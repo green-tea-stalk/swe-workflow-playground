@@ -73,13 +73,13 @@ upstream:
     - [x] エンティティの単体テストが不変性、フィールドゲッター、equals/hashCode契約を検証していること。
   - **コミットメッセージ**: `feat(backend): add flyway migration and message entity`
 
-- [ ] **TASK-003**: ページネーションクエリおよび統合テストを含む MessageRepository の実装
+- [x] **TASK-003**: ページネーションクエリおよび統合テストを含む MessageRepository の実装
   - **対象コンポーネント & 要件**: `COMP-003`, `REQ-002`, `REQ-003`, `REQ-004`
   - **対象ファイル**: `backend/src/main/java/com/example/bulletinboard/repository/MessageRepository.java`, `backend/src/test/java/com/example/bulletinboard/repository/MessageRepositoryTest.java`
   - **受け入れ基準**:
-    - [ ] `MessageRepository` が `@JdbcRepository(dialect = Dialect.MYSQL)` を伴って `PageableRepository<MessageEntity, Long>` を継承していること。
-    - [ ] 事前条件・事後条件が検証されていること: `save` がIDおよび作成日時を生成し、`findAll(Pageable)` が `created_at DESC` でソートされたレコードを返却すること。
-    - [ ] リポジトリ統合テストが、MySQL（またはテスト用H2/Testcontainers）に対してページネーションと逆時系列ソートを検証していること。
+    - [x] `MessageRepository` が `@JdbcRepository(dialect = Dialect.MYSQL)` を伴って `PageableRepository<MessageEntity, Long>` を継承していること。
+    - [x] 事前条件・事後条件が検証されていること: `save` がIDおよび作成日時を生成し、`findAll(Pageable)` が `created_at DESC` でソートされたレコードを返却すること。
+    - [x] リポジトリ統合テストが、MySQL（またはテスト用H2/Testcontainers）に対してページネーションと逆時系列ソートを検証していること。
   - **コミットメッセージ**: `feat(backend): implement COMP-003 message repository`
 
 ---

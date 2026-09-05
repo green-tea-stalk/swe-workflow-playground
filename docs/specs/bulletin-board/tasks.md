@@ -73,13 +73,13 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Entity unit tests verify immutability, field getters, and equals/hashCode contracts.
   - **Commit Message**: `feat(backend): add flyway migration and message entity`
 
-- [ ] **TASK-003**: Implement MessageRepository with pagination query and integration tests
+- [x] **TASK-003**: Implement MessageRepository with pagination query and integration tests
   - **Component & Requirements**: `COMP-003`, `REQ-002`, `REQ-003`, `REQ-004`
   - **Target Files**: `backend/src/main/java/com/example/bulletinboard/repository/MessageRepository.java`, `backend/src/test/java/com/example/bulletinboard/repository/MessageRepositoryTest.java`
   - **Acceptance Criteria**:
-    - [ ] `MessageRepository` extends `PageableRepository<MessageEntity, Long>` with `@JdbcRepository(dialect = Dialect.MYSQL)`.
-    - [ ] Preconditions and postconditions verified: `save` generates ID and timestamp; `findAll(Pageable)` returns records ordered by `created_at DESC`.
-    - [ ] Repository integration tests against MySQL (or test H2/Testcontainers) verify pagination and reverse-chronological ordering.
+    - [x] `MessageRepository` extends `PageableRepository<MessageEntity, Long>` with `@JdbcRepository(dialect = Dialect.MYSQL)`.
+    - [x] Preconditions and postconditions verified: `save` generates ID and timestamp; `findAll(Pageable)` returns records ordered by `created_at DESC`.
+    - [x] Repository integration tests against MySQL (or test H2/Testcontainers) verify pagination and reverse-chronological ordering.
   - **Commit Message**: `feat(backend): implement COMP-003 message repository`
 
 ---
