@@ -13,6 +13,8 @@
 # Gradle
 .gradle/
 build/
+bin/
+.micronaut/
 !gradle/wrapper/gradle-wrapper.jar
 
 # Node

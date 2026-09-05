@@ -1,0 +1,35 @@
+micronaut:
+  application:
+    name: bulletinboard
+  server:
+    port: 8080
+    cors:
+      enabled: true
+      configurations:
+        frontend:
+          allowed-origins:
+            - http://localhost:4200
+          allowed-methods:
+            - GET
+            - POST
+            - OPTIONS
+          allowed-headers:
+            - Content-Type
+            - Accept
+            - Origin
+
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:mysql://localhost:3306/bulletin_board?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${JDBC_USER:`user`}
+    password: ${JDBC_PASSWORD:`password`}
+    dialect: MYSQL
+    db-type: mysql
+
+flyway:
+  datasources:
+    default:
+      enabled: true
+      clean-on-validation-error: false
+

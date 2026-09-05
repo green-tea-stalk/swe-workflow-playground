@@ -55,13 +55,13 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `main`
 
 #### Tasks
-- [ ] **TASK-001**: Provision Docker Compose MySQL environment and Gradle Micronaut workspace
+- [x] **TASK-001**: Provision Docker Compose MySQL environment and Gradle Micronaut workspace
   - **Component & Requirements**: `COMP-003`, `NFR-DEV-001`, `NFR-COMP-001`
   - **Target Files**: `docker-compose.yml`, `backend/build.gradle`, `backend/settings.gradle`, `backend/gradlew`, `backend/src/main/resources/application.yml`
   - **Acceptance Criteria**:
-    - [ ] `docker-compose.yml` configures MySQL 8.4 LTS on port 3306 with health check and persistent volume.
-    - [ ] Backend Gradle project builds cleanly with Micronaut 4.x, Micronaut Data JDBC, MySQL Connector/J, and Flyway dependencies.
-    - [ ] Basic configuration loads without classpath errors.
+    - [x] `docker-compose.yml` configures MySQL 8.4 LTS on port 3306 with health check and persistent volume.
+    - [x] Backend Gradle project builds cleanly with Micronaut 4.x, Micronaut Data JDBC, MySQL Connector/J, and Flyway dependencies.
+    - [x] Basic configuration loads without classpath errors.
   - **Commit Message**: `chore(infra): setup docker mysql and backend gradle workspace`
 
 - [ ] **TASK-002**: Implement Flyway schema migration and MessageEntity mapping

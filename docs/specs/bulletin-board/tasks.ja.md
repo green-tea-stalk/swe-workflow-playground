@@ -55,13 +55,13 @@ upstream:
 - **マージ先**: `main`
 
 #### タスク
-- [ ] **TASK-001**: Docker Compose MySQL 環境および Gradle Micronaut ワークスペースの初期構築
+- [x] **TASK-001**: Docker Compose MySQL 環境および Gradle Micronaut ワークスペースの初期構築
   - **対象コンポーネント & 要件**: `COMP-003`, `NFR-DEV-001`, `NFR-COMP-001`
   - **対象ファイル**: `docker-compose.yml`, `backend/build.gradle`, `backend/settings.gradle`, `backend/gradlew`, `backend/src/main/resources/application.yml`
   - **受け入れ基準**:
-    - [ ] `docker-compose.yml` がMySQL 8.4 LTSをポート3306で構成し、ヘルスチェックおよび永続化ボリュームを定義していること。
-    - [ ] バックエンドGradleプロジェクトが、Micronaut 4.x、Micronaut Data JDBC、MySQL Connector/J、Flywayの依存関係を含んで正常にビルドできること。
-    - [ ] 基本設定がクラスパスエラーなくロードできること。
+    - [x] `docker-compose.yml` がMySQL 8.4 LTSをポート3306で構成し、ヘルスチェックおよび永続化ボリュームを定義していること。
+    - [x] バックエンドGradleプロジェクトが、Micronaut 4.x、Micronaut Data JDBC、MySQL Connector/J、Flywayの依存関係を含んで正常にビルドできること。
+    - [x] 基本設定がクラスパスエラーなくロードできること。
   - **コミットメッセージ**: `chore(infra): setup docker mysql and backend gradle workspace`
 
 - [ ] **TASK-002**: Flyway スキーママイグレーションおよび MessageEntity マッピングの実装
