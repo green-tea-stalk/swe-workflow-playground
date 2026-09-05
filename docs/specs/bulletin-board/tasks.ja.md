@@ -64,13 +64,13 @@ upstream:
     - [x] 基本設定がクラスパスエラーなくロードできること。
   - **コミットメッセージ**: `chore(infra): setup docker mysql and backend gradle workspace`
 
-- [ ] **TASK-002**: Flyway スキーママイグレーションおよび MessageEntity マッピングの実装
+- [x] **TASK-002**: Flyway スキーママイグレーションおよび MessageEntity マッピングの実装
   - **対象コンポーネント & 要件**: `COMP-003`, `REQ-004`, `NFR-REL-001`
   - **対象ファイル**: `backend/src/main/resources/db/migration/V1__create_messages_table.sql`, `backend/src/main/java/com/example/bulletinboard/entity/MessageEntity.java`, `backend/src/test/java/com/example/bulletinboard/entity/MessageEntityTest.java`
   - **受け入れ基準**:
-    - [ ] SQL DDLが `messages` テーブルを作成し、主キー `id` (BIGINT AUTO_INCREMENT)、`name` (VARCHAR 50 NOT NULL)、`email` (VARCHAR 100 NULL)、`title` (VARCHAR 100 NOT NULL)、`message` (VARCHAR 1000 NOT NULL)、`created_at` (TIMESTAMP NOT NULL) および `created_at` 降順インデックスを定義していること。
-    - [ ] `MessageEntity` が Micronaut Data の `@MappedEntity("messages")`、`@Id`、`@GeneratedValue` を用いて正しくマッピングされていること。
-    - [ ] エンティティの単体テストが不変性、フィールドゲッター、equals/hashCode契約を検証していること。
+    - [x] SQL DDLが `messages` テーブルを作成し、主キー `id` (BIGINT AUTO_INCREMENT)、`name` (VARCHAR 50 NOT NULL)、`email` (VARCHAR 100 NULL)、`title` (VARCHAR 100 NOT NULL)、`message` (VARCHAR 1000 NOT NULL)、`created_at` (TIMESTAMP NOT NULL) および `created_at` 降順インデックスを定義していること。
+    - [x] `MessageEntity` が Micronaut Data の `@MappedEntity("messages")`、`@Id`、`@GeneratedValue` を用いて正しくマッピングされていること。
+    - [x] エンティティの単体テストが不変性、フィールドゲッター、equals/hashCode契約を検証していること。
   - **コミットメッセージ**: `feat(backend): add flyway migration and message entity`
 
 - [ ] **TASK-003**: ページネーションクエリおよび統合テストを含む MessageRepository の実装

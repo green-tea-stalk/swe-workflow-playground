@@ -64,13 +64,13 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Basic configuration loads without classpath errors.
   - **Commit Message**: `chore(infra): setup docker mysql and backend gradle workspace`
 
-- [ ] **TASK-002**: Implement Flyway schema migration and MessageEntity mapping
+- [x] **TASK-002**: Implement Flyway schema migration and MessageEntity mapping
   - **Component & Requirements**: `COMP-003`, `REQ-004`, `NFR-REL-001`
   - **Target Files**: `backend/src/main/resources/db/migration/V1__create_messages_table.sql`, `backend/src/main/java/com/example/bulletinboard/entity/MessageEntity.java`, `backend/src/test/java/com/example/bulletinboard/entity/MessageEntityTest.java`
   - **Acceptance Criteria**:
-    - [ ] SQL DDL creates `messages` table with primary key `id` (BIGINT AUTO_INCREMENT), `name` (VARCHAR 50 NOT NULL), `email` (VARCHAR 100 NULL), `title` (VARCHAR 100 NOT NULL), `message` (VARCHAR 1000 NOT NULL), and `created_at` (TIMESTAMP NOT NULL) with descending index on `created_at`.
-    - [ ] `MessageEntity` mapped using Micronaut Data `@MappedEntity("messages")` with `@Id` and `@GeneratedValue`.
-    - [ ] Entity unit tests verify immutability, field getters, and equals/hashCode contracts.
+    - [x] SQL DDL creates `messages` table with primary key `id` (BIGINT AUTO_INCREMENT), `name` (VARCHAR 50 NOT NULL), `email` (VARCHAR 100 NULL), `title` (VARCHAR 100 NOT NULL), `message` (VARCHAR 1000 NOT NULL), and `created_at` (TIMESTAMP NOT NULL) with descending index on `created_at`.
+    - [x] `MessageEntity` mapped using Micronaut Data `@MappedEntity("messages")` with `@Id` and `@GeneratedValue`.
+    - [x] Entity unit tests verify immutability, field getters, and equals/hashCode contracts.
   - **Commit Message**: `feat(backend): add flyway migration and message entity`
 
 - [ ] **TASK-003**: Implement MessageRepository with pagination query and integration tests
