@@ -1,5 +1,6 @@
 package com.example.bulletinboard.exception;
 
+import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -7,6 +8,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
+import io.micronaut.validation.exceptions.ConstraintExceptionHandler;
 import jakarta.inject.Singleton;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -22,6 +24,7 @@ import java.util.List;
 @Singleton
 @Produces({ValidationExceptionHandler.MEDIA_TYPE_PROBLEM_JSON, MediaType.APPLICATION_JSON})
 @Requires(classes = {ConstraintViolationException.class, ExceptionHandler.class})
+@Replaces(ConstraintExceptionHandler.class)
 public class ValidationExceptionHandler implements ExceptionHandler<ConstraintViolationException, HttpResponse<ProblemDetails>> {
 
     public static final String TYPE_URI = "https://api.bulletin-board.local/errors/invalid-request";

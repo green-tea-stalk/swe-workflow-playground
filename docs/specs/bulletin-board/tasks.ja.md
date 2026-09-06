@@ -109,14 +109,14 @@ upstream:
     - [x] 単体テストがバリデーション失敗および予期せぬ例外の JSON エラーペイロードを検証していること。
   - **コミットメッセージ**: `feat(backend): add RFC 9457 problem details exception handlers`
 
-- [ ] **TASK-006**: MessageController REST エンドポイントおよび CORS 設定の実装
+- [x] **TASK-006**: MessageController REST エンドポイントおよび CORS 設定の実装
   - **対象コンポーネント & 要件**: `COMP-001`, `REQ-003`, `REQ-004`, `REQ-006`, `REQ-007`, `NFR-PERF-001`, `NFR-SEC-001`
   - **対象ファイル**: `backend/src/main/java/com/example/bulletinboard/controller/MessageController.java`, `backend/src/test/java/com/example/bulletinboard/controller/MessageControllerTest.java`
   - **受け入れ基準**:
-    - [ ] `GET /api/messages` が `page`（デフォルト: 0）および `size`（デフォルト: 50）を適切に扱い、`PageResponse` とともに `200 OK` を返却すること。
-    - [ ] `POST /api/messages` が `@Valid` によりリクエストボディを検証し、`MessageResponse` とともに `201 Created` を返却すること。
-    - [ ] `http://localhost:4200` に対する CORS が許可され、許可メソッド（`GET`, `POST`, `OPTIONS`）が設定されていること。
-    - [ ] コントローラー統合テストがHTTPステータスコード、リクエストバリデーションの拒絶、およびレスポンスのシリアライズを検証していること。
+    - [x] `GET /api/messages` が `page`（デフォルト: 0）および `size`（デフォルト: 50）を処理し、`PageResponse` と共に `200 OK` を返却すること。
+    - [x] `POST /api/messages` が `@Valid` によりリクエスト本文を検証し、`MessageResponse` と共に `201 Created` を返却すること。
+    - [x] `http://localhost:4200` に対する CORS が許可されたメソッド（`GET`, `POST`, `OPTIONS`）で有効化されていること。
+    - [x] コントローラー統合テストが HTTP ステータスコード、リクエスト検証の拒絶、およびレスポンスの正常なシリアライズを検証していること。
   - **コミットメッセージ**: `feat(backend): implement COMP-001 message controller and endpoints`
 
 ---

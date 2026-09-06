@@ -109,14 +109,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests verify JSON error payloads across validation failures and unexpected exceptions.
   - **Commit Message**: `feat(backend): add RFC 9457 problem details exception handlers`
 
-- [ ] **TASK-006**: Implement MessageController REST endpoints and CORS configuration
+- [x] **TASK-006**: Implement MessageController REST endpoints and CORS configuration
   - **Component & Requirements**: `COMP-001`, `REQ-003`, `REQ-004`, `REQ-006`, `REQ-007`, `NFR-PERF-001`, `NFR-SEC-001`
   - **Target Files**: `backend/src/main/java/com/example/bulletinboard/controller/MessageController.java`, `backend/src/test/java/com/example/bulletinboard/controller/MessageControllerTest.java`
   - **Acceptance Criteria**:
-    - [ ] `GET /api/messages` handles `page` (default: 0) and `size` (default: 50), returning `200 OK` with `PageResponse`.
-    - [ ] `POST /api/messages` validates request body via `@Valid`, returning `201 Created` with `MessageResponse`.
-    - [ ] CORS enabled for `http://localhost:4200` with permitted methods (`GET`, `POST`, `OPTIONS`).
-    - [ ] Controller integration tests verify HTTP status codes, request validation rejection, and successful response serialization.
+    - [x] `GET /api/messages` handles `page` (default: 0) and `size` (default: 50), returning `200 OK` with `PageResponse`.
+    - [x] `POST /api/messages` validates request body via `@Valid`, returning `201 Created` with `MessageResponse`.
+    - [x] CORS enabled for `http://localhost:4200` with permitted methods (`GET`, `POST`, `OPTIONS`).
+    - [x] Controller integration tests verify HTTP status codes, request validation rejection, and successful response serialization.
   - **Commit Message**: `feat(backend): implement COMP-001 message controller and endpoints`
 
 ---
