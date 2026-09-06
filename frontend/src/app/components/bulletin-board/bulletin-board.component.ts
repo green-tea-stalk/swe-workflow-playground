@@ -76,7 +76,7 @@ export class BulletinBoardComponent implements OnInit {
     this.isLoading.set(true);
     this.messageApiService.getMessages(pageIndex, this.pageSize).subscribe({
       next: (response) => {
-        this.messages.set(response.content);
+        this.messages.set(response.content || []);
         this.pagination.set(response);
         this.isLoading.set(false);
       },
