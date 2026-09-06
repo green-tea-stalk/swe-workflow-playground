@@ -1,0 +1,41 @@
+<div class="message-list-container">
+  @if (messages().length === 0) {
+    <div class="empty-feed-notice">
+      <p>投稿されたメッセージはありません。</p>
+    </div>
+  } @else {
+    <div class="feed-cards">
+      @for (message of messages(); track message.id) {
+        <mat-card class="message-card" appearance="outlined">
+          <mat-card-header>
+            <mat-card-title class="message-title">{{ message.title }}</mat-card-title>
+            <mat-card-subtitle class="message-meta">
+              <span class="author-name">{{ message.name }}</span>
+              @if (message.email && message.email.trim().length > 0) {
+                <a class="author-email" [href]="'mailto:' + message.email">&lt;{{ message.email }}&gt;</a>
+              }
+              <span class="created-at">{{ message.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</span>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="message-body">{{ message.message }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+
+  @if (pagination(); as pag) {
+    <div class="paginator-wrapper">
+      <mat-paginator
+        [length]="pag.totalElements"
+        [pageSize]="pag.size"
+        [pageIndex]="pag.page"
+        [pageSizeOptions]="[]"
+        (page)="onPageChange($event)"
+        aria-label="ページ選択">
+      </mat-paginator>
+    </div>
+  }
+</div>
+

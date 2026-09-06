@@ -136,14 +136,14 @@ upstream:
     - [x] `HttpTestingController` を用いた単体テストがクエリパラメータ、ペイロード、エラー変換を検証していること。
   - **コミットメッセージ**: `feat(frontend): initialize angular workspace and COMP-007 api client`
 
-- [ ] **TASK-008**: メッセージ一覧描画、ページネーション、メール表示を含む MessageListComponent の実装
+- [x] **TASK-008**: メッセージ一覧描画、ページネーション、メール表示を含む MessageListComponent の実装
   - **対象コンポーネント & 要件**: `COMP-006`, `REQ-002`, `REQ-003`, `REQ-008`, `NFR-SEC-001`
   - **対象ファイル**: `frontend/src/app/components/message-list/message-list.component.ts`, `frontend/src/app/components/message-list/message-list.component.html`, `frontend/src/app/components/message-list/message-list.component.scss`, `frontend/src/app/components/message-list/message-list.component.spec.ts`
   - **受け入れ基準**:
-    - [ ] コンポーネントが `@Input() messages` シグナルから受信した順序通りにメッセージを描画すること。
-    - [ ] 投稿者メールアドレスが存在する場合は `mailto:` リンクとして描画し、null/空の場合は空文字の遺物を残さず完全に省略すること。
-    - [ ] `MatPaginator` が `totalElements`、`pageSize = 50` を表示し、0開始のページ変更イベントを上位へ通知すること。
-    - [ ] コンポーネント単体テストがフィード描画、メールアドレスの有無、およびページネーションイベント発行を検証していること。
+    - [x] コンポーネントが `@Input() messages` シグナルから受信した順序通りにメッセージを描画すること。
+    - [x] 投稿者メールアドレスが存在する場合は `mailto:` リンクとして描画し、null/空の場合は空文字の遺物を残さず完全に省略すること。
+    - [x] `MatPaginator` が `totalElements`、`pageSize = 50` を表示し、0開始のページ変更イベントを上位へ通知すること。
+    - [x] コンポーネント単体テストがフィード描画、メールアドレスの有無、およびページネーションイベント発行を検証していること。
   - **コミットメッセージ**: `feat(frontend): implement COMP-006 message list and paginator`
 
 - [ ] **TASK-009**: 画面下部固定レイアウトおよびリアクティブバリデーションを含む MessageFormComponent の実装

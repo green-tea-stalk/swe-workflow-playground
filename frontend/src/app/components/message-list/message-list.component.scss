@@ -1,0 +1,71 @@
+.message-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.empty-feed-notice {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--mat-sys-on-surface-variant, #666);
+  font-size: 1rem;
+}
+
+.feed-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message-card {
+  border-radius: 8px;
+
+  .message-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+
+  .message-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant, #666);
+
+    .author-name {
+      font-weight: 500;
+      color: var(--mat-sys-on-surface, #333);
+    }
+
+    .author-email {
+      color: var(--mat-sys-primary, #1976d2);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .created-at {
+      font-size: 0.8rem;
+    }
+  }
+
+  .message-body {
+    margin-top: 12px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+.paginator-wrapper {
+  margin-top: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+

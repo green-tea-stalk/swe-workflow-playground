@@ -136,14 +136,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Service unit tests with `HttpTestingController` verify query parameters, payloads, and error transformation.
   - **Commit Message**: `feat(frontend): initialize angular workspace and COMP-007 api client`
 
-- [ ] **TASK-008**: Implement MessageListComponent with feed display, paginator, and email formatting
+- [x] **TASK-008**: Implement MessageListComponent with feed display, paginator, and email formatting
   - **Component & Requirements**: `COMP-006`, `REQ-002`, `REQ-003`, `REQ-008`, `NFR-SEC-001`
   - **Target Files**: `frontend/src/app/components/message-list/message-list.component.ts`, `frontend/src/app/components/message-list/message-list.component.html`, `frontend/src/app/components/message-list/message-list.component.scss`, `frontend/src/app/components/message-list/message-list.component.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Component renders messages in exact order received via `@Input() messages` signal.
-    - [ ] Author email rendered as `mailto:` link if present; cleanly omitted if null/empty without empty artifacts.
-    - [ ] `MatPaginator` displays `totalElements`, `pageSize = 50`, and emits zero-based page change events upstream.
-    - [ ] Component unit tests verify feed rendering, email presence/absence, and pagination event emission.
+    - [x] Component renders messages in exact order received via `@Input() messages` signal.
+    - [x] Author email rendered as `mailto:` link if present; cleanly omitted if null/empty without empty artifacts.
+    - [x] `MatPaginator` displays `totalElements`, `pageSize = 50`, and emits zero-based page change events upstream.
+    - [x] Component unit tests verify feed rendering, email presence/absence, and pagination event emission.
   - **Commit Message**: `feat(frontend): implement COMP-006 message list and paginator`
 
 - [ ] **TASK-009**: Implement MessageFormComponent with sticky footer layout and reactive validation
