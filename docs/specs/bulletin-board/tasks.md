@@ -89,14 +89,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/bulletin-board-phase1-backend-persistence`
 
 #### Tasks
-- [ ] **TASK-004**: Implement MessageService domain coordination and transactional logic
+- [x] **TASK-004**: Implement MessageService domain coordination and transactional logic
   - **Component & Requirements**: `COMP-002`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-009`, `NFR-REL-001`
   - **Target Files**: `backend/src/main/java/com/example/bulletinboard/service/MessageService.java`, `backend/src/main/java/com/example/bulletinboard/dto/MessageCreateRequest.java`, `backend/src/main/java/com/example/bulletinboard/dto/MessageResponse.java`, `backend/src/main/java/com/example/bulletinboard/dto/PageResponse.java`, `backend/src/test/java/com/example/bulletinboard/service/MessageServiceTest.java`
   - **Acceptance Criteria**:
-    - [ ] DTO records defined: `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`.
-    - [ ] `createMessage` executes within transactional boundary, trims inputs, maps to entity, and guarantees postcondition response.
-    - [ ] `findMessages` returns `PageResponse<MessageResponse>` ordered by creation timestamp descending.
-    - [ ] Unit tests achieve 100% branch coverage for happy path and database error propagation.
+    - [x] DTO records defined: `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`.
+    - [x] `createMessage` executes within transactional boundary, trims inputs, maps to entity, and guarantees postcondition response.
+    - [x] `findMessages` returns `PageResponse<MessageResponse>` ordered by creation timestamp descending.
+    - [x] Unit tests achieve 100% branch coverage for happy path and database error propagation.
   - **Commit Message**: `feat(backend): implement COMP-002 message service and DTOs`
 
 - [ ] **TASK-005**: Implement RFC 9457 problem details handlers and exception hierarchy

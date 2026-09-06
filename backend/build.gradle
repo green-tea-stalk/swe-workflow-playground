@@ -32,6 +32,7 @@ dependencies {
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation("org.mockito:mockito-junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

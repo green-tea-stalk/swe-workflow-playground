@@ -89,14 +89,14 @@ upstream:
 - **マージ先**: `feat/bulletin-board-phase1-backend-persistence`
 
 #### タスク
-- [ ] **TASK-004**: ドメイン調整およびトランザクション境界を担う MessageService の実装
+- [x] **TASK-004**: ドメイン調整およびトランザクション境界を担う MessageService の実装
   - **対象コンポーネント & 要件**: `COMP-002`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-009`, `NFR-REL-001`
   - **対象ファイル**: `backend/src/main/java/com/example/bulletinboard/service/MessageService.java`, `backend/src/main/java/com/example/bulletinboard/dto/MessageCreateRequest.java`, `backend/src/main/java/com/example/bulletinboard/dto/MessageResponse.java`, `backend/src/main/java/com/example/bulletinboard/dto/PageResponse.java`, `backend/src/test/java/com/example/bulletinboard/service/MessageServiceTest.java`
   - **受け入れ基準**:
-    - [ ] DTOレコードが定義されていること: `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`。
-    - [ ] `createMessage` がトランザクション境界内で実行され、入力をトリムし、エンティティへマッピングして事後条件のレスポンスを保証していること。
-    - [ ] `findMessages` が作成日時の降順でソートされた `PageResponse<MessageResponse>` を返却すること。
-    - [ ] 単体テストが正常系およびデータベース例外伝搬のすべての分岐を網羅していること。
+    - [x] DTOレコードが定義されていること: `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`。
+    - [x] `createMessage` がトランザクション境界内で実行され、入力をトリムし、エンティティへマッピングして事後条件のレスポンスを保証していること。
+    - [x] `findMessages` が作成日時の降順でソートされた `PageResponse<MessageResponse>` を返却すること。
+    - [x] 単体テストが正常系およびデータベース例外伝搬のすべての分岐を網羅していること。
   - **コミットメッセージ**: `feat(backend): implement COMP-002 message service and DTOs`
 
 - [ ] **TASK-005**: RFC 9457 Problem Details ハンドラーおよび例外階層の実装
