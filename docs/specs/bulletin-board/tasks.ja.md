@@ -126,14 +126,14 @@ upstream:
 - **マージ先**: `feat/bulletin-board-phase2-backend-api`
 
 #### タスク
-- [ ] **TASK-007**: Angular ワークスペース、Angular Material テーマ、および MessageApiClient の初期構築
+- [x] **TASK-007**: Angular ワークスペースの初期化、Angular Material テーマおよび MessageApiClient の実装
   - **対象コンポーネント & 要件**: `COMP-007`, `REQ-003`, `REQ-004`, `REQ-009`, `NFR-COMP-001`
   - **対象ファイル**: `frontend/package.json`, `frontend/angular.json`, `frontend/src/app/models/message.model.ts`, `frontend/src/app/services/message-api.service.ts`, `frontend/src/app/services/message-api.service.spec.ts`
   - **受け入れ基準**:
-    - [ ] Standalone Components および Angular Material コンポーネント（`MatCard`, `MatButton`, `MatFormField`, `MatInput`, `MatPaginator`）を含む Angular プロジェクトが初期化されていること。
-    - [ ] `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`, `ProblemDetails` の TypeScript インターフェースが定義されていること。
-    - [ ] `MessageApiClient` (COMP-007) が `HttpClient` を用いて `getMessages` および `postMessage` を実装していること。
-    - [ ] `HttpTestingController` を用いた単体テストが、クエリパラメータ、ペイロード、およびエラー変換を検証していること。
+    - [x] Standalone Components および Angular Material コンポーネント（`MatCard`, `MatButton`, `MatFormField`, `MatInput`, `MatPaginator`）を備えた Angular プロジェクトが初期化されていること。
+    - [x] TypeScript インターフェースが定義されていること: `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`, `ProblemDetails`。
+    - [x] `MessageApiClient`（COMP-007）が `HttpClient` を用いて `getMessages` および `postMessage` を実装していること。
+    - [x] `HttpTestingController` を用いた単体テストがクエリパラメータ、ペイロード、エラー変換を検証していること。
   - **コミットメッセージ**: `feat(frontend): initialize angular workspace and COMP-007 api client`
 
 - [ ] **TASK-008**: メッセージ一覧描画、ページネーション、メール表示を含む MessageListComponent の実装

@@ -126,14 +126,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/bulletin-board-phase2-backend-api`
 
 #### Tasks
-- [ ] **TASK-007**: Initialize Angular workspace, Angular Material theme, and MessageApiClient
+- [x] **TASK-007**: Initialize Angular workspace, Angular Material theme, and MessageApiClient
   - **Component & Requirements**: `COMP-007`, `REQ-003`, `REQ-004`, `REQ-009`, `NFR-COMP-001`
   - **Target Files**: `frontend/package.json`, `frontend/angular.json`, `frontend/src/app/models/message.model.ts`, `frontend/src/app/services/message-api.service.ts`, `frontend/src/app/services/message-api.service.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Angular project initialized with Standalone Components and Angular Material components (`MatCard`, `MatButton`, `MatFormField`, `MatInput`, `MatPaginator`).
-    - [ ] TypeScript interfaces defined for `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`, and `ProblemDetails`.
-    - [ ] `MessageApiClient` (COMP-007) implements `getMessages` and `postMessage` using `HttpClient`.
-    - [ ] Service unit tests with `HttpTestingController` verify query parameters, payloads, and error transformation.
+    - [x] Angular project initialized with Standalone Components and Angular Material components (`MatCard`, `MatButton`, `MatFormField`, `MatInput`, `MatPaginator`).
+    - [x] TypeScript interfaces defined for `MessageCreateRequest`, `MessageResponse`, `PageResponse<T>`, and `ProblemDetails`.
+    - [x] `MessageApiClient` (COMP-007) implements `getMessages` and `postMessage` using `HttpClient`.
+    - [x] Service unit tests with `HttpTestingController` verify query parameters, payloads, and error transformation.
   - **Commit Message**: `feat(frontend): initialize angular workspace and COMP-007 api client`
 
 - [ ] **TASK-008**: Implement MessageListComponent with feed display, paginator, and email formatting
