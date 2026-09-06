@@ -1,0 +1,58 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="message-form" novalidate>
+  <div class="form-row header-row">
+    <mat-form-field appearance="outline" class="field-name">
+      <mat-label>名前 *</mat-label>
+      <input matInput formControlName="name" maxlength="50" placeholder="お名前" />
+      @if (form.get('name')?.hasError('required') || form.get('name')?.hasError('whitespace')) {
+        <mat-error>名前は必須入力です（空白のみ不可）。</mat-error>
+      }
+      @if (form.get('name')?.hasError('maxlength')) {
+        <mat-error>名前は50文字以内で入力してください。</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-email">
+      <mat-label>メールアドレス (任意)</mat-label>
+      <input matInput type="email" formControlName="email" maxlength="100" placeholder="example@domain.com" />
+      @if (form.get('email')?.hasError('email')) {
+        <mat-error>有効なメールアドレス形式で入力してください。</mat-error>
+      }
+      @if (form.get('email')?.hasError('maxlength')) {
+        <mat-error>メールアドレスは100文字以内で入力してください。</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>タイトル *</mat-label>
+      <input matInput formControlName="title" maxlength="100" placeholder="投稿タイトル" />
+      @if (form.get('title')?.hasError('required') || form.get('title')?.hasError('whitespace')) {
+        <mat-error>タイトルは必須入力です（空白のみ不可）。</mat-error>
+      }
+      @if (form.get('title')?.hasError('maxlength')) {
+        <mat-error>タイトルは100文字以内で入力してください。</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>メッセージ *</mat-label>
+      <textarea matInput formControlName="message" rows="3" maxlength="1000" placeholder="メッセージを入力してください"></textarea>
+      @if (form.get('message')?.hasError('required') || form.get('message')?.hasError('whitespace')) {
+        <mat-error>メッセージは必須入力です（空白のみ不可）。</mat-error>
+      }
+      @if (form.get('message')?.hasError('maxlength')) {
+        <mat-error>メッセージは1000文字以内で入力してください。</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div class="form-actions">
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+      投稿する
+    </button>
+  </div>
+</form>
+

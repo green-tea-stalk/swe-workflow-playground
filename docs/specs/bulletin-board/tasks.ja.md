@@ -146,14 +146,14 @@ upstream:
     - [x] コンポーネント単体テストがフィード描画、メールアドレスの有無、およびページネーションイベント発行を検証していること。
   - **コミットメッセージ**: `feat(frontend): implement COMP-006 message list and paginator`
 
-- [ ] **TASK-009**: 画面下部固定レイアウトおよびリアクティブバリデーションを含む MessageFormComponent の実装
+- [x] **TASK-009**: 画面下部固定レイアウトおよびリアクティブバリデーションを含む MessageFormComponent の実装
   - **対象コンポーネント & 要件**: `COMP-005`, `REQ-001`, `REQ-004`, `REQ-006`, `REQ-007`
   - **対象ファイル**: `frontend/src/app/components/message-form/message-form.component.ts`, `frontend/src/app/components/message-form/message-form.component.html`, `frontend/src/app/components/message-form/message-form.component.scss`, `frontend/src/app/components/message-form/message-form.component.spec.ts`
   - **受け入れ基準**:
-    - [ ] リアクティブフォームが制約を強制すること: 名前（必須、1〜50文字）、メールアドレス（任意、メール形式、最大100文字）、タイトル（必須、1〜100文字）、メッセージ（必須、1〜1,000文字）。
-    - [ ] フォームが入力不正時の送信を防止し、項目ごとのエラーヒントを表示すること。
-    - [ ] コンポーネントCSSが画面最下部への固定配置スタイル（`position: sticky`, `bottom: 0`, `z-index: 100`）を適用していること。
-    - [ ] コンポーネント単体テストがバリデーション規則、送信イベント発行、および `resetForm()` の挙動を検証していること。
+    - [x] リアクティブフォームが制約を強制すること: 名前（必須、1〜50文字）、メールアドレス（任意、メール形式、最大100文字）、タイトル（必須、1〜100文字）、メッセージ（必須、1〜1,000文字）。
+    - [x] フォームが入力不正時の送信を防止し、項目ごとのエラーヒントを表示すること。
+    - [x] コンポーネントCSSが画面最下部への固定配置スタイル（`position: sticky`, `bottom: 0`, `z-index: 100`）を適用していること。
+    - [x] コンポーネント単体テストがバリデーション規則、送信イベント発行、および `resetForm()` の挙動を検証していること。
   - **コミットメッセージ**: `feat(frontend): implement COMP-005 sticky message form`
 
 - [ ] **TASK-010**: 状態連携、自動再取得、独立スクロールを統括する BulletinBoardComponent ルートコンテナの実装

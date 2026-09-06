@@ -1,0 +1,59 @@
+:host {
+  display: block;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: var(--mat-sys-surface, #ffffff);
+  border-top: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.message-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+
+  &.header-row {
+    flex-direction: row;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  .field-name {
+    flex: 1;
+  }
+
+  .field-email {
+    flex: 1;
+  }
+
+  .field-full {
+    width: 100%;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+
+  button[type='submit'] {
+    min-width: 120px;
+    font-weight: 600;
+  }
+}
+

@@ -146,14 +146,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Component unit tests verify feed rendering, email presence/absence, and pagination event emission.
   - **Commit Message**: `feat(frontend): implement COMP-006 message list and paginator`
 
-- [ ] **TASK-009**: Implement MessageFormComponent with sticky footer layout and reactive validation
+- [x] **TASK-009**: Implement MessageFormComponent with sticky footer layout and reactive validation
   - **Component & Requirements**: `COMP-005`, `REQ-001`, `REQ-004`, `REQ-006`, `REQ-007`
   - **Target Files**: `frontend/src/app/components/message-form/message-form.component.ts`, `frontend/src/app/components/message-form/message-form.component.html`, `frontend/src/app/components/message-form/message-form.component.scss`, `frontend/src/app/components/message-form/message-form.component.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Reactive form enforces constraints: Name (required, 1-50 chars), Email (optional, email pattern, max 100), Title (required, 1-100 chars), Message (required, 1-1000 chars).
-    - [ ] Form prevents submission if invalid; displays field-specific error hints.
-    - [ ] Component CSS applies sticky/fixed footer styling (`position: sticky`, `bottom: 0`, `z-index: 100`).
-    - [ ] Component unit tests verify validation rules, submit emission, and `resetForm()` behavior.
+    - [x] Reactive form enforces constraints: Name (required, 1-50 chars), Email (optional, email pattern, max 100), Title (required, 1-100 chars), Message (required, 1-1000 chars).
+    - [x] Form prevents submission if invalid; displays field-specific error hints.
+    - [x] Component CSS applies sticky/fixed footer styling (`position: sticky`, `bottom: 0`, `z-index: 100`).
+    - [x] Component unit tests verify validation rules, submit emission, and `resetForm()` behavior.
   - **Commit Message**: `feat(frontend): implement COMP-005 sticky message form`
 
 - [ ] **TASK-010**: Implement BulletinBoardComponent root container coordinating state, auto-refresh, and independent scrolling
