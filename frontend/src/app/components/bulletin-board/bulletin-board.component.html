@@ -1,0 +1,32 @@
+<div class="bulletin-board-container">
+  <mat-toolbar color="primary" class="app-toolbar">
+    <span>掲示板アプリケーション</span>
+  </mat-toolbar>
+
+  @if (isLoading()) {
+    <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+  }
+
+  @if (errorMessage(); as err) {
+    <div class="error-banner" role="alert">
+      <span>{{ err }}</span>
+    </div>
+  }
+
+  <main class="scrollable-feed-area">
+    <div class="feed-content-wrapper">
+      <app-message-list
+        [messages]="messages()"
+        [pagination]="pagination()"
+        (pageChange)="loadMessages($event)">
+      </app-message-list>
+    </div>
+  </main>
+
+  <footer class="sticky-form-footer">
+    <app-message-form
+      (submitMessage)="handleMessageSubmitted($event)">
+    </app-message-form>
+  </footer>
+</div>
+

@@ -156,14 +156,14 @@ upstream:
     - [x] コンポーネント単体テストがバリデーション規則、送信イベント発行、および `resetForm()` の挙動を検証していること。
   - **コミットメッセージ**: `feat(frontend): implement COMP-005 sticky message form`
 
-- [ ] **TASK-010**: 状態連携、自動再取得、独立スクロールを統括する BulletinBoardComponent ルートコンテナの実装
+- [x] **TASK-010**: 状態連携、自動再取得、独立スクロールを統括する BulletinBoardComponent ルートコンテナの実装
   - **対象コンポーネント & 要件**: `COMP-004`, `REQ-001`, `REQ-002`, `REQ-005`
   - **対象ファイル**: `frontend/src/app/components/bulletin-board/bulletin-board.component.ts`, `frontend/src/app/components/bulletin-board/bulletin-board.component.html`, `frontend/src/app/components/bulletin-board/bulletin-board.component.scss`, `frontend/src/app/components/bulletin-board/bulletin-board.component.spec.ts`, `frontend/src/app/app.component.ts`
   - **受け入れ基準**:
-    - [ ] ルートコンテナが上部スクロール可能領域（`overflow-y: auto`）の `MessageListComponent` と最下部に固定された `MessageFormComponent` を統括配置すること。
-    - [ ] 初期化時に先頭ページ（`page=0`）を自動取得すること。
-    - [ ] メッセージ投稿成功時にフォームをリセットし、新規投稿を最上部に表示するため先頭ページを再取得すること。
-    - [ ] コンポーネント統合テストが、コンポーネント間の連携、再取得トリガー、およびエラーバナー表示を検証していること。
+    - [x] ルートコンテナが上部スクロール可能領域（`overflow-y: auto`）の `MessageListComponent` と最下部に固定された `MessageFormComponent` を統括配置すること。
+    - [x] 初期化時に先頭ページ（`page=0`）を自動取得すること。
+    - [x] メッセージ投稿成功時にフォームをリセットし、新規投稿を最上部に表示するため先頭ページを再取得すること。
+    - [x] コンポーネント統合テストが、コンポーネント間の連携、再取得トリガー、およびエラーバナー表示を検証していること。
   - **コミットメッセージ**: `feat(frontend): implement COMP-004 bulletin board root container`
 
 ---

@@ -1,11 +1,17 @@
 import { Component } from '@angular/core';
+import { BulletinBoardComponent } from './components/bulletin-board/bulletin-board.component';
 
+/**
+ * Root application component hosting the bulletin board system.
+ */
 @Component({
   selector: 'app-root',
-  imports: [],
+  standalone: true,
+  imports: [BulletinBoardComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'frontend';
+  /** Application title identifier */
+  readonly title = 'bulletin-board';
 }

@@ -156,14 +156,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Component unit tests verify validation rules, submit emission, and `resetForm()` behavior.
   - **Commit Message**: `feat(frontend): implement COMP-005 sticky message form`
 
-- [ ] **TASK-010**: Implement BulletinBoardComponent root container coordinating state, auto-refresh, and independent scrolling
+- [x] **TASK-010**: Implement BulletinBoardComponent root container coordinating state, auto-refresh, and independent scrolling
   - **Component & Requirements**: `COMP-004`, `REQ-001`, `REQ-002`, `REQ-005`
   - **Target Files**: `frontend/src/app/components/bulletin-board/bulletin-board.component.ts`, `frontend/src/app/components/bulletin-board/bulletin-board.component.html`, `frontend/src/app/components/bulletin-board/bulletin-board.component.scss`, `frontend/src/app/components/bulletin-board/bulletin-board.component.spec.ts`, `frontend/src/app/app.component.ts`
   - **Acceptance Criteria**:
-    - [ ] Root container orchestrates `MessageListComponent` in an upper scrollable area (`overflow-y: auto`) and `MessageFormComponent` fixed at the bottom.
-    - [ ] On initialization, automatically loads first page (`page=0`).
-    - [ ] On successful message submission, resets the form and reloads the first page to surface the new message at the top.
-    - [ ] Component integration tests verify end-to-end component interaction, reload trigger, and error banner display.
+    - [x] Root container orchestrates `MessageListComponent` in an upper scrollable area (`overflow-y: auto`) and `MessageFormComponent` fixed at the bottom.
+    - [x] On initialization, automatically loads first page (`page=0`).
+    - [x] On successful message submission, resets the form and reloads the first page to surface the new message at the top.
+    - [x] Component integration tests verify end-to-end component interaction, reload trigger, and error banner display.
   - **Commit Message**: `feat(frontend): implement COMP-004 bulletin board root container`
 
 ---
