@@ -99,14 +99,14 @@ upstream:
     - [x] 単体テストが正常系およびデータベース例外伝搬のすべての分岐を網羅していること。
   - **コミットメッセージ**: `feat(backend): implement COMP-002 message service and DTOs`
 
-- [ ] **TASK-005**: RFC 9457 Problem Details ハンドラーおよび例外階層の実装
+- [x] **TASK-005**: RFC 9457 Problem Details ハンドラーおよび例外階層の実装
   - **対象コンポーネント & 要件**: `COMP-001`, `REQ-006`, `REQ-007`, `REQ-009`
   - **対象ファイル**: `backend/src/main/java/com/example/bulletinboard/exception/BulletinBoardException.java`, `backend/src/main/java/com/example/bulletinboard/exception/ProblemDetails.java`, `backend/src/main/java/com/example/bulletinboard/exception/ValidationExceptionHandler.java`, `backend/src/main/java/com/example/bulletinboard/exception/GlobalExceptionHandler.java`, `backend/src/test/java/com/example/bulletinboard/exception/ExceptionHandlerTest.java`
   - **受け入れ基準**:
-    - [ ] `ProblemDetails` モデルが RFC 9457（`type`, `title`, `status`, `detail`, `instance`, `invalid_params`）に準拠していること。
-    - [ ] `ValidationExceptionHandler` が Micronaut の `ConstraintViolationException` を構造化された項目別エラーを含む HTTP 400 Problem Details へ変換すること。
-    - [ ] `GlobalExceptionHandler` が根本原因をログ出力し、スタックトレースを漏洩させることなく HTTP 500 Problem Details を返却すること。
-    - [ ] 単体テストがバリデーション失敗時および予期せぬ例外発生時のJSONエラーペイロードを検証していること。
+    - [x] `ProblemDetails` モデルが RFC 9457 (`type`, `title`, `status`, `detail`, `instance`, `invalid_params`) に準拠していること。
+    - [x] `ValidationExceptionHandler` が Micronaut の `ConstraintViolationException` を構造化フィールドエラーを含む HTTP 400 Problem Details に変換すること。
+    - [x] `GlobalExceptionHandler` が根本原因をログ出力し、スタックトレースを漏洩させずに HTTP 500 Problem Details を返却すること。
+    - [x] 単体テストがバリデーション失敗および予期せぬ例外の JSON エラーペイロードを検証していること。
   - **コミットメッセージ**: `feat(backend): add RFC 9457 problem details exception handlers`
 
 - [ ] **TASK-006**: MessageController REST エンドポイントおよび CORS 設定の実装

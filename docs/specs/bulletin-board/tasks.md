@@ -99,14 +99,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests achieve 100% branch coverage for happy path and database error propagation.
   - **Commit Message**: `feat(backend): implement COMP-002 message service and DTOs`
 
-- [ ] **TASK-005**: Implement RFC 9457 problem details handlers and exception hierarchy
+- [x] **TASK-005**: Implement RFC 9457 problem details handlers and exception hierarchy
   - **Component & Requirements**: `COMP-001`, `REQ-006`, `REQ-007`, `REQ-009`
   - **Target Files**: `backend/src/main/java/com/example/bulletinboard/exception/BulletinBoardException.java`, `backend/src/main/java/com/example/bulletinboard/exception/ProblemDetails.java`, `backend/src/main/java/com/example/bulletinboard/exception/ValidationExceptionHandler.java`, `backend/src/main/java/com/example/bulletinboard/exception/GlobalExceptionHandler.java`, `backend/src/test/java/com/example/bulletinboard/exception/ExceptionHandlerTest.java`
   - **Acceptance Criteria**:
-    - [ ] `ProblemDetails` model conforms to RFC 9457 (`type`, `title`, `status`, `detail`, `instance`, `invalid_params`).
-    - [ ] `ValidationExceptionHandler` transforms Micronaut `ConstraintViolationException` into HTTP 400 Problem Details with structured field errors.
-    - [ ] `GlobalExceptionHandler` logs root causes and returns HTTP 500 Problem Details without leaking stack traces.
-    - [ ] Unit tests verify JSON error payloads across validation failures and unexpected exceptions.
+    - [x] `ProblemDetails` model conforms to RFC 9457 (`type`, `title`, `status`, `detail`, `instance`, `invalid_params`).
+    - [x] `ValidationExceptionHandler` transforms Micronaut `ConstraintViolationException` into HTTP 400 Problem Details with structured field errors.
+    - [x] `GlobalExceptionHandler` logs root causes and returns HTTP 500 Problem Details without leaking stack traces.
+    - [x] Unit tests verify JSON error payloads across validation failures and unexpected exceptions.
   - **Commit Message**: `feat(backend): add RFC 9457 problem details exception handlers`
 
 - [ ] **TASK-006**: Implement MessageController REST endpoints and CORS configuration
