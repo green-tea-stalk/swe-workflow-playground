@@ -91,14 +91,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests verify preconditions, postconditions, and invariant contracts with 100% branch coverage.
   - **Commit Message**: `feat(backend): implement COMP-002 PostService domain logic`
 
-- [ ] **TASK-004**: Implement PostController and RFC 9457 error handler
+- [x] **TASK-004**: Implement PostController and RFC 9457 error handler
   - **Component & Requirements**: `COMP-001`, `REQ-002`, `REQ-003`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`
   - **Target Files**: `backend/src/main/java/**/PostController.java`, `backend/src/main/java/**/exception/*.java`, `backend/src/test/java/**/PostControllerTest.java`
   - **Acceptance Criteria**:
-    - [ ] `GET /api/posts` returns `200 OK` with paginated posts (default: `page=0`, `size=50`).
-    - [ ] `POST /api/posts` validates body via Bean Validation, returning `201 Created` with Location header.
-    - [ ] Validation failures return `400 Bad Request` with `application/problem+json` RFC 9457 structure and `invalid_params`.
-    - [ ] Micronaut HTTP client test verifies full controller interaction.
+    - [x] `GET /api/posts` returns `200 OK` with paginated posts (default: `page=0`, `size=50`).
+    - [x] `POST /api/posts` validates body via Bean Validation, returning `201 Created` with Location header.
+    - [x] Validation failures return `400 Bad Request` with `application/problem+json` RFC 9457 structure and `invalid_params`.
+    - [x] Micronaut HTTP client test verifies full controller interaction.
   - **Commit Message**: `feat(backend): implement COMP-001 PostController and RFC 9457 error handling`
 
 ---

@@ -91,14 +91,14 @@ upstream:
     - [x] 単体テストにより事前条件、事後条件、および不変条件の契約が 100% 分岐網羅率で検証されていること。
   - **コミットメッセージ**: `feat(backend): implement COMP-002 PostService domain logic`
 
-- [ ] **TASK-004**: PostController および RFC 9457 エラーハンドラーの実装
+- [x] **TASK-004**: PostController および RFC 9457 エラーハンドラーの実装
   - **対象コンポーネント & 要件**: `COMP-001`, `REQ-002`, `REQ-003`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`
   - **対象ファイル**: `backend/src/main/java/**/PostController.java`, `backend/src/main/java/**/exception/*.java`, `backend/src/test/java/**/PostControllerTest.java`
   - **受け入れ基準**:
-    - [ ] `GET /api/posts` がページ分割された投稿とともに `200 OK` を返却すること（デフォルト: `page=0`, `size=50`）。
-    - [ ] `POST /api/posts` が Bean Validation によりボディを検証し、Location ヘッダーとともに `201 Created` を返却すること。
-    - [ ] バリデーション失敗時に `application/problem+json` の RFC 9457 構造および `invalid_params` を伴う `400 Bad Request` を返却すること。
-    - [ ] Micronaut HTTP クライアントテストによりコントローラーの完全なインタラクションが検証されていること。
+    - [x] `GET /api/posts` がページ分割された投稿とともに `200 OK` を返却すること（デフォルト: `page=0`, `size=50`）。
+    - [x] `POST /api/posts` が Bean Validation によりボディを検証し、Location ヘッダーとともに `201 Created` を返却すること。
+    - [x] バリデーション失敗時に `application/problem+json` の RFC 9457 構造および `invalid_params` を伴う `400 Bad Request` を返却すること。
+    - [x] Micronaut HTTP クライアントテストによりコントローラーの完全なインタラクションが検証されていること。
   - **コミットメッセージ**: `feat(backend): implement COMP-001 PostController and RFC 9457 error handling`
 
 ---
