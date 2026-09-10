@@ -108,14 +108,14 @@ upstream:
 - **マージ対象**: `feat/bulletin-board-phase2-backend-service-api`
 
 #### タスク一覧
-- [ ] **TASK-005**: Angular プロジェクトの初期化および API クライアントサービスの実装
+- [x] **TASK-005**: Angular プロジェクトの初期化および API クライアントサービスの実装
   - **対象コンポーネント & 要件**: `COMP-004`, `REQ-010`
   - **対象ファイル**: `frontend/package.json`, `frontend/angular.json`, `frontend/src/app/models/post.model.ts`, `frontend/src/app/services/post-api.service.ts`, `frontend/src/app/services/post-api.service.spec.ts`
   - **受け入れ基準**:
-    - [ ] Angular プロジェクトが Angular Material とともに初期化・構成されていること。
-    - [ ] `CreatePostRequest`, `PostResponse`, および `PagedPostResponse` に一致する TypeScript インターフェースが定義されていること。
-    - [ ] `PostApiService` がエラー伝播を伴う `getPosts(page, size)` および `createPost(payload)` を処理すること。
-    - [ ] `HttpClientTestingModule` を用いた `PostApiService` の単体テストが通過すること。
+    - [x] Angular プロジェクトが Angular Material とともに初期化・構成されていること。
+    - [x] `CreatePostRequest`, `PostResponse`, および `PagedPostResponse` に一致する TypeScript インターフェースが定義されていること。
+    - [x] `PostApiService` がエラー伝播を伴う `getPosts(page, size)` および `createPost(payload)` を処理すること。
+    - [x] `HttpClientTestingModule` を用いた `PostApiService` の単体テストが通過すること。
   - **コミットメッセージ**: `chore(frontend): initialize Angular project and implement PostApiService`
 
 - [ ] **TASK-006**: ページネーションおよび0件表示を備えた PostFeedComponent の実装

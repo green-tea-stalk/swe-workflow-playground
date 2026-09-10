@@ -108,14 +108,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/bulletin-board-phase2-backend-service-api`
 
 #### Tasks
-- [ ] **TASK-005**: Initialize Angular project and API client service
+- [x] **TASK-005**: Initialize Angular project and API client service
   - **Component & Requirements**: `COMP-004`, `REQ-010`
   - **Target Files**: `frontend/package.json`, `frontend/angular.json`, `frontend/src/app/models/post.model.ts`, `frontend/src/app/services/post-api.service.ts`, `frontend/src/app/services/post-api.service.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Angular project initialized with Angular Material installed and configured.
-    - [ ] TypeScript interfaces matching `CreatePostRequest`, `PostResponse`, and `PagedPostResponse` defined.
-    - [ ] `PostApiService` handles `getPosts(page, size)` and `createPost(payload)` with error propagation.
-    - [ ] Unit tests for `PostApiService` with `HttpClientTestingModule` pass.
+    - [x] Angular project initialized with Angular Material installed and configured.
+    - [x] TypeScript interfaces matching `CreatePostRequest`, `PostResponse`, and `PagedPostResponse` defined.
+    - [x] `PostApiService` handles `getPosts(page, size)` and `createPost(payload)` with error propagation.
+    - [x] Unit tests for `PostApiService` with `HttpClientTestingModule` pass.
   - **Commit Message**: `chore(frontend): initialize Angular project and implement PostApiService`
 
 - [ ] **TASK-006**: Implement PostFeedComponent with pagination and empty state
