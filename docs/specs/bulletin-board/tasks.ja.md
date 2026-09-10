@@ -82,13 +82,13 @@ upstream:
 - **マージ対象**: `feat/bulletin-board-phase1-backend-persistence`
 
 #### タスク一覧
-- [ ] **TASK-003**: PostService ドメインロジックおよびバリデーションの実装
+- [x] **TASK-003**: PostService ドメインロジックおよびバリデーションの実装
   - **対象コンポーネント & 要件**: `COMP-002`, `REQ-002`, `REQ-003`, `REQ-007`
   - **対象ファイル**: `backend/src/main/java/**/PostService.java`, `backend/src/test/java/**/PostServiceTest.java`
   - **受け入れ基準**:
-    - [ ] `PostService.getPagedPosts(page, size)` が0件時に空リスト保証を伴う `PagedPostResponse` を返却すること。
-    - [ ] `PostService.createPost(command)` が非空白文字列を検証し、UTC タイムスタンプを割り当て、リポジトリの save を呼び出すこと。
-    - [ ] 単体テストにより事前条件、事後条件、および不変条件の契約が 100% 分岐網羅率で検証されていること。
+    - [x] `PostService.getPagedPosts(page, size)` が0件時に空リスト保証を伴う `PagedPostResponse` を返却すること。
+    - [x] `PostService.createPost(command)` が非空白文字列を検証し、UTC タイムスタンプを割り当て、リポジトリの save を呼び出すこと。
+    - [x] 単体テストにより事前条件、事後条件、および不変条件の契約が 100% 分岐網羅率で検証されていること。
   - **コミットメッセージ**: `feat(backend): implement COMP-002 PostService domain logic`
 
 - [ ] **TASK-004**: PostController および RFC 9457 エラーハンドラーの実装

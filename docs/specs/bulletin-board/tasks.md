@@ -82,13 +82,13 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/bulletin-board-phase1-backend-persistence`
 
 #### Tasks
-- [ ] **TASK-003**: Implement PostService domain logic and validation
+- [x] **TASK-003**: Implement PostService domain logic and validation
   - **Component & Requirements**: `COMP-002`, `REQ-002`, `REQ-003`, `REQ-007`
   - **Target Files**: `backend/src/main/java/**/PostService.java`, `backend/src/test/java/**/PostServiceTest.java`
   - **Acceptance Criteria**:
-    - [ ] `PostService.getPagedPosts(page, size)` returns `PagedPostResponse` with empty list guarantee on 0 records.
-    - [ ] `PostService.createPost(command)` validates non-blank strings, assigns UTC timestamp, and invokes repository save.
-    - [ ] Unit tests verify preconditions, postconditions, and invariant contracts with 100% branch coverage.
+    - [x] `PostService.getPagedPosts(page, size)` returns `PagedPostResponse` with empty list guarantee on 0 records.
+    - [x] `PostService.createPost(command)` validates non-blank strings, assigns UTC timestamp, and invokes repository save.
+    - [x] Unit tests verify preconditions, postconditions, and invariant contracts with 100% branch coverage.
   - **Commit Message**: `feat(backend): implement COMP-002 PostService domain logic`
 
 - [ ] **TASK-004**: Implement PostController and RFC 9457 error handler
