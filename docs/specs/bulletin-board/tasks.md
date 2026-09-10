@@ -55,13 +55,13 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `docs/bulletin-board-spec`
 
 #### Tasks
-- [ ] **TASK-001**: Initialize Micronaut backend and Flyway migration
+- [x] **TASK-001**: Initialize Micronaut backend and Flyway migration
   - **Component & Requirements**: `COMP-003`, `REQ-007`
   - **Target Files**: `backend/build.gradle.kts`, `backend/src/main/resources/application.yml`, `backend/src/main/resources/db/migration/V1__create_posts_table.sql`
   - **Acceptance Criteria**:
-    - [ ] Micronaut 4.x project configured with Java 25 LTS, Gradle Kotlin DSL, and Micronaut Data JDBC dependencies.
-    - [ ] Flyway migration script creates `posts` table with `BIGINT AUTO_INCREMENT`, UTF-8 encoding, and `idx_posts_created_at_desc` index.
-    - [ ] Local and containerized MySQL database connection configurations verified.
+    - [x] Micronaut 4.x project configured with Java 25 LTS, Gradle Kotlin DSL, and Micronaut Data JDBC dependencies.
+    - [x] Flyway migration script creates `posts` table with `BIGINT AUTO_INCREMENT`, UTF-8 encoding, and `idx_posts_created_at_desc` index.
+    - [x] Local and containerized MySQL database connection configurations verified.
   - **Commit Message**: `chore(backend): initialize Micronaut project and posts table migration`
 
 - [ ] **TASK-002**: Implement PostEntity, DTO records, and PostRepository

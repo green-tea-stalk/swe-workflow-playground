@@ -55,13 +55,13 @@ upstream:
 - **マージ対象**: `docs/bulletin-board-spec`
 
 #### タスク一覧
-- [ ] **TASK-001**: Micronaut バックエンドおよび Flyway マイグレーションの初期化
+- [x] **TASK-001**: Micronaut バックエンドおよび Flyway マイグレーションの初期化
   - **対象コンポーネント & 要件**: `COMP-003`, `REQ-007`
   - **対象ファイル**: `backend/build.gradle.kts`, `backend/src/main/resources/application.yml`, `backend/src/main/resources/db/migration/V1__create_posts_table.sql`
   - **受け入れ基準**:
-    - [ ] Micronaut 4.x プロジェクトが Java 25 LTS、Gradle Kotlin DSL、および Micronaut Data JDBC 依存関係で構成されていること。
-    - [ ] Flyway マイグレーションスクリプトが `posts` テーブルを `BIGINT AUTO_INCREMENT`、UTF-8 エンコーディング、および `idx_posts_created_at_desc` インデックス付きで作成すること。
-    - [ ] ローカルおよびコンテナ化された MySQL データベース接続設定が検証されていること。
+    - [x] Micronaut 4.x プロジェクトが Java 25 LTS、Gradle Kotlin DSL、および Micronaut Data JDBC 依存関係で構成されていること。
+    - [x] Flyway マイグレーションスクリプトが `posts` テーブルを `BIGINT AUTO_INCREMENT`、UTF-8 エンコーディング、および `idx_posts_created_at_desc` インデックス付きで作成すること。
+    - [x] ローカルおよびコンテナ化された MySQL データベース接続設定が検証されていること。
   - **コミットメッセージ**: `chore(backend): initialize Micronaut project and posts table migration`
 
 - [ ] **TASK-002**: PostEntity、DTO レコード、および PostRepository の実装
