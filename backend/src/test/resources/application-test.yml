@@ -1,8 +1,14 @@
+datasources:
+  default:
+    url: ${JDBC_URL:`jdbc:mysql://localhost:3306/bulletin_board?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${JDBC_USER:`user`}
+    password: ${JDBC_PASSWORD:`password`}
+    dialect: MYSQL
+    maximum-pool-size: 10
+
 flyway:
   datasources:
     default:
-      enabled: false
-
-datasources:
-  default:
-    enabled: false
+      enabled: true
+      clean-schema: false

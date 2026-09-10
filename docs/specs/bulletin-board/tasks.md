@@ -64,15 +64,15 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Local and containerized MySQL database connection configurations verified.
   - **Commit Message**: `chore(backend): initialize Micronaut project and posts table migration`
 
-- [ ] **TASK-002**: Implement PostEntity, DTO records, and PostRepository
+- [x] **TASK-002**: Implement PostEntity, DTO records, and PostRepository
   - **Component & Requirements**: `COMP-003`, `REQ-002`, `REQ-003`, `REQ-007`
   - **Target Files**: `backend/src/main/java/**/PostEntity.java`, `backend/src/main/java/**/dto/*.java`, `backend/src/main/java/**/PostRepository.java`, `backend/src/test/java/**/PostRepositoryTest.java`
   - **Acceptance Criteria**:
-    - [ ] `PostEntity` mapped to `posts` table with generated ID and creation timestamp.
-    - [ ] `CreatePostRequest`, `PostResponse`, and `PagedPostResponse` record DTOs defined with JSON Schema constraints.
-    - [ ] `PagedPostResponse` enforces `minItems: 0 (guaranteed [] on empty)` for `items`.
-    - [ ] `PostRepository` extends Micronaut Data `PageableRepository` with order descending by `created_at`.
-    - [ ] Integration tests verify repository persistence and reverse-chronological pagination against Testcontainers MySQL.
+    - [x] `PostEntity` mapped to `posts` table with generated ID and creation timestamp.
+    - [x] `CreatePostRequest`, `PostResponse`, and `PagedPostResponse` record DTOs defined with JSON Schema constraints.
+    - [x] `PagedPostResponse` enforces `minItems: 0 (guaranteed [] on empty)` for `items`.
+    - [x] `PostRepository` extends Micronaut Data `PageableRepository` with order descending by `created_at`.
+    - [x] Integration tests verify repository persistence and reverse-chronological pagination against Testcontainers MySQL.
   - **Commit Message**: `feat(backend): implement COMP-003 PostEntity DTOs and PostRepository`
 
 ---

@@ -64,15 +64,15 @@ upstream:
     - [x] ローカルおよびコンテナ化された MySQL データベース接続設定が検証されていること。
   - **コミットメッセージ**: `chore(backend): initialize Micronaut project and posts table migration`
 
-- [ ] **TASK-002**: PostEntity、DTO レコード、および PostRepository の実装
+- [x] **TASK-002**: PostEntity、DTO レコード、および PostRepository の実装
   - **対象コンポーネント & 要件**: `COMP-003`, `REQ-002`, `REQ-003`, `REQ-007`
   - **対象ファイル**: `backend/src/main/java/**/PostEntity.java`, `backend/src/main/java/**/dto/*.java`, `backend/src/main/java/**/PostRepository.java`, `backend/src/test/java/**/PostRepositoryTest.java`
   - **受け入れ基準**:
-    - [ ] `PostEntity` が自動採番 ID および作成日時とともに `posts` テーブルにマッピングされていること。
-    - [ ] `CreatePostRequest`, `PostResponse`, および `PagedPostResponse` の Record DTO が JSON Schema 制約に準拠して定義されていること。
-    - [ ] `PagedPostResponse` が `items` に対して `minItems: 0 (guaranteed [] on empty)`（空配列保証）を適用していること。
-    - [ ] `PostRepository` が `created_at` 降順ソートを伴う Micronaut Data `PageableRepository` を拡張していること。
-    - [ ] Testcontainers MySQL に対する統合テストで、リポジトリの永続化および時系列逆順ページネーションが検証されていること。
+    - [x] `PostEntity` が自動採番 ID および作成日時とともに `posts` テーブルにマッピングされていること。
+    - [x] `CreatePostRequest`, `PostResponse`, および `PagedPostResponse` の Record DTO が JSON Schema 制約に準拠して定義されていること。
+    - [x] `PagedPostResponse` が `items` に対して `minItems: 0 (guaranteed [] on empty)`（空配列保証）を適用していること。
+    - [x] `PostRepository` が `created_at` 降順ソートを伴う Micronaut Data `PageableRepository` を拡張していること。
+    - [x] Testcontainers MySQL に対する統合テストで、リポジトリの永続化および時系列逆順ページネーションが検証されていること。
   - **コミットメッセージ**: `feat(backend): implement COMP-003 PostEntity DTOs and PostRepository`
 
 ---
