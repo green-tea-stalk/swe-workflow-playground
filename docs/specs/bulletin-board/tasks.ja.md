@@ -136,15 +136,15 @@ upstream:
 - **マージ対象**: `feat/bulletin-board-phase3-frontend-feed`
 
 #### タスク一覧
-- [ ] **TASK-007**: 下部固定 PostFormComponent の実装およびフィード連携
+- [x] **TASK-007**: 下部固定 PostFormComponent の実装およびフィード連携
   - **対象コンポーネント & 要件**: `COMP-005`, `REQ-001`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`
   - **対象ファイル**: `frontend/src/app/components/post-form/post-form.component.ts`, `frontend/src/app/components/post-form/post-form.component.html`, `frontend/src/app/components/post-form/post-form.component.scss`, `frontend/src/app/components/post-form/post-form.component.spec.ts`
   - **受け入れ基準**:
-    - [ ] フォームコンテナがビューポートの最下部に固定配置されていること（`position: fixed; bottom: 0; width: 100%`）。
-    - [ ] リアクティブフォームが名前（1〜50）、タイトル（1〜100）、メッセージ本文（1〜4,000）、および任意メールアドレスを検証すること。
-    - [ ] バリデーション失敗時に入力値を消去せずに項目レベルのエラーメッセージを表示すること（`REQ-009`）。
-    - [ ] 投稿成功時にフォームを初期化し、フィードを0ページ目に更新し、`MatSnackBar` 通知を開くこと（`REQ-008`）。
-    - [ ] コンポーネントの単体テストによりフォーム状態、エラー表示、および送信コールバックが検証されていること。
+    - [x] フォームコンテナがビューポートの最下部に固定配置されていること（`position: fixed; bottom: 0; width: 100%`）。
+    - [x] リアクティブフォームが名前（1〜50）、タイトル（1〜100）、メッセージ本文（1〜4,000）、および任意メールアドレスを検証すること。
+    - [x] バリデーション失敗時に入力値を消去せずに項目レベルのエラーメッセージを表示すること（`REQ-009`）。
+    - [x] 投稿成功時にフォームを初期化し、フィードを0ページ目に更新し、`MatSnackBar` 通知を開くこと（`REQ-008`）。
+    - [x] コンポーネントの単体テストによりフォーム状態、エラー表示、および送信コールバックが検証されていること。
   - **コミットメッセージ**: `feat(frontend): implement COMP-005 PostFormComponent with fixed bottom layout`
 
 - [ ] **TASK-008**: フルスタック統合スモーク検証

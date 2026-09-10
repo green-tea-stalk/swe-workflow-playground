@@ -136,15 +136,15 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/bulletin-board-phase3-frontend-feed`
 
 #### Tasks
-- [ ] **TASK-007**: Implement persistent bottom PostFormComponent and feed integration
+- [x] **TASK-007**: Implement persistent bottom PostFormComponent and feed integration
   - **Component & Requirements**: `COMP-005`, `REQ-001`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`
   - **Target Files**: `frontend/src/app/components/post-form/post-form.component.ts`, `frontend/src/app/components/post-form/post-form.component.html`, `frontend/src/app/components/post-form/post-form.component.scss`, `frontend/src/app/components/post-form/post-form.component.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Form container anchored to bottom of viewport (`position: fixed; bottom: 0; width: 100%`).
-    - [ ] Reactive form validates name (1–50), title (1–100), message (1–4000), and optional email.
-    - [ ] Field-level error messages displayed without clearing input on validation failure (`REQ-009`).
-    - [ ] On successful submission: resets form, refreshes feed to page 0, and opens `MatSnackBar` notification (`REQ-008`).
-    - [ ] Component unit tests verify form states, error indicators, and submission callback.
+    - [x] Form container anchored to bottom of viewport (`position: fixed; bottom: 0; width: 100%`).
+    - [x] Reactive form validates name (1–50), title (1–100), message (1–4000), and optional email.
+    - [x] Field-level error messages displayed without clearing input on validation failure (`REQ-009`).
+    - [x] On successful submission: resets form, refreshes feed to page 0, and opens `MatSnackBar` notification (`REQ-008`).
+    - [x] Component unit tests verify form states, error indicators, and submission callback.
   - **Commit Message**: `feat(frontend): implement COMP-005 PostFormComponent with fixed bottom layout`
 
 - [ ] **TASK-008**: Full-stack integration smoke verification
