@@ -147,12 +147,12 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Component unit tests verify form states, error indicators, and submission callback.
   - **Commit Message**: `feat(frontend): implement COMP-005 PostFormComponent with fixed bottom layout`
 
-- [ ] **TASK-008**: Full-stack integration smoke verification
+- [x] **TASK-008**: Full-stack integration smoke verification
   - **Component & Requirements**: `COMP-001`, `COMP-004`, `COMP-005`, `REQ-010`
   - **Target Files**: `README.md`, integration smoke test script or workflow verification
   - **Acceptance Criteria**:
-    - [ ] End-to-end user flow verified: open application -> view empty state -> post message -> observe success notification and feed refresh with 50-item pagination.
-    - [ ] All automated unit and integration tests across backend and frontend pass cleanly.
+    - [x] End-to-end user flow verified: open application -> view empty state -> post message -> observe success notification and feed refresh with 50-item pagination.
+    - [x] All automated unit and integration tests across backend and frontend pass cleanly.
   - **Commit Message**: `test(e2e): verify end-to-end bulletin board flow and update documentation`
 
 ---

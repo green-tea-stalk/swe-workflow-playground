@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { PostFeedComponent } from './components/post-feed/post-feed.component';
+import { PostFormComponent } from './components/post-form/post-form.component';
 
 /**
  * Root application component coordinating navigation header, message feed, and persistent bottom form.
@@ -8,11 +9,21 @@ import { PostFeedComponent } from './components/post-feed/post-feed.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [MatToolbarModule, PostFeedComponent],
+  imports: [MatToolbarModule, PostFeedComponent, PostFormComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   /** Application display title. */
   readonly title = '掲示板アプリケーション';
+
+  /** Reference to the feed child component for triggering refreshes. */
+  @ViewChild(PostFeedComponent) feedComponent?: PostFeedComponent;
+
+  /**
+   * Refreshes the post feed back to page 0 upon successful post creation.
+   */
+  onPostCreated(): void {
+    this.feedComponent?.loadPage(0);
+  }
 }
