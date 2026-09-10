@@ -118,15 +118,15 @@ upstream:
     - [x] `HttpClientTestingModule` を用いた `PostApiService` の単体テストが通過すること。
   - **コミットメッセージ**: `chore(frontend): initialize Angular project and implement PostApiService`
 
-- [ ] **TASK-006**: ページネーションおよび0件表示を備えた PostFeedComponent の実装
+- [x] **TASK-006**: ページネーションおよび0件表示を備えた PostFeedComponent の実装
   - **対象コンポーネント & 要件**: `COMP-004`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-010`
   - **対象ファイル**: `frontend/src/app/components/post-feed/post-feed.component.ts`, `frontend/src/app/components/post-feed/post-feed.component.html`, `frontend/src/app/components/post-feed/post-feed.component.scss`, `frontend/src/app/components/post-feed/post-feed.component.spec.ts`
   - **受け入れ基準**:
-    - [ ] フィードが投稿者名、フォーマットされた投稿日時、タイトル、メッセージ本文、および任意の公開メールアドレスを時系列逆順で描画すること。
-    - [ ] 1ページあたり50件に設定された `MatPaginator` を統合すること。
-    - [ ] 総件数が0件の際にプレースホルダーメッセージを表示すること（`REQ-004`）。
-    - [ ] スクロール可能なフィードコンテナが、下部フォームと重ならないように動的計算スタイルで配置されていること。
-    - [ ] コンポーネントの単体テストにより描画、0件表示、およびページ遷移が検証されていること。
+    - [x] フィードが投稿者名、フォーマットされた投稿日時、タイトル、メッセージ本文、および任意の公開メールアドレスを時系列逆順で描画すること。
+    - [x] 1ページあたり50件に設定された `MatPaginator` を統合すること。
+    - [x] 総件数が0件の際にプレースホルダーメッセージを表示すること（`REQ-004`）。
+    - [x] スクロール可能なフィードコンテナが、下部フォームと重ならないように動的計算スタイルで配置されていること。
+    - [x] コンポーネントの単体テストにより描画、0件表示、およびページ遷移が検証されていること。
   - **コミットメッセージ**: `feat(frontend): implement COMP-004 PostFeedComponent with pagination`
 
 ---

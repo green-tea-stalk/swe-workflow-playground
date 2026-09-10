@@ -118,15 +118,15 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests for `PostApiService` with `HttpClientTestingModule` pass.
   - **Commit Message**: `chore(frontend): initialize Angular project and implement PostApiService`
 
-- [ ] **TASK-006**: Implement PostFeedComponent with pagination and empty state
+- [x] **TASK-006**: Implement PostFeedComponent with pagination and empty state
   - **Component & Requirements**: `COMP-004`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-010`
   - **Target Files**: `frontend/src/app/components/post-feed/post-feed.component.ts`, `frontend/src/app/components/post-feed/post-feed.component.html`, `frontend/src/app/components/post-feed/post-feed.component.scss`, `frontend/src/app/components/post-feed/post-feed.component.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Feed renders posts in reverse chronological order displaying name, formatted timestamp, title, message, and optional public email.
-    - [ ] Integrates `MatPaginator` configured for 50 items per page.
-    - [ ] Displays placeholder message when total items is zero (`REQ-004`).
-    - [ ] Scrollable feed container styled with dynamic calculation to avoid bottom form overlap.
-    - [ ] Component unit tests verify rendering, empty state, and page navigation.
+    - [x] Feed renders posts in reverse chronological order displaying name, formatted timestamp, title, message, and optional public email.
+    - [x] Integrates `MatPaginator` configured for 50 items per page.
+    - [x] Displays placeholder message when total items is zero (`REQ-004`).
+    - [x] Scrollable feed container styled with dynamic calculation to avoid bottom form overlap.
+    - [x] Component unit tests verify rendering, empty state, and page navigation.
   - **Commit Message**: `feat(frontend): implement COMP-004 PostFeedComponent with pagination`
 
 ---
