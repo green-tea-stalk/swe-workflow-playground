@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Integration test suite for {@link PostRepository} verifying database persistence contracts against MySQL 8.4.
  */
 @MicronautTest(transactional = false)
-@DisplayName("掲示板投稿リポジトリの統合テスト")
+@DisplayName("Integration test suite for PostRepository")
 class PostRepositoryTest {
 
     @Inject
@@ -49,7 +49,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    @DisplayName("新規投稿を保存すると主キーIDが自動採番され、永続化および再取得できること")
+    @DisplayName("Saving a new post should auto-generate primary key ID, persist entity, and allow retrieval")
     void testSavePostSuccessfully() {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         PostEntity unsaved = new PostEntity(
@@ -64,22 +64,22 @@ class PostRepositoryTest {
         PostEntity saved = postRepository.save(unsaved);
 
         assertAll(
-                () -> assertNotNull(saved.id(), "保存後のIDはnullでないこと"),
-                () -> assertTrue(saved.id() > 0, "保存後のIDは正の整数であること"),
-                () -> assertEquals("山田 太郎", saved.name(), "名前が一致すること"),
-                () -> assertEquals("yamada@example.com", saved.email(), "メールアドレスが一致すること"),
-                () -> assertEquals("初回投稿", saved.title(), "タイトルが一致すること"),
-                () -> assertEquals("メッセージ本文です。", saved.message(), "本文が一致すること"),
-                () -> assertEquals(now, saved.createdAt().truncatedTo(ChronoUnit.SECONDS), "作成日時が一致すること")
+                () -> assertNotNull(saved.id(), "Saved ID must not be null"),
+                () -> assertTrue(saved.id() > 0, "Saved ID must be positive"),
+                () -> assertEquals("山田 太郎", saved.name(), "Name must match"),
+                () -> assertEquals("yamada@example.com", saved.email(), "Email must match"),
+                () -> assertEquals("初回投稿", saved.title(), "Title must match"),
+                () -> assertEquals("メッセージ本文です。", saved.message(), "Message must match"),
+                () -> assertEquals(now, saved.createdAt().truncatedTo(ChronoUnit.SECONDS), "Created timestamp must match")
         );
 
         Optional<PostEntity> retrieved = postRepository.findById(saved.id());
-        assertTrue(retrieved.isPresent(), "データベースからIDで再取得できること");
+        assertTrue(retrieved.isPresent(), "Must be retrievable from database by ID");
         assertEquals(saved.id(), retrieved.get().id());
     }
 
     @Test
-    @DisplayName("メールアドレスがnullの投稿も正常に保存および再取得できること")
+    @DisplayName("Saving a post with null email should succeed and allow retrieval")
     void testSavePostWithNullEmail() {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         PostEntity unsaved = new PostEntity(
@@ -94,16 +94,16 @@ class PostRepositoryTest {
         PostEntity saved = postRepository.save(unsaved);
 
         assertAll(
-                () -> assertNotNull(saved.id(), "保存後のIDはnullでないこと"),
+                () -> assertNotNull(saved.id(), "Saved ID must not be null"),
                 () -> assertEquals("名無しさん", saved.name()),
-                () -> assertNull(saved.email(), "メールアドレスはnullであること"),
+                () -> assertNull(saved.email(), "Email must be null"),
                 () -> assertEquals("匿名タイトル", saved.title()),
                 () -> assertEquals("メールなしの投稿", saved.message())
         );
     }
 
     @Test
-    @DisplayName("SQLインジェクション構文を含む文字列がリテラルとして安全に保存および取得できること")
+    @DisplayName("Strings containing SQL injection payloads must be safely persisted and retrieved as literals")
     void testSavePostWithSqlInjectionPayload() {
         String sqlInjectionTitle = "'); DROP TABLE posts; --";
         String sqlInjectionMessage = "' OR '1'='1";
@@ -119,13 +119,13 @@ class PostRepositoryTest {
         PostEntity saved = postRepository.save(unsaved);
         Optional<PostEntity> retrieved = postRepository.findById(saved.id());
 
-        assertTrue(retrieved.isPresent(), "レコードが正常に取得できること");
-        assertEquals(sqlInjectionTitle, retrieved.get().title(), "SQLインジェクション文字列がリテラルとして保存されていること");
-        assertEquals(sqlInjectionMessage, retrieved.get().message(), "SQLインジェクション文字列がリテラルとして保存されていること");
+        assertTrue(retrieved.isPresent(), "Record must be retrieved successfully");
+        assertEquals(sqlInjectionTitle, retrieved.get().title(), "SQL injection string must be preserved as a literal");
+        assertEquals(sqlInjectionMessage, retrieved.get().message(), "SQL injection string must be preserved as a literal");
     }
 
     @Test
-    @DisplayName("投稿日時の降順（最新順）でメッセージ一覧が取得できること")
+    @DisplayName("Posts must be retrieved ordered descending by createdAt")
     void testFindAllOrderByCreatedAtDesc() {
         LocalDateTime baseTime = LocalDateTime.of(2026, 9, 11, 10, 0, 0);
 
@@ -144,11 +144,11 @@ class PostRepositoryTest {
         List<PostEntity> posts = page.getContent();
 
         assertAll(
-                () -> assertEquals(3, page.getTotalSize(), "総件数は3件であること"),
-                () -> assertEquals(3, posts.size(), "現在ページの件数は3件であること"),
-                () -> assertEquals(third.id(), posts.get(0).id(), "先頭は最新投稿（third）であること"),
-                () -> assertEquals(second.id(), posts.get(1).id(), "2番目は2番目に新しい投稿（second）であること"),
-                () -> assertEquals(first.id(), posts.get(2).id(), "末尾は最古の投稿（first）であること")
+                () -> assertEquals(3, page.getTotalSize(), "Total count must be 3"),
+                () -> assertEquals(3, posts.size(), "Current page count must be 3"),
+                () -> assertEquals(third.id(), posts.get(0).id(), "First element must be the newest post (third)"),
+                () -> assertEquals(second.id(), posts.get(1).id(), "Second element must be the second newest post (second)"),
+                () -> assertEquals(first.id(), posts.get(2).id(), "Last element must be the oldest post (first)")
         );
     }
 
@@ -160,9 +160,9 @@ class PostRepositoryTest {
         );
     }
 
-    @ParameterizedTest(name = "ページ番号: {0} でのページネーション検証（期待件数: {1}）")
+    @ParameterizedTest(name = "pagination test for page index {0} (expected size: {1})")
     @MethodSource("paginationTestCases")
-    @DisplayName("指定したページインデックスおよびサイズで正確に全件ページネーションされること")
+    @DisplayName("Posts must be correctly paginated with specified page index and size")
     void testPaginatePostsCorrectly(int pageIndex, int expectedSize, List<String> expectedTitles) {
         LocalDateTime baseTime = LocalDateTime.of(2026, 9, 11, 10, 0, 0);
         for (int i = 1; i <= 5; i++) {
@@ -177,27 +177,27 @@ class PostRepositoryTest {
         List<String> actualTitles = page.getContent().stream().map(PostEntity::title).toList();
 
         assertAll(
-                () -> assertEquals(5, page.getTotalSize(), "総件数は5件であること"),
-                () -> assertEquals(2, page.getTotalPages(), "総ページ数は2ページであること"),
-                () -> assertEquals(expectedSize, page.getContent().size(), "ページ内件数が一致すること"),
-                () -> assertEquals(expectedTitles, actualTitles, "ページ内の全タイトルおよび順序が完全に一致すること")
+                () -> assertEquals(5, page.getTotalSize(), "Total size must be 5"),
+                () -> assertEquals(2, page.getTotalPages(), "Total pages must be 2"),
+                () -> assertEquals(expectedSize, page.getContent().size(), "Page content size must match expected size"),
+                () -> assertEquals(expectedTitles, actualTitles, "Page titles and ordering must match expected")
         );
     }
 
     @Test
-    @DisplayName("レコードが0件の場合、nullではなく空のコレクション [] を保証して返却すること（契約防御）")
+    @DisplayName("Defensive contract: should guarantee empty collection [] instead of null when no records exist")
     void testFindAllGuaranteesEmptyListWhenNoRecords() {
         Pageable pageable = Pageable.from(0, 50, Sort.of(Sort.Order.desc("createdAt")));
         Page<PostEntity> page = postRepository.findAll(pageable);
 
-        assertNotNull(page, "ページ結果はnullであってはならない");
-        assertNotNull(page.getContent(), "コンテンツリストは決してnullであってはならない");
-        assertTrue(page.getContent().isEmpty(), "0件の場合は空のコレクション [] でなければならない");
-        assertEquals(0, page.getTotalSize(), "総レコード数は0でなければならない");
+        assertNotNull(page, "Page result must not be null");
+        assertNotNull(page.getContent(), "Content list must not be null");
+        assertTrue(page.getContent().isEmpty(), "Must be empty collection [] when zero records exist");
+        assertEquals(0, page.getTotalSize(), "Total record count must be 0");
     }
 
     @Test
-    @DisplayName("事前条件違反: 必須項目（名前）がnullの投稿を保存しようとした場合、例外が発生すること")
+    @DisplayName("Precondition violation: saving a post with null name must throw DataAccessException")
     void testSavePostWithNullNameThrowsException() {
         PostEntity invalid = new PostEntity(
                 null,
@@ -209,6 +209,6 @@ class PostRepositoryTest {
         );
 
         assertThrows(DataAccessException.class, () -> postRepository.save(invalid),
-                "NOT NULL制約違反によりDataAccessExceptionが発生すること");
+                "DataAccessException must be thrown due to NOT NULL constraint violation");
     }
 }

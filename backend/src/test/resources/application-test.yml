@@ -1,3 +1,7 @@
+micronaut:
+  server:
+    port: -1
+
 datasources:
   default:
     url: ${JDBC_URL:`jdbc:mysql://localhost:3306/bulletin_board?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC`}

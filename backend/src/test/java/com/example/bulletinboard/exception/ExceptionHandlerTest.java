@@ -25,11 +25,11 @@ import static org.mockito.Mockito.when;
 /**
  * Unit test suite for custom exception handlers verifying RFC 9457 Problem Details envelopes.
  */
-@DisplayName("RFC 9457 例外ハンドラーの単体テスト")
+@DisplayName("Unit test suite for RFC 9457 exception handlers")
 class ExceptionHandlerTest {
 
     @Test
-    @DisplayName("GlobalExceptionHandler: 予期せぬ例外を捕捉し、スタックトレースを漏洩させずに500 ProblemDetailsを返却すること")
+    @DisplayName("GlobalExceptionHandler: should catch unexpected exceptions and return 500 ProblemDetails without leaking stack trace")
     void testGlobalExceptionHandler() {
         GlobalExceptionHandler handler = new GlobalExceptionHandler();
         HttpRequest<?> request = HttpRequest.GET("/api/posts");
@@ -52,7 +52,7 @@ class ExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("IllegalArgumentExceptionHandler: 不正引数例外を捕捉し、400 ProblemDetailsを返却すること")
+    @DisplayName("IllegalArgumentExceptionHandler: should catch illegal argument exceptions and return 400 ProblemDetails")
     void testIllegalArgumentExceptionHandler() {
         IllegalArgumentExceptionHandler handler = new IllegalArgumentExceptionHandler();
         HttpRequest<?> request = HttpRequest.POST("/api/posts", "{}");
@@ -75,7 +75,7 @@ class ExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("ValidationExceptionHandler: プロパティパスのノード名が空の場合、パス文字列表現をフォールバックとして使用すること")
+    @DisplayName("ValidationExceptionHandler: should fallback to path string representation when property path node name is blank")
     @SuppressWarnings("unchecked")
     void testValidationExceptionHandlerFallbackPropertyPath() {
         ValidationExceptionHandler handler = new ValidationExceptionHandler();
@@ -103,7 +103,7 @@ class ExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("ドメイン例外階層: PostValidationException および PostStorageException が正しくインスタンス化されること")
+    @DisplayName("Domain exception hierarchy: PostValidationException and PostStorageException should be instantiated correctly")
     void testDomainExceptionHierarchy() {
         PostValidationException validationEx = new PostValidationException("Validation failed");
         assertEquals("Validation failed", validationEx.getMessage());

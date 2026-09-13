@@ -6,7 +6,7 @@ import { App } from './app';
 import { PostFeedComponent } from './components/post-feed/post-feed.component';
 import { PostFormComponent } from './components/post-form/post-form.component';
 
-describe('App (アプリケーションルート統合テスト)', () => {
+describe('App (Application Root Integration)', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
@@ -18,13 +18,13 @@ describe('App (アプリケーションルート統合テスト)', () => {
     }).compileComponents();
   });
 
-  it('アプリケーションルートコンポーネントが正常にインスタンス化されること', () => {
+  it('should instantiate application root component successfully', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  it('ツールバーに掲示板タイトルが表示されること', async () => {
+  it('should display bulletin board title in toolbar', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
@@ -32,7 +32,7 @@ describe('App (アプリケーションルート統合テスト)', () => {
     expect(compiled.querySelector('.app-toolbar')?.textContent).toContain('掲示板アプリケーション');
   });
 
-  it('フィードコンポーネントおよび画面下部固定フォームが正しく組み込まれていること', async () => {
+  it('should correctly include feed component and fixed bottom form component', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
@@ -41,7 +41,7 @@ describe('App (アプリケーションルート統合テスト)', () => {
     expect(compiled.querySelector('app-post-form')).not.toBeNull();
   });
 
-  it('onPostCreated()が呼び出された際、フィードコンポーネントのloadPage(0)を呼び出して再読み込みすること', () => {
+  it('should call loadPage(0) on feed component when onPostCreated() is invoked', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     fixture.detectChanges();

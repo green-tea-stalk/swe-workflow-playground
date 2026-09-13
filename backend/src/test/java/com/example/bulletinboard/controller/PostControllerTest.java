@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Integration test suite verifying REST API controller contracts, status codes, headers, and RFC 9457 error envelopes.
  */
 @MicronautTest(transactional = false)
-@DisplayName("掲示板投稿RESTコントローラーの統合テスト")
+@DisplayName("Integration tests for PostController REST endpoints")
 class PostControllerTest {
 
     @Inject
@@ -55,7 +55,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/posts: デフォルトパラメータ(page=0, size=50)で200 OKおよび空リスト保証を返却すること")
+    @DisplayName("GET /api/posts: should return 200 OK and guaranteed empty list with default parameters")
     void testListPostsDefaultReturnsEmptyPage() {
         HttpRequest<?> request = HttpRequest.GET("/api/posts");
         HttpResponse<PagedPostResponse> response = client.exchange(request, PagedPostResponse.class);
@@ -63,8 +63,8 @@ class PostControllerTest {
         assertEquals(HttpStatus.OK, response.getStatus());
         PagedPostResponse body = response.body();
         assertNotNull(body);
-        assertNotNull(body.items(), "0件時でもitemsはnullであってはならない");
-        assertTrue(body.items().isEmpty(), "0件時のitemsは空リスト[]でなければならない");
+        assertNotNull(body.items(), "items must not be null when 0 posts exist");
+        assertTrue(body.items().isEmpty(), "items must be empty list [] when 0 posts exist");
         assertEquals(0, body.page());
         assertEquals(50, body.size());
         assertEquals(0L, body.totalItems());
@@ -72,7 +72,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/posts: 正常なリクエストで201 Created、Locationヘッダー、および永続化データを返却すること")
+    @DisplayName("POST /api/posts: should return 201 Created, Location header, and persisted entity on valid request")
     void testCreatePostSuccessfully() {
         CreatePostRequest requestPayload = new CreatePostRequest(
                 "  Alice  ",
@@ -86,26 +86,26 @@ class PostControllerTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatus());
         String location = response.header("Location");
-        assertNotNull(location, "Locationヘッダーが存在しなければならない");
+        assertNotNull(location, "Location header must be present");
 
         PostResponse body = response.body();
         assertNotNull(body);
         assertNotNull(body.id());
         assertEquals("/api/posts/" + body.id(), location);
-        assertEquals("Alice", body.name(), "名前はトリムされていなければならない");
-        assertEquals("alice@example.com", body.email(), "メールアドレスはトリムされていなければならない");
-        assertEquals("First Post", body.title(), "タイトルはトリムされていなければならない");
-        assertEquals("Hello World!", body.message(), "メッセージはトリムされていなければならない");
-        assertNotNull(body.createdAt(), "ISO 8601 UTCタイムスタンプが付与されていなければならない");
+        assertEquals("Alice", body.name(), "Name must be trimmed");
+        assertEquals("alice@example.com", body.email(), "Email must be trimmed");
+        assertEquals("First Post", body.title(), "Title must be trimmed");
+        assertEquals("Hello World!", body.message(), "Message must be trimmed");
+        assertNotNull(body.createdAt(), "ISO 8601 UTC timestamp must be populated");
 
-        // 後続のGETでフィードに反映されていることを確認
+        // Verify newly created post is reflected in subsequent GET feed
         HttpResponse<PagedPostResponse> feedResponse = client.exchange(HttpRequest.GET("/api/posts"), PagedPostResponse.class);
         assertEquals(1, feedResponse.body().items().size());
         assertEquals(body.id(), feedResponse.body().items().get(0).id());
     }
 
     @Test
-    @DisplayName("POST /api/posts: 省略可能なメールアドレスが未指定の場合、nullのまま201 Createdが返却されること")
+    @DisplayName("POST /api/posts: should return 201 Created retaining null email when email is omitted")
     void testCreatePostWithNullEmail() {
         CreatePostRequest requestPayload = new CreatePostRequest(
                 "Bob",
@@ -120,10 +120,10 @@ class PostControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatus());
         PostResponse body = response.body();
         assertNotNull(body);
-        assertNull(body.email(), "未指定のメールアドレスはnullでなければならない");
+        assertNull(body.email(), "Omitted email must remain null");
     }
 
-    @ParameterizedTest(name = "不正な必須フィールド（空白・空文字）: name=''{0}'', title=''{1}'', message=''{2}''")
+    @ParameterizedTest(name = "Invalid blank required field: name=''{0}'', title=''{1}'', message=''{2}''")
     @CsvSource({
             "'   ', 'Valid Title', 'Valid Message'",
             "'', 'Valid Title', 'Valid Message'",
@@ -132,7 +132,7 @@ class PostControllerTest {
             "'Valid Name', 'Valid Title', '   '",
             "'Valid Name', 'Valid Title', ''"
     })
-    @DisplayName("POST /api/posts: 必須フィールドが空白または空文字の場合、400 Bad RequestとRFC 9457 ProblemDetailsを返却すること")
+    @DisplayName("POST /api/posts: should return 400 Bad Request with RFC 9457 ProblemDetails when required fields are blank")
     void testCreatePostRejectsBlankFields(String name, String title, String message) {
         CreatePostRequest requestPayload = new CreatePostRequest(name, null, title, message);
         HttpRequest<?> request = HttpRequest.POST("/api/posts", requestPayload);
@@ -146,19 +146,19 @@ class PostControllerTest {
         assertEquals("application/problem+json", ex.getResponse().getContentType().map(Object::toString).orElse(""));
 
         Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
-        assertTrue(problemOpt.isPresent(), "RFC 9457 ProblemDetails ボディが存在しなければならない");
+        assertTrue(problemOpt.isPresent(), "RFC 9457 ProblemDetails body must be present");
 
         ProblemDetails problem = problemOpt.get();
         assertEquals("https://example.com/errors/validation-failed", problem.type());
         assertEquals("Validation Failed", problem.title());
         assertEquals(400, problem.status());
         assertEquals("/api/posts", problem.instance());
-        assertNotNull(problem.invalidParams(), "invalid_params はnullであってはならない");
-        assertTrue(!problem.invalidParams().isEmpty(), "invalid_params にバリデーション違反項目が含まれていなければならない");
+        assertNotNull(problem.invalidParams(), "invalid_params must not be null");
+        assertTrue(!problem.invalidParams().isEmpty(), "invalid_params must contain validation violation entries");
     }
 
     @Test
-    @DisplayName("POST /api/posts: 不正な形式のメールアドレスの場合、400 Bad Requestとemailの違反情報を返却すること")
+    @DisplayName("POST /api/posts: should return 400 Bad Request with email violation when email format is invalid")
     void testCreatePostRejectsInvalidEmailFormat() {
         CreatePostRequest requestPayload = new CreatePostRequest(
                 "Alice",
@@ -180,10 +180,10 @@ class PostControllerTest {
         ProblemDetails problem = problemOpt.get();
         boolean hasEmailViolation = problem.invalidParams().stream()
                 .anyMatch(param -> param.name().contains("email"));
-        assertTrue(hasEmailViolation, "invalid_params に email に関する違反が含まれていなければならない");
+        assertTrue(hasEmailViolation, "invalid_params must include violation for email");
     }
 
-    @ParameterizedTest(name = "不正なページネーション引数: page={0}, size={1}")
+    @ParameterizedTest(name = "Invalid pagination argument: page={0}, size={1}")
     @CsvSource({
             "-1, 50",
             "0, 0",
@@ -191,7 +191,7 @@ class PostControllerTest {
             "0, 51",
             "0, 100"
     })
-    @DisplayName("GET /api/posts: 範囲外のページ番号またはサイズが指定された場合、400 Bad RequestとRFC 9457 ProblemDetailsを返却すること")
+    @DisplayName("GET /api/posts: should return 400 Bad Request with RFC 9457 ProblemDetails when page or size is out of bounds")
     void testListPostsRejectsInvalidPagination(int page, int size) {
         HttpRequest<?> request = HttpRequest.GET("/api/posts?page=" + page + "&size=" + size);
 
@@ -209,13 +209,13 @@ class PostControllerTest {
         assertEquals(400, problem.status());
     }
 
-    @ParameterizedTest(name = "上限長超過フィールド: name長={0}, title長={1}, message長={2}")
+    @ParameterizedTest(name = "Exceeded max length field: nameLen={0}, titleLen={1}, messageLen={2}")
     @CsvSource({
             "51, 10, 10",
             "10, 101, 10",
             "10, 10, 4001"
     })
-    @DisplayName("POST /api/posts: 必須フィールドの最大長を超過した場合、400 Bad Requestと違反情報を返却すること")
+    @DisplayName("POST /api/posts: should return 400 Bad Request when required field exceeds maximum allowed length")
     void testCreatePostRejectsExceededLength(int nameLen, int titleLen, int messageLen) {
         String name = "A".repeat(nameLen);
         String title = "T".repeat(titleLen);
@@ -236,7 +236,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/posts: 指定したpageおよびsizeパラメータに従ってページング結果が返却されること")
+    @DisplayName("GET /api/posts: should return paginated posts matching custom page and size parameters")
     void testListPostsWithCustomPagination() {
         for (int i = 1; i <= 3; i++) {
             postRepository.save(new PostEntity(null, "User" + i, null, "Title" + i, "Msg" + i, LocalDateTime.now().minusMinutes(i)));
@@ -256,7 +256,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("PostControllerコンストラクタ: nullのPostServiceが渡された場合、NullPointerExceptionが発生すること")
+    @DisplayName("PostController constructor: should throw NullPointerException when PostService is null")
     void testControllerRejectsNullService() {
         assertThrows(NullPointerException.class, () -> new PostController(null));
     }

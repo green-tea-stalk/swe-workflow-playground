@@ -4,7 +4,7 @@ import { PostFeedComponent } from './post-feed.component';
 import { PostApiService } from '../../services/post-api.service';
 import { PagedPostResponse } from '../../models/post.model';
 
-describe('PostFeedComponent (投稿一覧フィードコンポーネントテスト)', () => {
+describe('PostFeedComponent (Post Feed Component Unit)', () => {
   let component: PostFeedComponent;
   let fixture: ComponentFixture<PostFeedComponent>;
   let mockPostApiService: { getPosts: ReturnType<typeof vi.fn> };
@@ -58,7 +58,7 @@ describe('PostFeedComponent (投稿一覧フィードコンポーネントテス
     component = fixture.componentInstance;
   });
 
-  it('コンポーネント初期化時(ngOnInit)に第0ページ(50件)の取得を呼び出すこと', () => {
+  it('should fetch page 0 (size 50) on component initialization (ngOnInit)', () => {
     fixture.detectChanges();
 
     expect(mockPostApiService.getPosts).toHaveBeenCalledWith(0, 50);
@@ -67,28 +67,28 @@ describe('PostFeedComponent (投稿一覧フィードコンポーネントテス
     expect(component.pageIndex()).toBe(0);
   });
 
-  it('投稿が存在する場合、投稿一覧カードが正しく描画されること', () => {
+  it('should render post cards correctly when posts exist', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
     const cards = compiled.querySelectorAll('.post-card');
     expect(cards.length).toBe(2);
 
-    // 1件目のカード（メールあり）
+    // First card (with email)
     const firstCard = cards[0];
     expect(firstCard.querySelector('.post-title')?.textContent).toContain('Latest Post Title');
     expect(firstCard.querySelector('.post-name')?.textContent).toContain('Alice');
     expect(firstCard.querySelector('.post-email')?.textContent).toContain('alice@example.com');
     expect(firstCard.querySelector('.post-message')?.textContent).toContain('This is the newest message content.');
 
-    // 2件目のカード（メールなし: 要素が描画されないこと）
+    // Second card (without email: element should not be rendered)
     const secondCard = cards[1];
     expect(secondCard.querySelector('.post-title')?.textContent).toContain('Second Post Title');
     expect(secondCard.querySelector('.post-name')?.textContent).toContain('Bob');
     expect(secondCard.querySelector('.post-email')).toBeNull();
   });
 
-  it('レコードが0件の場合、プレースホルダーメッセージが表示されクラッシュしないこと', () => {
+  it('should display placeholder message without crashing when zero records exist', () => {
     mockPostApiService.getPosts.mockReturnValue(of(emptyResponse));
     fixture.detectChanges();
 
@@ -99,7 +99,7 @@ describe('PostFeedComponent (投稿一覧フィードコンポーネントテス
     expect(compiled.querySelectorAll('.post-card').length).toBe(0);
   });
 
-  it('ページネーションイベント発生時、指定されたページインデックスでAPIを再呼び出しすること', () => {
+  it('should re-fetch API with specified page index upon pagination event', () => {
     fixture.detectChanges();
 
     const page1Response: PagedPostResponse = {
@@ -128,7 +128,7 @@ describe('PostFeedComponent (投稿一覧フィードコンポーネントテス
     expect(component.posts().length).toBe(1);
   });
 
-  it('refresh()呼び出し時、現在のページインデックスで再読込を行うこと', () => {
+  it('should reload with current page index when refresh() is called', () => {
     fixture.detectChanges();
     mockPostApiService.getPosts.mockClear();
     mockPostApiService.getPosts.mockReturnValue(of(samplePosts));
@@ -138,8 +138,8 @@ describe('PostFeedComponent (投稿一覧フィードコンポーネントテス
     expect(mockPostApiService.getPosts).toHaveBeenCalledWith(0, 50);
   });
 
-  it('APIエラー時、エラーメッセージが表示されローディング状態が解除されること', () => {
-    mockPostApiService.getPosts.mockReturnValue(throwError(() => new Error('ネットワークエラー')));
+  it('should display error message and clear loading state on API failure', () => {
+    mockPostApiService.getPosts.mockReturnValue(throwError(() => new Error('Network error')));
     fixture.detectChanges();
 
     expect(component.isLoading()).toBe(false);

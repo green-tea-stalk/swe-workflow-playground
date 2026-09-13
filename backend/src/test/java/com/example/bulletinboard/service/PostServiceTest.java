@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
  * Unit test suite for PostService verifying domain validation, pagination, and persistence contracts.
  */
 @ExtendWith(MockitoExtension.class)
-@DisplayName("掲示板投稿ドメインサービスの単体テスト")
+@DisplayName("Unit test suite for PostService")
 class PostServiceTest {
 
     private static final Instant FIXED_INSTANT = Instant.parse("2026-09-11T10:15:30Z");
@@ -58,7 +58,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("正常な投稿リクエストの場合、文字列をトリムしUTC日時を付与して永続化し、PostResponseを返却すること")
+    @DisplayName("Valid post request: should trim strings, set UTC timestamp, persist entity, and return PostResponse")
     void testCreatePostSuccessfully() {
         CreatePostRequest request = new CreatePostRequest(
                 "  Alice  ",
@@ -99,9 +99,9 @@ class PostServiceTest {
         assertEquals(EXPECTED_NOW, saved.createdAt());
     }
 
-    @ParameterizedTest(name = "空白メールアドレス: ''{0}'' が null に正規化されること")
+    @ParameterizedTest(name = "blank email: ''{0}'' should normalize to null")
     @ValueSource(strings = {"", "   ", "\t\n"})
-    @DisplayName("空文字または空白のみのメールアドレスが渡された場合、nullに正規化して保存すること")
+    @DisplayName("Blank or whitespace-only email should normalize to null before persistence")
     void testCreatePostNormalizesBlankEmailToNull(String blankEmail) {
         CreatePostRequest request = new CreatePostRequest(
                 "Bob",
@@ -117,7 +117,7 @@ class PostServiceTest {
 
         PostResponse response = postService.createPost(request);
 
-        assertNull(response.email(), "空白メールはnullに正規化されなければならない");
+        assertNull(response.email(), "Blank email must be normalized to null");
 
         ArgumentCaptor<PostEntity> captor = ArgumentCaptor.forClass(PostEntity.class);
         verify(postRepository).save(captor.capture());
@@ -125,7 +125,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("メールアドレスがnullの場合、nullのまま安全に保存されること")
+    @DisplayName("Null email: should safely persist null email")
     void testCreatePostWithNullEmail() {
         CreatePostRequest request = new CreatePostRequest(
                 "Charlie",
@@ -145,18 +145,18 @@ class PostServiceTest {
 
         ArgumentCaptor<PostEntity> captor = ArgumentCaptor.forClass(PostEntity.class);
         verify(postRepository).save(captor.capture());
-        assertNull(captor.getValue().email(), "リポジトリに渡されるエンティティのメールもnullでなければならない");
+        assertNull(captor.getValue().email(), "Entity email passed to repository must also be null");
     }
 
     @Test
-    @DisplayName("事前条件違反: リクエストオブジェクトがnullの場合、IllegalArgumentExceptionが発生すること")
+    @DisplayName("Precondition violation: null request object must throw IllegalArgumentException")
     void testCreatePostRejectsNullCommand() {
         assertThrows(IllegalArgumentException.class, () -> postService.createPost(null),
-                "nullのリクエストは拒否されなければならない");
+                "Null request must be rejected");
         verify(postRepository, never()).save(any());
     }
 
-    @ParameterizedTest(name = "不正な必須フィールド（空白・空文字・null）: name=''{0}'', title=''{1}'', message=''{2}''")
+    @ParameterizedTest(name = "invalid required field (blank/empty/null): name=''{0}'', title=''{1}'', message=''{2}''")
     @CsvSource(value = {
             "'   ', 'Valid Title', 'Valid Message'",
             "'', 'Valid Title', 'Valid Message'",
@@ -168,17 +168,17 @@ class PostServiceTest {
             "'Valid Name', 'Valid Title', ''",
             "'Valid Name', 'Valid Title', NIL"
     }, nullValues = {"NIL"})
-    @DisplayName("事前条件違反: 必須フィールドが空白文字・空文字・nullの場合、IllegalArgumentExceptionが発生すること")
+    @DisplayName("Precondition violation: blank, empty, or null required fields must throw IllegalArgumentException")
     void testCreatePostRejectsBlankFields(String name, String title, String message) {
         CreatePostRequest request = new CreatePostRequest(name, null, title, message);
 
         assertThrows(IllegalArgumentException.class, () -> postService.createPost(request),
-                "空白・空文字・nullの必須項目は事前条件違反として拒否されなければならない");
+                "Blank, empty, or null required fields must be rejected as precondition violation");
         verify(postRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("正常なページネーションリクエストの場合、降順ソートでPageableを渡し、PagedPostResponseを返却すること")
+    @DisplayName("Valid pagination request: should pass Pageable sorted descending and return PagedPostResponse")
     void testGetPagedPostsSuccessfully() {
         LocalDateTime now = LocalDateTime.now();
         List<PostEntity> entities = List.of(
@@ -212,7 +212,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("レコードが0件の場合、nullではなく空リスト [] を保証した PagedPostResponse を返却すること")
+    @DisplayName("Defensive contract: should guarantee empty list [] instead of null in PagedPostResponse when zero records exist")
     void testGetPagedPostsEmptyGuaranteesEmptyList() {
         Page<PostEntity> emptyPage = Page.of(List.of(), Pageable.from(0, 50), 0L);
         when(postRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
@@ -220,13 +220,13 @@ class PostServiceTest {
         PagedPostResponse response = postService.getPagedPosts(0, 50);
 
         assertNotNull(response);
-        assertNotNull(response.items(), "items は決してnullであってはならない");
-        assertTrue(response.items().isEmpty(), "0件の場合は空リストでなければならない");
+        assertNotNull(response.items(), "items must never be null");
+        assertTrue(response.items().isEmpty(), "items must be empty list when zero records exist");
         assertEquals(0L, response.totalItems());
         assertEquals(0, response.totalPages());
     }
 
-    @ParameterizedTest(name = "不正なページネーション引数: page={0}, size={1}")
+    @ParameterizedTest(name = "invalid pagination arguments: page={0}, size={1}")
     @CsvSource({
             "-1, 50",
             "0, 0",
@@ -234,22 +234,22 @@ class PostServiceTest {
             "0, 51",
             "0, 100"
     })
-    @DisplayName("事前条件違反: 負のページ番号や範囲外（1〜50以外）のサイズが指定された場合、IllegalArgumentExceptionが発生すること")
+    @DisplayName("Precondition violation: negative page or out-of-range size (not 1-50) must throw IllegalArgumentException")
     void testGetPagedPostsRejectsInvalidPagination(int page, int size) {
         assertThrows(IllegalArgumentException.class, () -> postService.getPagedPosts(page, size),
-                "範囲外のページネーション引数は拒否されなければならない");
+                "Out-of-range pagination arguments must be rejected");
         verify(postRepository, never()).findAll(any(Pageable.class));
     }
 
     @Test
-    @DisplayName("事前条件違反: nullの依存オブジェクトをコンストラクタに渡した場合、NullPointerExceptionが発生すること")
+    @DisplayName("Precondition violation: passing null dependencies to constructor must throw NullPointerException")
     void testConstructorRejectsNullDependencies() {
         assertThrows(NullPointerException.class, () -> new PostService(null));
         assertThrows(NullPointerException.class, () -> new PostService(postRepository, null));
     }
 
     @Test
-    @DisplayName("デフォルトコンストラクタの初期化: システムUTCクロックで正常に初期化されること")
+    @DisplayName("Default constructor: should instantiate successfully with system UTC clock")
     void testDefaultConstructorInstantiates() {
         PostService defaultService = new PostService(postRepository);
         assertNotNull(defaultService);

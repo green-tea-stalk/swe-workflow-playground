@@ -4,7 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { PostApiService } from './post-api.service';
 import { CreatePostRequest, PagedPostResponse, PostResponse, ProblemDetails } from '../models/post.model';
 
-describe('PostApiService (掲示板API通信サービステスト)', () => {
+describe('PostApiService (Bulletin Board API Service Unit)', () => {
   let service: PostApiService;
   let httpMock: HttpTestingController;
 
@@ -24,7 +24,7 @@ describe('PostApiService (掲示板API通信サービステスト)', () => {
     httpMock.verify();
   });
 
-  it('デフォルト引数(page=0, size=50)でGET /api/postsへリクエストを送信すること', () => {
+  it('should send GET /api/posts request with default parameters (page=0, size=50)', () => {
     const mockResponse: PagedPostResponse = {
       items: [
         {
@@ -53,7 +53,7 @@ describe('PostApiService (掲示板API通信サービステスト)', () => {
     req.flush(mockResponse);
   });
 
-  it('指定したカスタムパラメータ(page=2, size=20)でクエリパラメータが正しく付与されること', () => {
+  it('should append custom query parameters correctly (page=2, size=20)', () => {
     service.getPosts(2, 20).subscribe();
 
     const req = httpMock.expectOne('/api/posts?page=2&size=20');
@@ -61,7 +61,7 @@ describe('PostApiService (掲示板API通信サービステスト)', () => {
     req.flush({ items: [], page: 2, size: 20, total_items: 0, total_pages: 0 });
   });
 
-  it('レコード0件の際、空配列 [] を安全に受信できること', () => {
+  it('should safely receive empty array [] when zero records exist', () => {
     const emptyResponse: PagedPostResponse = {
       items: [],
       page: 0,
@@ -80,7 +80,7 @@ describe('PostApiService (掲示板API通信サービステスト)', () => {
     req.flush(emptyResponse);
   });
 
-  it('createPost: 正常なペイロードをPOST /api/postsへ送信し、登録されたPostResponseを受信すること', () => {
+  it('createPost: should send valid payload to POST /api/posts and receive created PostResponse', () => {
     const requestPayload: CreatePostRequest = {
       name: 'Bob',
       email: 'bob@example.com',
@@ -109,7 +109,7 @@ describe('PostApiService (掲示板API通信サービステスト)', () => {
     req.flush(mockCreatedResponse, { status: 201, statusText: 'Created' });
   });
 
-  it('createPost: バリデーション失敗時に400 Bad RequestおよびRFC 9457エラーを受信すること', () => {
+  it('createPost: should receive 400 Bad Request and RFC 9457 ProblemDetails upon validation failure', () => {
     const invalidPayload: CreatePostRequest = {
       name: '',
       title: '',
@@ -128,7 +128,7 @@ describe('PostApiService (掲示板API通信サービステスト)', () => {
     };
 
     service.createPost(invalidPayload).subscribe({
-      next: () => expect.fail('エラーレスポンス時はエラーコールバックが呼ばれなければならない'),
+      next: () => expect.fail('Error callback should have been called for error response'),
       error: (error) => {
         expect(error.status).toBe(400);
         expect(error.error).toEqual(problemDetails);
