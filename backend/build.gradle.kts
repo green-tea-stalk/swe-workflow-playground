@@ -41,7 +41,7 @@ dependencies {
 }
 
 application {
-    mainClass = "com.example.Application"
+    mainClass = "com.example.bulletinboard.Application"
 }
 
 java {
