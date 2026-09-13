@@ -35,9 +35,7 @@ export class PostApiService {
    * @returns an Observable emitting the {@link PagedPostResponse}, or emitting {@link HttpErrorResponse} on failure
    */
   getPosts(page: number = 0, size: number = 50): Observable<PagedPostResponse> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
 
     return this.http.get<PagedPostResponse>(this.baseUrl, {
       params,
@@ -57,4 +55,3 @@ export class PostApiService {
     });
   }
 }
-

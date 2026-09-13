@@ -153,11 +153,14 @@ const server = http.createServer((req, res) => {
       (proxyRes) => {
         res.writeHead(proxyRes.statusCode || 500, proxyRes.headers);
         proxyRes.pipe(res, { end: true });
-      }
+      },
     );
 
     proxyReq.on('error', (err) => {
-      console.error(`[i18n-server] Proxy connection error (${BACKEND_HOST}:${BACKEND_PORT}):`, err.message);
+      console.error(
+        `[i18n-server] Proxy connection error (${BACKEND_HOST}:${BACKEND_PORT}):`,
+        err.message,
+      );
       if (!res.headersSent) {
         res.writeHead(502, {
           ...SECURITY_HEADERS,
@@ -312,5 +315,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`[i18n-server] Serving multi-locale distribution at http://localhost:${PORT}/ (ja & en)`);
+  console.log(
+    `[i18n-server] Serving multi-locale distribution at http://localhost:${PORT}/ (ja & en)`,
+  );
 });

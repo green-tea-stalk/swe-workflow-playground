@@ -189,16 +189,16 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Intentionally introducing a style violation causes `./gradlew spotlessCheck` to fail with exit code `1`.
   - **Commit Message**: `style(backend): configure spotless with palantir java format and format codebase`
 
-- [ ] **TASK-011**: Configure Prettier formatting and lifecycle scripts for frontend
+- [x] **TASK-011**: Configure Prettier formatting and lifecycle scripts for frontend
   - **Component & Requirements**: `COMP-007`, `REQ-013`, `REQ-016`
   - **Target Files**: `frontend/.prettierrc`, `frontend/.prettierignore`, `frontend/package.json`, `frontend/src/**/*`
   - **Acceptance Criteria**:
-    - [ ] `frontend/.prettierrc` created with `tabWidth: 2`, `singleQuote: true`, `semi: true`, `trailingComma: "all"`, `printWidth: 100`.
-    - [ ] `frontend/.prettierignore` created ignoring `dist/`, `.angular/`, `node_modules/`, `coverage/`.
-    - [ ] `format:check` (`prettier --check .`) and `format` (`prettier --write .`) added to `frontend/package.json` scripts.
-    - [ ] Initial formatting executed via `npm run format` across all TypeScript, HTML, SCSS, and JSON files in `frontend/`.
-    - [ ] Execution of `npm run format:check` passes with exit code `0`.
-    - [ ] Intentionally introducing a formatting discrepancy causes `npm run format:check` to fail with exit code `1`.
+    - [x] `frontend/.prettierrc` created with `tabWidth: 2`, `singleQuote: true`, `semi: true`, `trailingComma: "all"`, `printWidth: 100`.
+    - [x] `frontend/.prettierignore` created ignoring `dist/`, `.angular/`, `node_modules/`, `coverage/`.
+    - [x] `format:check` (`prettier --check .`) and `format` (`prettier --write .`) added to `frontend/package.json` scripts.
+    - [x] Initial formatting executed via `npm run format` across all TypeScript, HTML, SCSS, and JSON files in `frontend/`.
+    - [x] Execution of `npm run format:check` passes with exit code `0`.
+    - [x] Intentionally introducing a formatting discrepancy causes `npm run format:check` to fail with exit code `1`.
   - **Commit Message**: `style(frontend): configure prettier rules and apply in-place formatting`
 
 ---

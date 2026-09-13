@@ -4,7 +4,12 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { PostApiService } from './post-api.service';
 import { LocaleService, type SupportedLocale } from './locale.service';
-import { CreatePostRequest, PagedPostResponse, PostResponse, ProblemDetails } from '../models/post.model';
+import {
+  CreatePostRequest,
+  PagedPostResponse,
+  PostResponse,
+  ProblemDetails,
+} from '../models/post.model';
 
 describe('PostApiService (Bulletin Board API Service Unit)', () => {
   let service: PostApiService;
@@ -193,9 +198,7 @@ describe('PostApiService (Bulletin Board API Service Unit)', () => {
       status: 400,
       detail: 'Input payload failed validation constraints.',
       instance: '/api/posts',
-      invalid_params: [
-        { name: 'name', reason: 'Name must not be blank' },
-      ],
+      invalid_params: [{ name: 'name', reason: 'Name must not be blank' }],
     };
 
     service.createPost(invalidPayload).subscribe({
@@ -214,44 +217,44 @@ describe('PostApiService (Bulletin Board API Service Unit)', () => {
   });
 
   describe('Accept-Language header injection', () => {
-    it.each([
-      { locale: 'en' as const },
-      { locale: 'ja' as const },
-    ])('should attach "Accept-Language: $locale" header to GET /api/posts calls', ({ locale }) => {
-      mockLocaleService.getActiveLocale.mockReturnValue(locale);
+    it.each([{ locale: 'en' as const }, { locale: 'ja' as const }])(
+      'should attach "Accept-Language: $locale" header to GET /api/posts calls',
+      ({ locale }) => {
+        mockLocaleService.getActiveLocale.mockReturnValue(locale);
 
-      service.getPosts().subscribe();
+        service.getPosts().subscribe();
 
-      const req = httpMock.expectOne('/api/posts?page=0&size=50');
-      expect(req.request.headers.has('Accept-Language')).toBe(true);
-      expect(req.request.headers.get('Accept-Language')).toBe(locale);
-      req.flush({ items: [], page: 0, size: 50, total_items: 0, total_pages: 0 });
-    });
+        const req = httpMock.expectOne('/api/posts?page=0&size=50');
+        expect(req.request.headers.has('Accept-Language')).toBe(true);
+        expect(req.request.headers.get('Accept-Language')).toBe(locale);
+        req.flush({ items: [], page: 0, size: 50, total_items: 0, total_pages: 0 });
+      },
+    );
 
-    it.each([
-      { locale: 'en' as const },
-      { locale: 'ja' as const },
-    ])('should attach "Accept-Language: $locale" header to POST /api/posts calls', ({ locale }) => {
-      mockLocaleService.getActiveLocale.mockReturnValue(locale);
+    it.each([{ locale: 'en' as const }, { locale: 'ja' as const }])(
+      'should attach "Accept-Language: $locale" header to POST /api/posts calls',
+      ({ locale }) => {
+        mockLocaleService.getActiveLocale.mockReturnValue(locale);
 
-      const requestPayload: CreatePostRequest = {
-        name: 'Tester',
-        title: 'Title',
-        message: 'Message',
-      };
+        const requestPayload: CreatePostRequest = {
+          name: 'Tester',
+          title: 'Title',
+          message: 'Message',
+        };
 
-      service.createPost(requestPayload).subscribe();
+        service.createPost(requestPayload).subscribe();
 
-      const req = httpMock.expectOne('/api/posts');
-      expect(req.request.headers.has('Accept-Language')).toBe(true);
-      expect(req.request.headers.get('Accept-Language')).toBe(locale);
-      req.flush({
-        id: 1,
-        name: 'Tester',
-        title: 'Title',
-        message: 'Message',
-        created_at: '2026-09-13T12:00:00Z',
-      });
-    });
+        const req = httpMock.expectOne('/api/posts');
+        expect(req.request.headers.has('Accept-Language')).toBe(true);
+        expect(req.request.headers.get('Accept-Language')).toBe(locale);
+        req.flush({
+          id: 1,
+          name: 'Tester',
+          title: 'Title',
+          message: 'Message',
+          created_at: '2026-09-13T12:00:00Z',
+        });
+      },
+    );
   });
 });

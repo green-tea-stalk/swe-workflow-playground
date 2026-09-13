@@ -27,10 +27,7 @@ describe('LocaleService', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [
-        LocaleService,
-        { provide: DOCUMENT, useValue: mockDocument },
-      ],
+      providers: [LocaleService, { provide: DOCUMENT, useValue: mockDocument }],
     });
 
     service = TestBed.inject(LocaleService);
@@ -42,11 +39,36 @@ describe('LocaleService', () => {
 
   describe('getActiveLocale', () => {
     it.each([
-      { pathname: '/ja/', baseURI: 'http://localhost:4200/ja/', expected: 'ja', description: 'root /ja/ path' },
-      { pathname: '/ja', baseURI: 'http://localhost:4200/ja', expected: 'ja', description: 'exact /ja path' },
-      { pathname: '/en/', baseURI: 'http://localhost:4200/en/', expected: 'en', description: 'root /en/ path' },
-      { pathname: '/', baseURI: 'http://localhost:4200/', expected: 'en', description: 'default root / path' },
-      { pathname: '/articles/ja/', baseURI: 'http://localhost:4200/articles/ja/', expected: 'en', description: 'nested path containing ja segment' },
+      {
+        pathname: '/ja/',
+        baseURI: 'http://localhost:4200/ja/',
+        expected: 'ja',
+        description: 'root /ja/ path',
+      },
+      {
+        pathname: '/ja',
+        baseURI: 'http://localhost:4200/ja',
+        expected: 'ja',
+        description: 'exact /ja path',
+      },
+      {
+        pathname: '/en/',
+        baseURI: 'http://localhost:4200/en/',
+        expected: 'en',
+        description: 'root /en/ path',
+      },
+      {
+        pathname: '/',
+        baseURI: 'http://localhost:4200/',
+        expected: 'en',
+        description: 'default root / path',
+      },
+      {
+        pathname: '/articles/ja/',
+        baseURI: 'http://localhost:4200/articles/ja/',
+        expected: 'en',
+        description: 'nested path containing ja segment',
+      },
     ])('should resolve "$expected" for $description', ({ pathname, baseURI, expected }) => {
       if (mockDocument.location) {
         mockDocument.location.pathname = pathname;
@@ -58,10 +80,7 @@ describe('LocaleService', () => {
     it('should fallback to en safely when document.location is undefined', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        providers: [
-          LocaleService,
-          { provide: DOCUMENT, useValue: { baseURI: '' } },
-        ],
+        providers: [LocaleService, { provide: DOCUMENT, useValue: { baseURI: '' } }],
       });
       const noLocService = TestBed.inject(LocaleService);
       expect(noLocService.getActiveLocale()).toBe('en');
@@ -94,14 +113,54 @@ describe('LocaleService', () => {
 
   describe('resolveInitialLocale', () => {
     it.each([
-      { stored: 'ja', browserLang: 'en-US', expected: 'ja', description: 'prioritizes valid stored locale ja over browser language' },
-      { stored: 'en', browserLang: 'ja-JP', expected: 'en', description: 'prioritizes valid stored locale en over browser language' },
-      { stored: null, browserLang: 'ja', expected: 'ja', description: 'resolves ja when browser language is ja' },
-      { stored: null, browserLang: 'ja-JP', expected: 'ja', description: 'resolves ja when browser language is ja-JP' },
-      { stored: null, browserLang: 'JA', expected: 'ja', description: 'resolves ja case-insensitively' },
-      { stored: null, browserLang: 'en-US', expected: 'en', description: 'resolves en when browser language is en-US' },
-      { stored: null, browserLang: 'de-DE', expected: 'en', description: 'falls back to en when browser language is unsupported' },
-      { stored: null, browserLang: '', expected: 'en', description: 'falls back to en when browser language is empty' },
+      {
+        stored: 'ja',
+        browserLang: 'en-US',
+        expected: 'ja',
+        description: 'prioritizes valid stored locale ja over browser language',
+      },
+      {
+        stored: 'en',
+        browserLang: 'ja-JP',
+        expected: 'en',
+        description: 'prioritizes valid stored locale en over browser language',
+      },
+      {
+        stored: null,
+        browserLang: 'ja',
+        expected: 'ja',
+        description: 'resolves ja when browser language is ja',
+      },
+      {
+        stored: null,
+        browserLang: 'ja-JP',
+        expected: 'ja',
+        description: 'resolves ja when browser language is ja-JP',
+      },
+      {
+        stored: null,
+        browserLang: 'JA',
+        expected: 'ja',
+        description: 'resolves ja case-insensitively',
+      },
+      {
+        stored: null,
+        browserLang: 'en-US',
+        expected: 'en',
+        description: 'resolves en when browser language is en-US',
+      },
+      {
+        stored: null,
+        browserLang: 'de-DE',
+        expected: 'en',
+        description: 'falls back to en when browser language is unsupported',
+      },
+      {
+        stored: null,
+        browserLang: '',
+        expected: 'en',
+        description: 'falls back to en when browser language is empty',
+      },
     ])('should resolve "$expected" when $description', ({ stored, browserLang, expected }) => {
       if (stored !== null) {
         mockStorage['bb_locale'] = stored;
@@ -181,4 +240,3 @@ describe('LocaleService', () => {
     });
   });
 });
-

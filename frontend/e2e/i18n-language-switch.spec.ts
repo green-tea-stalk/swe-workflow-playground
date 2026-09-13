@@ -13,7 +13,11 @@ test.describe('Bilingual Internationalization Workflows', () => {
     const res = await page.request.get('/api/posts?page=0&size=50');
     if (res.ok()) {
       const data = await res.json();
-      if (!data || data.total_items === 0 || (Array.isArray(data?.items) && data.items.length === 0)) {
+      if (
+        !data ||
+        data.total_items === 0 ||
+        (Array.isArray(data?.items) && data.items.length === 0)
+      ) {
         await page.request.post('/api/posts', {
           data: {
             name: 'Initial Seeder',
@@ -113,7 +117,9 @@ test.describe('Bilingual Internationalization Workflows', () => {
     await expect(snackBarEn).toContainText('Post submitted successfully!');
 
     // Wait for snackbar to dismiss before next test sequence
-    await expect(snackBarEn).toBeHidden({ timeout: 6000 }).catch(() => {});
+    await expect(snackBarEn)
+      .toBeHidden({ timeout: 6000 })
+      .catch(() => {});
 
     // 2. Verify Japanese locale form validation and submission
     await page.goto('/ja/');
@@ -151,7 +157,8 @@ test.describe('Bilingual Internationalization Workflows', () => {
 
     const originalName = '山田 太郎 🌟';
     const originalTitle = `【検証】多言語テスト投稿_${Date.now()}`;
-    const originalMessage = 'これは自動翻訳されず、入力されたそのままの日本語で表示されるべき本文です。\nLine 2 with Emoji: 🚀🎉';
+    const originalMessage =
+      'これは自動翻訳されず、入力されたそのままの日本語で表示されるべき本文です。\nLine 2 with Emoji: 🚀🎉';
 
     await page.fill('input[formControlName="name"]', originalName);
     await page.fill('input[formControlName="title"]', originalTitle);

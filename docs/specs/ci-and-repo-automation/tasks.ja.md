@@ -190,16 +190,16 @@ upstream:
     - [x] 意図的にスタイル違反を混入させると、`./gradlew spotlessCheck` が終了コード `1` で失敗すること。
   - **コミットメッセージ**: `style(backend): configure spotless with palantir java format and format codebase`
 
-- [ ] **TASK-011**: フロントエンド用 Prettier フォーマットおよびライフサイクルスクリプトの構成
+- [x] **TASK-011**: フロントエンド用 Prettier フォーマットおよびライフサイクルスクリプトの構成
   - **コンポーネント & 要件**: `COMP-007`, `REQ-013`, `REQ-016`
   - **対象ファイル**: `frontend/.prettierrc`, `frontend/.prettierignore`, `frontend/package.json`, `frontend/src/**/*`
   - **受け入れ基準**:
-    - [ ] `tabWidth: 2`, `singleQuote: true`, `semi: true`, `trailingComma: "all"`, `printWidth: 100` を持つ `frontend/.prettierrc` が作成されていること。
-    - [ ] `dist/`, `.angular/`, `node_modules/`, `coverage/` を除外する `frontend/.prettierignore` が作成されていること。
-    - [ ] `frontend/package.json` スクリプトに `format:check`（`prettier --check .`）および `format`（`prettier --write .`）が追加されていること。
-    - [ ] `frontend/` 内のすべての TypeScript、HTML、SCSS、および JSON ファイルにわたり、初回の `npm run format` が実行されていること。
-    - [ ] `npm run format:check` の実行が終了コード `0` で成功すること。
-    - [ ] 意図的にフォーマットの不一致を混入させると、`npm run format:check` が終了コード `1` で失敗すること。
+    - [x] `tabWidth: 2`, `singleQuote: true`, `semi: true`, `trailingComma: "all"`, `printWidth: 100` を持つ `frontend/.prettierrc` が作成されていること。
+    - [x] `dist/`, `.angular/`, `node_modules/`, `coverage/` を除外する `frontend/.prettierignore` が作成されていること。
+    - [x] `frontend/package.json` スクリプトに `format:check`（`prettier --check .`）および `format`（`prettier --write .`）が追加されていること。
+    - [x] `frontend/` 内のすべての TypeScript、HTML、SCSS、および JSON ファイルにわたり、初回の `npm run format` が実行されていること。
+    - [x] `npm run format:check` の実行が終了コード `0` で成功すること。
+    - [x] 意図的にフォーマットの不一致を混入させると、`npm run format:check` が終了コード `1` で失敗すること。
   - **コミットメッセージ**: `style(frontend): configure prettier rules and apply in-place formatting`
 
 ---

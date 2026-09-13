@@ -131,7 +131,11 @@ export class PostFormComponent {
         let errorMessage = $localize`:@@app.form.generic_error:An error occurred while submitting the post. Please try again later.`;
         if (err && typeof err === 'object') {
           const problemDetail = (err as { error?: { detail?: string } }).error?.detail;
-          if (problemDetail && typeof problemDetail === 'string' && problemDetail.trim().length > 0) {
+          if (
+            problemDetail &&
+            typeof problemDetail === 'string' &&
+            problemDetail.trim().length > 0
+          ) {
             errorMessage = problemDetail.trim();
           }
         }
