@@ -219,13 +219,13 @@ upstream:
     - [x] ワークフロー YAML が構文チェックをパスすること。
   - **コミットメッセージ**: `ci(workflow): add backend spotless and frontend prettier verification steps`
 
-- [ ] **TASK-013**: 技術開発者ドキュメントおよび AGENTS.md 単一情報源の更新
+- [x] **TASK-013**: 技術開発者ドキュメントおよび AGENTS.md 単一情報源の更新
   - **コンポーネント & 要件**: `COMP-005`, `REQ-010`
   - **対象ファイル**: `AGENTS.md`, `README.md`, `README.ja.md`
   - **受け入れ基準**:
-    - [ ] フォーマット検証および修正コマンド（`./gradlew spotlessCheck`, `./gradlew spotlessApply`, `npm run format:check`, `npm run format`）で `AGENTS.md` 第 5 セクションが更新されていること。
-    - [ ] 単一情報源ポリシーおよび一方向参照の整合性を維持しながら、Version Catalog アーキテクチャおよび CODEOWNERS レビュー割り当てを文書化するように `AGENTS.md` が更新されていること。
-    - [ ] すべての相互参照およびアンカーが検証され、リンク切れがゼロであること。
+    - [x] フォーマット検証および修正コマンド（`./gradlew spotlessCheck`, `./gradlew spotlessApply`, `npm run format:check`, `npm run format`）で `AGENTS.md` 第 5 セクションが更新されていること。
+    - [x] 単一情報源ポリシーおよび一方向参照の整合性を維持しながら、Version Catalog アーキテクチャおよび CODEOWNERS レビュー割り当てを文書化するように `AGENTS.md` が更新されていること。
+    - [x] すべての相互参照およびアンカーが検証され、リンク切れがゼロであること。
   - **コミットメッセージ**: `docs(app): document formatting commands and version catalog architecture in AGENTS.md`
 
 ---

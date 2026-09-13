@@ -27,7 +27,7 @@ This project provides a full-stack bulletin board application built to validate 
 
 To maintain single-source integrity and avoid duplicate instructions, all technical details, execution commands, and architectural rules are consolidated in [AGENTS.md](AGENTS.md). Please refer to the corresponding sections:
 
-- **System Architecture & Components**: See [AGENTS.md#2-system-architecture--component-inventory](AGENTS.md#2-system-architecture--component-inventory) for the system architecture diagram, technology stack details, and component boundaries (`COMP-001` through `COMP-005`).
+- **System Architecture & Components**: See [AGENTS.md#2-system-architecture--component-inventory](AGENTS.md#2-system-architecture--component-inventory) for the system architecture diagram, technology stack details, and component boundaries (`COMP-001` through `COMP-008`).
 - **Prerequisites & Setup**: See [AGENTS.md#3-prerequisites--environment-setup](AGENTS.md#3-prerequisites--environment-setup) for JDK 25, Node.js, and Docker requirements.
 - **Quick Start Guide**: See [AGENTS.md#4-quick-start--service-execution-guide](AGENTS.md#4-quick-start--service-execution-guide) for step-by-step commands to launch MySQL 8.4, the Micronaut backend service, and the Angular frontend application.
 - **Verification & Testing Protocol**: See [AGENTS.md#5-verification--testing-protocol](AGENTS.md#5-verification--testing-protocol) for commands to execute backend tests, frontend Vitest tests, Playwright E2E suites, and production bundle builds.

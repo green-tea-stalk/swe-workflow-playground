@@ -218,13 +218,13 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Workflow YAML validated via schema checks and passes syntax linting.
   - **Commit Message**: `ci(workflow): add backend spotless and frontend prettier verification steps`
 
-- [ ] **TASK-013**: Update technical developer documentation and AGENTS.md single source of truth
+- [x] **TASK-013**: Update technical developer documentation and AGENTS.md single source of truth
   - **Component & Requirements**: `COMP-005`, `REQ-010`
   - **Target Files**: `AGENTS.md`, `README.md`, `README.ja.md`
   - **Acceptance Criteria**:
-    - [ ] `AGENTS.md` Section 5 updated with formatting check and fix commands (`./gradlew spotlessCheck`, `./gradlew spotlessApply`, `npm run format:check`, `npm run format`).
-    - [ ] `AGENTS.md` updated to document the Version Catalog architecture and CODEOWNERS review routing while maintaining single-source policy and unidirectional reference integrity.
-    - [ ] All cross-references and anchors verified with zero broken links.
+    - [x] `AGENTS.md` Section 5 updated with formatting check and fix commands (`./gradlew spotlessCheck`, `./gradlew spotlessApply`, `npm run format:check`, `npm run format`).
+    - [x] `AGENTS.md` updated to document the Version Catalog architecture and CODEOWNERS review routing while maintaining single-source policy and unidirectional reference integrity.
+    - [x] All cross-references and anchors verified with zero broken links.
   - **Commit Message**: `docs(app): document formatting commands and version catalog architecture in AGENTS.md`
 
 ---
