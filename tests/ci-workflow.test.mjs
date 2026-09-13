@@ -40,7 +40,7 @@ describe('Continuous Integration Workflow Engine', () => {
       runner: 'ubuntu-latest',
       setupAction: 'actions/setup-java@v4',
       setupWith: { distribution: 'corretto', 'java-version': '25', cache: 'gradle' },
-      expectedCommands: ['./gradlew test'],
+      expectedCommands: ['docker compose up -d --wait', './gradlew test'],
     },
     {
       name: 'frontend',
@@ -76,9 +76,15 @@ describe('Continuous Integration Workflow Engine', () => {
         );
       }
 
+      let lastIndex = -1;
       for (const cmd of jobConfig.expectedCommands) {
-        const matchingStep = steps.find((s) => s.run?.includes(cmd));
-        assert.ok(matchingStep, `${jobConfig.name} job must execute command matching "${cmd}"`);
+        const stepIndex = steps.findIndex((s) => s.run?.includes(cmd));
+        assert.ok(stepIndex !== -1, `${jobConfig.name} job must execute command matching "${cmd}"`);
+        assert.ok(
+          stepIndex > lastIndex,
+          `${jobConfig.name} step executing "${cmd}" must execute after preceding step`
+        );
+        lastIndex = stepIndex;
       }
     });
   }
@@ -106,8 +112,8 @@ describe('Continuous Integration Workflow Engine', () => {
     assert.equal(nodeStep.with?.cache, 'npm');
     assert.equal(nodeStep.with?.['cache-dependency-path'], 'frontend/package-lock.json');
 
-    const dbStep = steps.find((s) => s.run?.includes('docker compose up -d'));
-    assert.ok(dbStep, 'E2E job must boot MySQL container via docker compose');
+    const dbStep = steps.find((s) => s.run?.includes('docker compose up -d --wait'));
+    assert.ok(dbStep, 'E2E job must boot MySQL container via docker compose and await healthy state');
 
     const backendBgStep = steps.find((s) => s.run?.includes('./gradlew run') && s.run?.includes('&'));
     assert.ok(backendBgStep, 'E2E job must launch backend service in background');
