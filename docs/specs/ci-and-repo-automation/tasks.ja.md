@@ -209,14 +209,14 @@ upstream:
 - **マージ先**: `feat/ci-phase5-formatters-and-cleanup`
 
 #### タスク
-- [ ] **TASK-012**: CI ワークフローへのフェイルファストフォーマット品質ゲートの統合
+- [x] **TASK-012**: CI ワークフローへのフェイルファストフォーマット品質ゲートの統合
   - **コンポーネント & 要件**: `COMP-001`, `REQ-001`, `REQ-016`
   - **対象ファイル**: `.github/workflows/ci.yml`
   - **受け入れ基準**:
-    - [ ] `backend` ジョブにおいて、`./gradlew test` の実行前に `./gradlew spotlessCheck` ステップが追加されていること。
-    - [ ] `frontend` ジョブにおいて、`npm ci` の後、単体テストおよびビルドの前に `npm run format:check` ステップが追加されていること。
-    - [ ] いずれかのジョブでフォーマット違反が発生した場合、ジョブが非ゼロの終了コードで直ちに停止し、`e2e` ジョブがスキップされること。
-    - [ ] ワークフロー YAML が構文チェックをパスすること。
+    - [x] `backend` ジョブにおいて、`./gradlew test` の実行前に `./gradlew spotlessCheck` ステップが追加されていること。
+    - [x] `frontend` ジョブにおいて、`npm ci` の後、単体テストおよびビルドの前に `npm run format:check` ステップが追加されていること。
+    - [x] いずれかのジョブでフォーマット違反が発生した場合、ジョブが非ゼロの終了コードで直ちに停止し、`e2e` ジョブがスキップされること。
+    - [x] ワークフロー YAML が構文チェックをパスすること。
   - **コミットメッセージ**: `ci(workflow): add backend spotless and frontend prettier verification steps`
 
 - [ ] **TASK-013**: 技術開発者ドキュメントおよび AGENTS.md 単一情報源の更新

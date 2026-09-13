@@ -208,14 +208,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/ci-phase5-formatters-and-cleanup`
 
 #### Tasks
-- [ ] **TASK-012**: Integrate fail-fast formatting quality gates into CI workflow
+- [x] **TASK-012**: Integrate fail-fast formatting quality gates into CI workflow
   - **Component & Requirements**: `COMP-001`, `REQ-001`, `REQ-016`
   - **Target Files**: `.github/workflows/ci.yml`
   - **Acceptance Criteria**:
-    - [ ] In `backend` job, `./gradlew spotlessCheck` step added prior to executing `./gradlew test`.
-    - [ ] In `frontend` job, `npm run format:check` step added after `npm ci` and prior to unit tests and build.
-    - [ ] On formatting failure in either job, the job immediately terminates with non-zero exit code and bypasses the `e2e` job.
-    - [ ] Workflow YAML validated via schema checks and passes syntax linting.
+    - [x] In `backend` job, `./gradlew spotlessCheck` step added prior to executing `./gradlew test`.
+    - [x] In `frontend` job, `npm run format:check` step added after `npm ci` and prior to unit tests and build.
+    - [x] On formatting failure in either job, the job immediately terminates with non-zero exit code and bypasses the `e2e` job.
+    - [x] Workflow YAML validated via schema checks and passes syntax linting.
   - **Commit Message**: `ci(workflow): add backend spotless and frontend prettier verification steps`
 
 - [ ] **TASK-013**: Update technical developer documentation and AGENTS.md single source of truth

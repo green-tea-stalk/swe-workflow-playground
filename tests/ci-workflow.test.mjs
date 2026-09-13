@@ -44,7 +44,11 @@ describe('Continuous Integration Workflow Engine', () => {
       runner: 'ubuntu-latest',
       setupAction: 'actions/setup-java@v6',
       setupWith: { distribution: 'corretto', 'java-version': '25', cache: 'gradle' },
-      expectedCommands: ['docker compose up -d --wait', './gradlew test'],
+      expectedCommands: [
+        'docker compose up -d --wait',
+        './gradlew spotlessCheck',
+        './gradlew test',
+      ],
     },
     {
       name: 'frontend',
@@ -55,7 +59,12 @@ describe('Continuous Integration Workflow Engine', () => {
         cache: 'npm',
         'cache-dependency-path': 'frontend/package-lock.json',
       },
-      expectedCommands: ['npm ci', 'npm test -- --watch=false', 'npm run build'],
+      expectedCommands: [
+        'npm ci',
+        'npm run format:check',
+        'npm test -- --watch=false',
+        'npm run build',
+      ],
     },
   ];
 
