@@ -81,17 +81,17 @@ flowchart TD
     APIClient([外部 API クライアント])
     System[掲示板システム境界]
 
-    User -->|1. 初回アクセス (ブラウザ言語 / 保存された設定)| System
-    System -->|2. ローカライズされた UI & フォーマットされたフィードの表示| User
+    User -->|"1. 初回アクセス (ブラウザ言語 / 保存された設定)"| System
+    System -->|"2. ローカライズされた UI & フォーマットされたフィードの表示"| User
 
-    User -->|3. 言語コントロール切り替え (JA / EN)| System
-    System -->|4. UI 言語および日時表示の更新| User
+    User -->|"3. 言語コントロール切り替え (JA / EN)"| System
+    System -->|"4. UI 言語および日時表示の更新"| User
 
-    User -->|5. 投稿フォーム送信 (アクティブロケール付与)| System
-    System -->|6. ローカライズされた通知表示 (成功 / エラー)| User
+    User -->|"5. 投稿フォーム送信 (アクティブロケール付与)"| System
+    System -->|"6. ローカライズされた通知表示 (成功 / エラー)"| User
 
-    APIClient -->|7. 言語設定ヘッダーを付与したリクエスト送信| System
-    System -->|8. ローカライズされた Problem Details またはレスポンス返却| APIClient
+    APIClient -->|"7. 言語設定ヘッダーを付与したリクエスト送信"| System
+    System -->|"8. ローカライズされた Problem Details またはレスポンス返却"| APIClient
 ```
 
 ---

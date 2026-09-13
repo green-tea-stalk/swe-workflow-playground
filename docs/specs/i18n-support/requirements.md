@@ -81,17 +81,17 @@ flowchart TD
     APIClient([External API Client])
     System[Bulletin Board System Boundary]
 
-    User -->|1. Initial Visit (Browser Language / Stored Preference)| System
-    System -->|2. Present Localized UI & Locale-Formatted Feed| User
+    User -->|"1. Initial Visit (Browser Language / Stored Preference)"| System
+    System -->|"2. Present Localized UI & Locale-Formatted Feed"| User
 
-    User -->|3. Toggle Language Control (JA / EN)| System
-    System -->|4. Update UI Language & Timestamp Presentation| User
+    User -->|"3. Toggle Language Control (JA / EN)"| System
+    System -->|"4. Update UI Language & Timestamp Presentation"| User
 
-    User -->|5. Submit Post Form (with Active Locale)| System
-    System -->|6. Present Localized Feedback (Success / Error Notification)| User
+    User -->|"5. Submit Post Form (with Active Locale)"| System
+    System -->|"6. Present Localized Feedback (Success / Error Notification)"| User
 
-    APIClient -->|7. Send Request with Language Preference Header| System
-    System -->|8. Return Localized Problem Details or Response| APIClient
+    APIClient -->|"7. Send Request with Language Preference Header"| System
+    System -->|"8. Return Localized Problem Details or Response"| APIClient
 ```
 
 ---
