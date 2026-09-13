@@ -92,24 +92,24 @@ upstream:
 - **マージ先**: `feat/ci-phase1-dev-orchestration-and-governance`
 
 #### タスク
-- [ ] **TASK-004**: マルチエコシステム Dependabot 自動化の構成
+- [x] **TASK-004**: マルチエコシステム Dependabot 自動化の構成
   - **コンポーネント & 要件**: `COMP-002`, `REQ-004`
   - **対象ファイル**: `.github/dependabot.yml`
   - **受け入れ基準**:
-    - [ ] スキーマバージョン 2 に厳格に準拠して `.github/dependabot.yml` が作成されていること。
-    - [ ] 正確に 4 つのパッケージエコシステム（`/backend` の `gradle`、`/frontend` の `npm`、`/` の `github-actions`、`/` の `docker`）が構成されていること。
-    - [ ] 4 つのエコシステムすべてが週次月曜日のスケジュール（`interval: "weekly"`, `day: "monday"`）に同期されていること。
-    - [ ] スキーマリンターによって Dependabot 設定構文が検証されていること。
+    - [x] スキーマバージョン 2 に厳格に準拠して `.github/dependabot.yml` が作成されていること。
+    - [x] 正確に 4 つのパッケージエコシステム（`/backend` の `gradle`、`/frontend` の `npm`、`/` の `github-actions`、`/` の `docker`）が構成されていること。
+    - [x] 4 つのエコシステムすべてが週次月曜日のスケジュール（`interval: "weekly"`, `day: "monday"`）に同期されていること。
+    - [x] スキーマリンターによって Dependabot 設定構文が検証されていること。
   - **コミットメッセージ**: `ci(dependabot): configure multi-ecosystem weekly dependency automation`
 
-- [ ] **TASK-005**: セマンティック release-please ワークフローおよびマニフェストの構成
+- [x] **TASK-005**: セマンティック release-please ワークフローおよびマニフェストの構成
   - **コンポーネント & 要件**: `COMP-003`, `REQ-005`, `REQ-006`
   - **対象ファイル**: `.github/workflows/release-please.yml`, `.github/release-please-config.json`, `.release-please-manifest.json`
   - **受け入れ基準**:
-    - [ ] `main` へのプッシュで起動し、`contents: write` および `pull-requests: write` 権限を持つ `.github/workflows/release-please.yml` が構成されていること。
-    - [ ] ルートパッケージ `"."` に対して `release-type: "simple"` が設定された `.github/release-please-config.json` が構成されていること。
-    - [ ] 現在のリポジトリバージョンマイルストーン（`"0.1.0"`）で `.release-please-manifest.json` が初期化されていること。
-    - [ ] 静的リンティングによってワークフロー YAML および設定 JSON スキーマが検証されていること。
+    - [x] `main` へのプッシュで起動し、`contents: write` および `pull-requests: write` 権限を持つ `.github/workflows/release-please.yml` が構成されていること。
+    - [x] ルートパッケージ `"."` に対して `release-type: "simple"` が設定された `.github/release-please-config.json` が構成されていること。
+    - [x] 現在のリポジトリバージョンマイルストーン（`"0.1.0"`）で `.release-please-manifest.json` が初期化されていること。
+    - [x] 静的リンティングによってワークフロー YAML および設定 JSON スキーマが検証されていること。
   - **コミットメッセージ**: `ci(release): configure google release-please semantic versioning and changelog automation`
 
 ---

@@ -92,24 +92,24 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/ci-phase1-dev-orchestration-and-governance`
 
 #### Tasks
-- [ ] **TASK-004**: Configure multi-ecosystem Dependabot automation
+- [x] **TASK-004**: Configure multi-ecosystem Dependabot automation
   - **Component & Requirements**: `COMP-002`, `REQ-004`
   - **Target Files**: `.github/dependabot.yml`
   - **Acceptance Criteria**:
-    - [ ] `.github/dependabot.yml` created conforming strictly to schema version 2.
-    - [ ] Exactly four package ecosystems configured: `gradle` (`/backend`), `npm` (`/frontend`), `github-actions` (`/`), and `docker` (`/`).
-    - [ ] All four ecosystems synchronized to weekly Monday schedule (`interval: "weekly"`, `day: "monday"`).
-    - [ ] Dependabot configuration syntax validated via schema linter.
+    - [x] `.github/dependabot.yml` created conforming strictly to schema version 2.
+    - [x] Exactly four package ecosystems configured: `gradle` (`/backend`), `npm` (`/frontend`), `github-actions` (`/`), and `docker` (`/`).
+    - [x] All four ecosystems synchronized to weekly Monday schedule (`interval: "weekly"`, `day: "monday"`).
+    - [x] Dependabot configuration syntax validated via schema linter.
   - **Commit Message**: `ci(dependabot): configure multi-ecosystem weekly dependency automation`
 
-- [ ] **TASK-005**: Configure semantic release-please workflow and manifests
+- [x] **TASK-005**: Configure semantic release-please workflow and manifests
   - **Component & Requirements**: `COMP-003`, `REQ-005`, `REQ-006`
   - **Target Files**: `.github/workflows/release-please.yml`, `.github/release-please-config.json`, `.release-please-manifest.json`
   - **Acceptance Criteria**:
-    - [ ] `.github/workflows/release-please.yml` configured to trigger on push to `main` with `contents: write` and `pull-requests: write` permissions.
-    - [ ] `.github/release-please-config.json` configured with `release-type: "simple"` for root package `"."`.
-    - [ ] `.release-please-manifest.json` initialized with current repository version milestone (`"0.1.0"`).
-    - [ ] Workflow YAML and configuration JSON schemas verified via static linting.
+    - [x] `.github/workflows/release-please.yml` configured to trigger on push to `main` with `contents: write` and `pull-requests: write` permissions.
+    - [x] `.github/release-please-config.json` configured with `release-type: "simple"` for root package `"."`.
+    - [x] `.release-please-manifest.json` initialized with current repository version milestone (`"0.1.0"`).
+    - [x] Workflow YAML and configuration JSON schemas verified via static linting.
   - **Commit Message**: `ci(release): configure google release-please semantic versioning and changelog automation`
 
 ---
