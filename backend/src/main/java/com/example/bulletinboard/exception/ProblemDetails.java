@@ -25,13 +25,12 @@ public record ProblemDetails(
         String detail,
         String instance,
         @JsonProperty("invalid_params")
-        @JsonInclude(JsonInclude.Include.NON_EMPTY)
         List<InvalidParam> invalidParams
 ) {
     /**
-     * Compact constructor guaranteeing immutability of invalid parameters list.
+     * Compact constructor guaranteeing immutability and non-null list for invalid parameters.
      */
     public ProblemDetails {
-        invalidParams = (invalidParams == null) ? null : List.copyOf(invalidParams);
+        invalidParams = (invalidParams == null) ? List.of() : List.copyOf(invalidParams);
     }
 }

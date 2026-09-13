@@ -25,7 +25,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -98,7 +97,6 @@ class PostControllerTest {
         assertEquals("Hello World!", body.message(), "Message must be trimmed");
         assertNotNull(body.createdAt(), "ISO 8601 UTC timestamp must be populated");
 
-        // Verify newly created post is reflected in subsequent GET feed
         HttpResponse<PagedPostResponse> feedResponse = client.exchange(HttpRequest.GET("/api/posts"), PagedPostResponse.class);
         assertEquals(1, feedResponse.body().items().size());
         assertEquals(body.id(), feedResponse.body().items().get(0).id());
@@ -123,17 +121,17 @@ class PostControllerTest {
         assertNull(body.email(), "Omitted email must remain null");
     }
 
-    @ParameterizedTest(name = "Invalid blank required field: name=''{0}'', title=''{1}'', message=''{2}''")
+    @ParameterizedTest(name = "Invalid blank required field: name=''{0}'', title=''{1}'', message=''{2}'', expectedField=''{3}''")
     @CsvSource({
-            "'   ', 'Valid Title', 'Valid Message'",
-            "'', 'Valid Title', 'Valid Message'",
-            "'Valid Name', '   ', 'Valid Message'",
-            "'Valid Name', '', 'Valid Message'",
-            "'Valid Name', 'Valid Title', '   '",
-            "'Valid Name', 'Valid Title', ''"
+            "'   ', 'Valid Title', 'Valid Message', 'name'",
+            "'', 'Valid Title', 'Valid Message', 'name'",
+            "'Valid Name', '   ', 'Valid Message', 'title'",
+            "'Valid Name', '', 'Valid Message', 'title'",
+            "'Valid Name', 'Valid Title', '   ', 'message'",
+            "'Valid Name', 'Valid Title', '', 'message'"
     })
     @DisplayName("POST /api/posts: should return 400 Bad Request with RFC 9457 ProblemDetails when required fields are blank")
-    void testCreatePostRejectsBlankFields(String name, String title, String message) {
+    void testCreatePostRejectsBlankFields(String name, String title, String message, String expectedField) {
         CreatePostRequest requestPayload = new CreatePostRequest(name, null, title, message);
         HttpRequest<?> request = HttpRequest.POST("/api/posts", requestPayload);
 
@@ -144,6 +142,7 @@ class PostControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
         assertEquals("application/problem+json", ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("en", ex.getResponse().getHeaders().get("Content-Language"));
 
         Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
         assertTrue(problemOpt.isPresent(), "RFC 9457 ProblemDetails body must be present");
@@ -151,10 +150,12 @@ class PostControllerTest {
         ProblemDetails problem = problemOpt.get();
         assertEquals("https://example.com/errors/validation-failed", problem.type());
         assertEquals("Validation Failed", problem.title());
+        assertEquals("Input payload failed validation constraints.", problem.detail());
         assertEquals(400, problem.status());
         assertEquals("/api/posts", problem.instance());
         assertNotNull(problem.invalidParams(), "invalid_params must not be null");
-        assertTrue(!problem.invalidParams().isEmpty(), "invalid_params must contain validation violation entries");
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> expectedField.equals(p.name())),
+                "invalid_params must contain violation for expected field: " + expectedField);
     }
 
     @Test
@@ -202,21 +203,28 @@ class PostControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
         assertEquals("application/problem+json", ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("en", ex.getResponse().getHeaders().get("Content-Language"));
 
         Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
         assertTrue(problemOpt.isPresent());
         ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/validation-failed", problem.type());
+        assertEquals("Validation Failed", problem.title());
+        assertEquals("Input payload failed validation constraints.", problem.detail());
         assertEquals(400, problem.status());
+        assertEquals("/api/posts", problem.instance());
+        assertNotNull(problem.invalidParams());
+        assertTrue(!problem.invalidParams().isEmpty());
     }
 
-    @ParameterizedTest(name = "Exceeded max length field: nameLen={0}, titleLen={1}, messageLen={2}")
+    @ParameterizedTest(name = "Exceeded max length field: nameLen={0}, titleLen={1}, messageLen={2}, expectedField=''{3}''")
     @CsvSource({
-            "51, 10, 10",
-            "10, 101, 10",
-            "10, 10, 4001"
+            "51, 10, 10, 'name'",
+            "10, 101, 10, 'title'",
+            "10, 10, 4001, 'message'"
     })
     @DisplayName("POST /api/posts: should return 400 Bad Request when required field exceeds maximum allowed length")
-    void testCreatePostRejectsExceededLength(int nameLen, int titleLen, int messageLen) {
+    void testCreatePostRejectsExceededLength(int nameLen, int titleLen, int messageLen, String expectedField) {
         String name = "A".repeat(nameLen);
         String title = "T".repeat(titleLen);
         String message = "M".repeat(messageLen);
@@ -230,9 +238,19 @@ class PostControllerTest {
         );
 
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals("en", ex.getResponse().getHeaders().get("Content-Language"));
+
         Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
         assertTrue(problemOpt.isPresent());
-        assertEquals(400, problemOpt.get().status());
+        ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/validation-failed", problem.type());
+        assertEquals("Validation Failed", problem.title());
+        assertEquals("Input payload failed validation constraints.", problem.detail());
+        assertEquals(400, problem.status());
+        assertEquals("/api/posts", problem.instance());
+        assertNotNull(problem.invalidParams());
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> expectedField.equals(p.name())),
+                "invalid_params must contain length violation for expected field: " + expectedField);
     }
 
     @Test
@@ -259,5 +277,69 @@ class PostControllerTest {
     @DisplayName("PostController constructor: should throw NullPointerException when PostService is null")
     void testControllerRejectsNullService() {
         assertThrows(NullPointerException.class, () -> new PostController(null));
+    }
+
+    @Test
+    @DisplayName("POST /api/posts: should return localized Japanese ProblemDetails when Accept-Language is ja")
+    void testCreatePostReturnsJapaneseProblemDetailsWhenAcceptLanguageIsJa() {
+        CreatePostRequest requestPayload = new CreatePostRequest("", null, "", "");
+        HttpRequest<?> request = HttpRequest.POST("/api/posts", requestPayload)
+                .header("Accept-Language", "ja");
+
+        HttpClientResponseException ex = assertThrows(
+                HttpClientResponseException.class,
+                () -> client.exchange(request, Argument.of(PostResponse.class), Argument.of(ProblemDetails.class))
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals("application/problem+json", ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("ja", ex.getResponse().getHeaders().get("Content-Language"));
+
+        Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
+        assertTrue(problemOpt.isPresent());
+
+        ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/validation-failed", problem.type());
+        assertEquals("入力値検証エラー", problem.title());
+        assertEquals("入力内容に不備があります。制約条件を確認してください。", problem.detail());
+        assertEquals(400, problem.status());
+        assertEquals("/api/posts", problem.instance());
+        assertNotNull(problem.invalidParams());
+
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> "name".equals(p.name()) && "名前を入力してください".equals(p.reason())));
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> "title".equals(p.name()) && "タイトルを入力してください".equals(p.reason())));
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> "message".equals(p.name()) && "メッセージ本文を入力してください".equals(p.reason())));
+    }
+
+    @Test
+    @DisplayName("POST /api/posts: should return localized English ProblemDetails when Accept-Language is en")
+    void testCreatePostReturnsEnglishProblemDetailsWhenAcceptLanguageIsEn() {
+        CreatePostRequest requestPayload = new CreatePostRequest("", null, "", "");
+        HttpRequest<?> request = HttpRequest.POST("/api/posts", requestPayload)
+                .header("Accept-Language", "en");
+
+        HttpClientResponseException ex = assertThrows(
+                HttpClientResponseException.class,
+                () -> client.exchange(request, Argument.of(PostResponse.class), Argument.of(ProblemDetails.class))
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals("application/problem+json", ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("en", ex.getResponse().getHeaders().get("Content-Language"));
+
+        Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
+        assertTrue(problemOpt.isPresent());
+
+        ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/validation-failed", problem.type());
+        assertEquals("Validation Failed", problem.title());
+        assertEquals("Input payload failed validation constraints.", problem.detail());
+        assertEquals(400, problem.status());
+        assertEquals("/api/posts", problem.instance());
+        assertNotNull(problem.invalidParams());
+
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> "name".equals(p.name()) && "Name must not be blank".equals(p.reason())));
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> "title".equals(p.name()) && "Title must not be blank".equals(p.reason())));
+        assertTrue(problem.invalidParams().stream().anyMatch(p -> "message".equals(p.name()) && "Message must not be blank".equals(p.reason())));
     }
 }

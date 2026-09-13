@@ -2,9 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { App } from './app';
 import { PostFeedComponent } from './components/post-feed/post-feed.component';
-import { PostFormComponent } from './components/post-form/post-form.component';
+import { LocaleService } from './services/locale.service';
 
 describe('App (Application Root Integration)', () => {
   beforeEach(async () => {
@@ -21,7 +22,7 @@ describe('App (Application Root Integration)', () => {
   it('should instantiate application root component successfully', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(app).toBeInstanceOf(App);
   });
 
   it('should display bulletin board title in toolbar', async () => {
@@ -29,14 +30,15 @@ describe('App (Application Root Integration)', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.app-toolbar')?.textContent).toContain('掲示板アプリケーション');
+    expect(compiled.querySelector('.app-toolbar')?.textContent).toContain('Bulletin Board');
   });
 
-  it('should correctly include feed component and fixed bottom form component', async () => {
+  it('should correctly include feed component, fixed bottom form component, and language switch in toolbar', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.app-toolbar app-language-switch')).not.toBeNull();
     expect(compiled.querySelector('app-post-feed')).not.toBeNull();
     expect(compiled.querySelector('app-post-form')).not.toBeNull();
   });
@@ -52,5 +54,18 @@ describe('App (Application Root Integration)', () => {
     app.onPostCreated();
 
     expect(mockFeed.loadPage).toHaveBeenCalledWith(0);
+  });
+
+  it('should trigger locale navigation on root path when resolved initial locale differs from active locale', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const localeService = TestBed.inject(LocaleService);
+    const setLocaleSpy = vi.spyOn(localeService, 'setLocale').mockImplementation(() => {});
+    vi.spyOn(localeService, 'getActiveLocale').mockReturnValue('en');
+    vi.spyOn(localeService, 'resolveInitialLocale').mockReturnValue('ja');
+
+    app.ngOnInit();
+
+    expect(setLocaleSpy).toHaveBeenCalledWith('ja');
   });
 });

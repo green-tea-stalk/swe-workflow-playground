@@ -4,7 +4,6 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -17,23 +16,21 @@ import jakarta.validation.constraints.Size;
  */
 @Serdeable
 public record CreatePostRequest(
-        @NotBlank(message = "Name must not be blank")
-        @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
-        @Pattern(regexp = "^(?!\\s*$).+", message = "Name must not contain only whitespace")
+        @NotBlank(message = "{validation.name.required}")
+        @Size(min = 1, max = 50, message = "{validation.name.size}")
         String name,
 
         @Nullable
-        @Size(max = 254, message = "Email must not exceed 254 characters")
-        @Email(message = "Email must be a well-formed email address")
+        @Size(max = 254, message = "{validation.email.size}")
+        @Email(message = "{validation.email.format}")
         String email,
 
-        @NotBlank(message = "Title must not be blank")
-        @Size(min = 1, max = 100, message = "Title must be between 1 and 100 characters")
-        @Pattern(regexp = "^(?!\\s*$).+", message = "Title must not contain only whitespace")
+        @NotBlank(message = "{validation.title.required}")
+        @Size(min = 1, max = 100, message = "{validation.title.size}")
         String title,
 
-        @NotBlank(message = "Message must not be blank")
-        @Size(min = 1, max = 4000, message = "Message must be between 1 and 4000 characters")
-        @Pattern(regexp = "^(?!\\s*$).+", message = "Message must not contain only whitespace")
+        @NotBlank(message = "{validation.message.required}")
+        @Size(min = 1, max = 4000, message = "{validation.message.size}")
         String message
 ) {}
+

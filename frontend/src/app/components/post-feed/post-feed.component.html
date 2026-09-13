@@ -1,4 +1,4 @@
-<section class="feed-container" aria-label="投稿一覧フィード">
+<section class="feed-container" aria-label="Posts feed" i18n-aria-label="@@app.feed.aria_label">
   @if (isLoading()) {
     <div class="loading-wrapper" aria-live="polite">
       <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
@@ -9,15 +9,14 @@
     <div class="error-banner" role="alert">
       <mat-icon color="warn">error_outline</mat-icon>
       <span class="error-text">{{ errorMessage() }}</span>
-      <button mat-button color="warn" (click)="refresh()">再試行</button>
+      <button mat-button color="warn" (click)="refresh()" i18n="@@app.feed.retry">Retry</button>
     </div>
   }
 
   @if (!isLoading() && posts().length === 0 && !errorMessage()) {
     <div class="empty-feed-placeholder">
       <mat-icon class="placeholder-icon">chat_bubble_outline</mat-icon>
-      <p class="placeholder-text">投稿されたメッセージはまだありません。</p>
-      <p class="placeholder-subtext">画面下部のフォームから最初のメッセージを投稿してみましょう！</p>
+      <p class="placeholder-text" i18n="@@app.feed.empty">No posts found. Be the first to post!</p>
     </div>
   } @else {
     <div class="post-cards-list">
@@ -31,7 +30,7 @@
               @if (post.email) {
                 <span class="post-email">&lt;<a [href]="'mailto:' + post.email">{{ post.email }}</a>&gt;</span>
               }
-              <span class="post-date">{{ post.created_at | date:'yyyy/MM/dd HH:mm:ss' }}</span>
+              <span class="post-date">{{ post.created_at | date: dateFormat }}</span>
             </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content class="post-content">
@@ -50,7 +49,8 @@
       [hidePageSize]="true"
       [showFirstLastButtons]="true"
       (page)="onPageChange($event)"
-      aria-label="ページ選択">
+      aria-label="Select page"
+      i18n-aria-label="@@app.feed.paginator_label">
     </mat-paginator>
   </div>
 </section>
