@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.micronaut.aot)
 }
 
-version = "0.3.0" // x-release-please-version
+version = "0.3.1" // x-release-please-version
 group = "com.example"
 
 repositories {

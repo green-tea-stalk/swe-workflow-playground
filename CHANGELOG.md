@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/green-tea-stalk/swe-workflow-playground/compare/v0.3.0...v0.3.1) (2026-09-13)
+
+
+### Bug Fixes
+
+* **ci:** omit component prefix from release tags and titles ([#48](https://github.com/green-tea-stalk/swe-workflow-playground/issues/48)) ([4be677b](https://github.com/green-tea-stalk/swe-workflow-playground/commit/4be677b929e38b7925d361eb4a09622707f0cbfe))
+
 ## [0.3.0](https://github.com/green-tea-stalk/swe-workflow-playground/compare/v0.2.0...v0.3.0) (2026-09-13)
 
 
