@@ -35,8 +35,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
-    testImplementation("org.testcontainers:mysql:1.20.4")
-    testImplementation("org.testcontainers:junit-jupiter:1.20.4")
+    testImplementation("org.testcontainers:mysql:1.21.4")
+    testImplementation("org.testcontainers:junit-jupiter:1.21.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
