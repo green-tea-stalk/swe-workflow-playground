@@ -1,5 +1,4 @@
 import { Component, inject, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
   FormBuilder,
@@ -55,7 +54,6 @@ export function optionalEmailValidator(): ValidatorFn {
   selector: 'app-post-form',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -119,7 +117,9 @@ export class PostFormComponent {
       next: () => {
         this.isSubmitting.set(false);
         this.resetForm();
-        this.snackBar.open('メッセージを投稿しました。', '閉じる', {
+        const successMessage = $localize`:@@app.form.success:Post submitted successfully!`;
+        const closeLabel = $localize`:@@app.form.close:Close`;
+        this.snackBar.open(successMessage, closeLabel, {
           duration: 4000,
           horizontalPosition: 'center',
           verticalPosition: 'bottom',
@@ -128,7 +128,7 @@ export class PostFormComponent {
       },
       error: (err: unknown) => {
         this.isSubmitting.set(false);
-        let errorMessage = '投稿処理中にエラーが発生しました。時間をおいて再試行してください。';
+        let errorMessage = $localize`:@@app.form.generic_error:An error occurred while submitting the post. Please try again later.`;
         if (err && typeof err === 'object') {
           const problemDetail = (err as { error?: { detail?: string } }).error?.detail;
           if (problemDetail && typeof problemDetail === 'string' && problemDetail.trim().length > 0) {
@@ -136,7 +136,8 @@ export class PostFormComponent {
           }
         }
 
-        this.snackBar.open(errorMessage, '閉じる', {
+        const closeLabel = $localize`:@@app.form.close:Close`;
+        this.snackBar.open(errorMessage, closeLabel, {
           duration: 5000,
           horizontalPosition: 'center',
           verticalPosition: 'bottom',

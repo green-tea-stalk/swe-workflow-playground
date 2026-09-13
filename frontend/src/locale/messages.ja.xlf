@@ -70,6 +70,14 @@
         <source>Post submitted successfully!</source>
         <target>投稿が完了しました！</target>
       </trans-unit>
+      <trans-unit id="app.form.close" datatype="html">
+        <source>Close</source>
+        <target>閉じる</target>
+      </trans-unit>
+      <trans-unit id="app.form.generic_error" datatype="html">
+        <source>An error occurred while submitting the post. Please try again later.</source>
+        <target>投稿処理中にエラーが発生しました。時間をおいて再試行してください。</target>
+      </trans-unit>
       <trans-unit id="app.lang.switch" datatype="html">
         <source>Switch Language</source>
         <target>言語切替</target>

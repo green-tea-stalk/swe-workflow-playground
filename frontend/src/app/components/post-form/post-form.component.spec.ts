@@ -70,7 +70,16 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       { value: '   ', expectedValid: true, desc: 'whitespace-only is optional and valid' },
       { value: 'invalid-email-format', expectedValid: false, desc: 'invalid email format is invalid' },
       { value: 'user@example.com', expectedValid: true, desc: 'valid email format is valid' },
-      { value: 'a'.repeat(243) + '@example.com', expectedValid: false, desc: 'exceeding limit (255 chars) is invalid' },
+      {
+        value: 'a'.repeat(64) + '@' + 'b'.repeat(63) + '.' + 'c'.repeat(60) + '.' + 'd'.repeat(60) + '.com',
+        expectedValid: true,
+        desc: 'boundary value (254 chars) is valid',
+      },
+      {
+        value: 'a'.repeat(64) + '@' + 'b'.repeat(64) + '.' + 'c'.repeat(60) + '.' + 'd'.repeat(60) + '.com',
+        expectedValid: false,
+        desc: 'exceeding limit (255 chars) is invalid',
+      },
     ])('email validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.email;
       control.setValue(value);
@@ -160,8 +169,8 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
         message: null,
       });
       expect(mockSnackBar.open).toHaveBeenCalledWith(
-        expect.stringContaining('投稿しました'),
-        expect.any(String),
+        'Post submitted successfully!',
+        'Close',
         expect.any(Object)
       );
       expect(postCreatedEmitted).toBe(true);
@@ -206,13 +215,42 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       component.onSubmit();
 
       expect(mockSnackBar.open).toHaveBeenCalledWith(
-        expect.stringContaining('投稿処理中にエラーが発生しました。'),
-        expect.any(String),
+        'An error occurred while submitting the post. Please try again later.',
+        'Close',
         expect.any(Object)
       );
       expect(component.postForm.value.name).toBe('鈴木一郎');
       expect(component.postForm.value.message).toBe('失敗予定本文');
       expect(postCreatedEmitted).toBe(false);
+      expect(component.isSubmitting()).toBe(false);
+    });
+
+    it('should fall back to generic error message when problem details detail is blank', () => {
+      const problemErrorWithBlankDetail = {
+        error: {
+          type: 'https://example.com/errors/server-error',
+          title: 'Error',
+          status: 500,
+          detail: '   ',
+          instance: '/api/posts',
+        },
+      };
+      mockPostApiService.createPost.mockReturnValue(throwError(() => problemErrorWithBlankDetail));
+
+      component.postForm.setValue({
+        name: '鈴木一郎',
+        email: 'ichiro@example.com',
+        title: 'テストタイトル',
+        message: 'テスト本文',
+      });
+
+      component.onSubmit();
+
+      expect(mockSnackBar.open).toHaveBeenCalledWith(
+        'An error occurred while submitting the post. Please try again later.',
+        'Close',
+        expect.any(Object)
+      );
       expect(component.isSubmitting()).toBe(false);
     });
 
@@ -239,11 +277,66 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
 
       expect(mockSnackBar.open).toHaveBeenCalledWith(
         '入力値に不正な文字が含まれています。',
-        '閉じる',
+        'Close',
         expect.any(Object)
       );
       expect(component.postForm.value.name).toBe('テストユーザー');
       expect(component.isSubmitting()).toBe(false);
+    });
+
+    it('should display English problem details error detail in snackbar upon English RFC 9457 error', () => {
+      const problemError = {
+        error: {
+          type: 'https://example.com/errors/validation-failed',
+          title: 'Validation Failed',
+          status: 400,
+          detail: 'Input payload failed validation constraints.',
+          instance: '/api/posts',
+        },
+      };
+      mockPostApiService.createPost.mockReturnValue(throwError(() => problemError));
+
+      component.postForm.setValue({
+        name: 'Alice',
+        email: null,
+        title: 'Title',
+        message: 'Message',
+      });
+
+      component.onSubmit();
+
+      expect(mockSnackBar.open).toHaveBeenCalledWith(
+        'Input payload failed validation constraints.',
+        'Close',
+        expect.any(Object)
+      );
+      expect(component.postForm.value.name).toBe('Alice');
+      expect(component.isSubmitting()).toBe(false);
+    });
+  });
+
+  describe('DOM validation error rendering and localized labels', () => {
+    it('should render canonical field labels in the DOM', () => {
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.form-field-name mat-label')?.textContent).toContain('Name');
+      expect(compiled.querySelector('.form-field-email mat-label')?.textContent).toContain('Email');
+      expect(compiled.querySelector('.form-field-title mat-label')?.textContent).toContain('Title');
+      expect(compiled.querySelector('.form-field-message mat-label')?.textContent).toContain('Message');
+    });
+
+    it('should render localized error messages when controls are touched and invalid', () => {
+      component.postForm.controls.name.markAsTouched();
+      component.postForm.controls.title.markAsTouched();
+      component.postForm.controls.message.markAsTouched();
+      component.postForm.controls.email.setValue('invalid-email');
+      component.postForm.controls.email.markAsTouched();
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.form-field-name mat-error')?.textContent).toContain('Name must not be blank');
+      expect(compiled.querySelector('.form-field-email mat-error')?.textContent).toContain('Email must be a well-formed email address');
+      expect(compiled.querySelector('.form-field-title mat-error')?.textContent).toContain('Title must not be blank');
+      expect(compiled.querySelector('.form-field-message mat-error')?.textContent).toContain('Message must not be blank');
     });
   });
 

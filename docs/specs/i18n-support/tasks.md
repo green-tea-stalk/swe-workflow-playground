@@ -184,17 +184,17 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests verify feed rendering under both locales.
   - **Commit Message**: `feat(frontend): localize PostFeedComponent and configure DatePipe locale formatting`
 
-- [ ] **TASK-009**: Localize `PostFormComponent` labels, placeholders, and error messages
-  - **Component & Requirements**: `COMP-104`, `REQ-001`, `REQ-008`, `REQ-011`
+- [x] **TASK-009**: Localize `PostFormComponent` labels, placeholders, errors, and toast messages
+  - **Component & Requirements**: `COMP-104`, `REQ-001`, `REQ-002`, `REQ-006`, `REQ-007`
   - **Target Files**:
     - `frontend/src/app/components/post-form/post-form.component.html`
     - `frontend/src/app/components/post-form/post-form.component.ts`
     - `frontend/src/app/components/post-form/post-form.component.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Form labels, input placeholders, inline validation errors, and submit button annotated with `i18n` attributes.
-    - [ ] Snackbar notifications for success and failure use localized text.
-    - [ ] Localized RFC 9457 `detail` displayed in error snackbar.
-    - [ ] Unit tests verify form interactions and validation errors in English and Japanese.
+    - [x] Form labels, input placeholders, inline validation errors, and submit button annotated with `i18n` attributes.
+    - [x] Snackbar notifications for success and failure use localized text.
+    - [x] Localized RFC 9457 `detail` displayed in error snackbar.
+    - [x] Unit tests verify form interactions and validation errors in English and Japanese.
   - **Commit Message**: `feat(frontend): localize PostFormComponent inputs, errors, and snackbars`
 
 - [ ] **TASK-010**: Extract and populate XLIFF translation bundles

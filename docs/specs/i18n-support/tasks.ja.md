@@ -184,17 +184,17 @@ upstream:
     - [x] 単体テストで両ロケールでのフィード描画を検証していること。
   - **コミットメッセージ**: `feat(frontend): localize PostFeedComponent and configure DatePipe locale formatting`
 
-- [ ] **TASK-009**: `PostFormComponent` のラベル、プレースホルダー、およびエラーメッセージの多言語化
+- [x] **TASK-009**: `PostFormComponent` のラベル、プレースホルダー、およびエラーメッセージの多言語化
   - **コンポーネント & 要件**: `COMP-104`, `REQ-001`, `REQ-008`, `REQ-011`
   - **対象ファイル**:
     - `frontend/src/app/components/post-form/post-form.component.html`
     - `frontend/src/app/components/post-form/post-form.component.ts`
     - `frontend/src/app/components/post-form/post-form.component.spec.ts`
   - **受け入れ基準**:
-    - [ ] フォームラベル、入力プレースホルダー、インラインバリデーションエラー、および送信ボタンに `i18n` 属性が付与されていること。
-    - [ ] 成功および失敗のスナックバー通知でローカライズされたテキストが使用されていること。
-    - [ ] エラースナックバーにローカライズされた RFC 9457 の `detail` が表示されること。
-    - [ ] 単体テストで英語および日本語のフォーム操作とバリデーションエラーを検証していること。
+    - [x] フォームラベル、入力プレースホルダー、インラインバリデーションエラー、および送信ボタンに `i18n` 属性が付与されていること。
+    - [x] 成功および失敗のスナックバー通知でローカライズされたテキストが使用されていること。
+    - [x] エラースナックバーにローカライズされた RFC 9457 の `detail` が表示されること。
+    - [x] 単体テストで英語および日本語のフォーム操作とバリデーションエラーを検証していること。
   - **コミットメッセージ**: `feat(frontend): localize PostFormComponent inputs, errors, and snackbars`
 
 - [ ] **TASK-010**: XLIFF 翻訳カタログの抽出および生成
