@@ -147,7 +147,8 @@ All configuration structures, workflow definitions, version catalogs, and manife
 | :--- | :--- | :--- | :--- | :--- |
 | `name` | `string` | Required | `const: "CI"` | Name of workflow |
 | `on.push.branches` | `array<string>` | Required | `minItems: 1, non-nullable; exact elements: ["main"]` | Monitored branch for pushes |
-| `on.pull_request.branches` | `array<string>` | Required | `minItems: 1, non-nullable; exact elements: ["main"]` | Monitored branch for PRs |
+| `on.pull_request.types` | `array<string>` | Required | `exact elements: ["opened", "synchronize"]` | Lifecycle activity triggers for PR verification |
+| `on.pull_request.branches` | `array<string>` | Optional | Omitted to ensure verification triggers across all target branches | Monitored target branches for PRs |
 | `permissions.contents` | `string` | Required | `const: "read"` | Least-privilege checkout permission |
 | `concurrency.group` | `string` | Required | Format: `${{ github.workflow }}-${{ github.ref }}` | Concurrency lock key |
 | `concurrency.cancel-in-progress` | `boolean` | Required | Value: `true` | Aborts redundant active runs |

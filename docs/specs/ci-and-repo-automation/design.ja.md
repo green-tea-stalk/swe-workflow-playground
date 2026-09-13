@@ -147,7 +147,8 @@ sequenceDiagram
 | :--- | :--- | :--- | :--- | :--- |
 | `name` | `string` | 必須 | `const: "CI"` | ワークフロー名 |
 | `on.push.branches` | `array<string>` | 必須 | `minItems: 1, non-nullable; exact elements: ["main"]` | プッシュを監視する対象ブランチ |
-| `on.pull_request.branches` | `array<string>` | 必須 | `minItems: 1, non-nullable; exact elements: ["main"]` | PR を監視する対象ブランチ |
+| `on.pull_request.types` | `array<string>` | 必須 | `exact elements: ["opened", "synchronize"]` | PR検証を実行するライフサイクルアクティビティトリガー |
+| `on.pull_request.branches` | `array<string>` | 任意 | 省略（全ターゲットブランチ宛のPRで検証を実行） | PR を監視する対象ブランチ |
 | `permissions.contents` | `string` | 必須 | `const: "read"` | 最小権限のチェックアウト権限 |
 | `concurrency.group` | `string` | 必須 | フォーマット: `${{ github.workflow }}-${{ github.ref }}` | 並行実行制御ロックキー |
 | `concurrency.cancel-in-progress` | `boolean` | 必須 | 値: `true` | 冗長なアクティブ実行を中断 |

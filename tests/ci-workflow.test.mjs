@@ -16,8 +16,12 @@ describe('Continuous Integration Workflow Engine', () => {
 
   test('ci workflow file exists and defines canonical trigger, permissions, concurrency, and job topology', () => {
     assert.equal(workflow.name, 'CI', 'Workflow name must be CI');
-    assert.deepEqual(workflow.on?.push?.branches, ['main'], 'Must trigger on push to main branch');
-    assert.deepEqual(workflow.on?.pull_request?.branches, ['main'], 'Must trigger on pull_request to main branch');
+    assert.equal(workflow.on?.pull_request?.branches, undefined, 'Must trigger on pull_request to any target branch');
+    assert.deepEqual(
+      workflow.on?.pull_request?.types,
+      ['opened', 'synchronize'],
+      'Must trigger strictly on opened and synchronize events'
+    );
     assert.equal(workflow.permissions?.contents, 'read', 'Workflow must enforce read-only contents permission');
 
     assert.equal(workflow.concurrency?.['cancel-in-progress'], true, 'Must cancel redundant in-progress runs');
@@ -38,14 +42,14 @@ describe('Continuous Integration Workflow Engine', () => {
     {
       name: 'backend',
       runner: 'ubuntu-latest',
-      setupAction: 'actions/setup-java@v4',
+      setupAction: 'actions/setup-java@v6',
       setupWith: { distribution: 'corretto', 'java-version': '25', cache: 'gradle' },
       expectedCommands: ['docker compose up -d --wait', './gradlew test'],
     },
     {
       name: 'frontend',
       runner: 'ubuntu-latest',
-      setupAction: 'actions/setup-node@v4',
+      setupAction: 'actions/setup-node@v7',
       setupWith: {
         'node-version': 22,
         cache: 'npm',
@@ -63,8 +67,8 @@ describe('Continuous Integration Workflow Engine', () => {
       assert.equal(job.needs, undefined, `${jobConfig.name} job must run concurrently without upstream dependencies`);
 
       const steps = job.steps ?? [];
-      const checkoutStep = steps.find((s) => s.uses === 'actions/checkout@v4');
-      assert.ok(checkoutStep, `${jobConfig.name} job must check out repository via actions/checkout@v4`);
+      const checkoutStep = steps.find((s) => s.uses === 'actions/checkout@v7');
+      assert.ok(checkoutStep, `${jobConfig.name} job must check out repository via actions/checkout@v7`);
 
       const runtimeStep = steps.find((s) => s.uses === jobConfig.setupAction);
       assert.ok(runtimeStep, `${jobConfig.name} job must setup runtime via ${jobConfig.setupAction}`);
@@ -97,28 +101,35 @@ describe('Continuous Integration Workflow Engine', () => {
 
     const steps = e2eJob.steps ?? [];
 
-    const checkoutStep = steps.find((s) => s.uses === 'actions/checkout@v4');
-    assert.ok(checkoutStep, 'E2E job must check out repository via actions/checkout@v4');
+    const checkoutStep = steps.find((s) => s.uses === 'actions/checkout@v7');
+    assert.ok(checkoutStep, 'E2E job must check out repository via actions/checkout@v7');
 
-    const javaStep = steps.find((s) => s.uses === 'actions/setup-java@v4');
-    assert.ok(javaStep, 'E2E job must configure Java runtime via actions/setup-java@v4');
+    const javaStep = steps.find((s) => s.uses === 'actions/setup-java@v6');
+    assert.ok(javaStep, 'E2E job must configure Java runtime via actions/setup-java@v6');
     assert.equal(javaStep.with?.distribution, 'corretto');
     assert.equal(String(javaStep.with?.['java-version']), '25');
     assert.equal(javaStep.with?.cache, 'gradle');
 
-    const nodeStep = steps.find((s) => s.uses === 'actions/setup-node@v4');
-    assert.ok(nodeStep, 'E2E job must configure Node runtime via actions/setup-node@v4');
+    const nodeStep = steps.find((s) => s.uses === 'actions/setup-node@v7');
+    assert.ok(nodeStep, 'E2E job must configure Node runtime via actions/setup-node@v7');
     assert.equal(String(nodeStep.with?.['node-version']), '22');
     assert.equal(nodeStep.with?.cache, 'npm');
     assert.equal(nodeStep.with?.['cache-dependency-path'], 'frontend/package-lock.json');
 
-    const dbStep = steps.find((s) => s.run?.includes('docker compose up -d --wait'));
-    assert.ok(dbStep, 'E2E job must boot MySQL container via docker compose and await healthy state');
+    const mysqlStep = steps.find((s) => s.run?.includes('docker compose up -d --wait'));
+    assert.ok(mysqlStep, 'E2E job must start MySQL persistence via docker compose up -d --wait');
 
-    const backendBgStep = steps.find((s) => s.run?.includes('./gradlew run') && s.run?.includes('&'));
+    const frontendInstallStep = steps.find((s) => s.run?.includes('npm ci'));
+    assert.ok(frontendInstallStep, 'E2E job must install frontend dependencies');
+
+    const backendBgStep = steps.find(
+      (s) => s.run?.includes('./gradlew run > backend.log') && s.run?.includes('backend.pid')
+    );
     assert.ok(backendBgStep, 'E2E job must launch backend service in background');
 
-    const frontendBgStep = steps.find((s) => s.run?.includes('npm start') && s.run?.includes('&'));
+    const frontendBgStep = steps.find(
+      (s) => s.run?.includes('npm start > frontend.log') && s.run?.includes('frontend.pid')
+    );
     assert.ok(frontendBgStep, 'E2E job must launch frontend service in background');
 
     const readinessStep = steps.find(
@@ -136,8 +147,8 @@ describe('Continuous Integration Workflow Engine', () => {
     const playwrightRunStep = steps.find((s) => s.run?.includes('playwright test'));
     assert.ok(playwrightRunStep, 'E2E job must execute Playwright test suite');
 
-    const artifactStep = steps.find((s) => s.uses === 'actions/upload-artifact@v4');
-    assert.ok(artifactStep, 'E2E job must include artifact upload step using actions/upload-artifact@v4');
+    const artifactStep = steps.find((s) => s.uses === 'actions/upload-artifact@v7');
+    assert.ok(artifactStep, 'E2E job must include artifact upload step using actions/upload-artifact@v7');
     assert.equal(artifactStep.if, 'failure()', 'Artifact upload must execute only on failure');
     assert.equal(artifactStep.with?.['retention-days'], 14, 'Artifact retention must be set to 14 days');
     assert.equal(artifactStep.with?.name, 'playwright-failure-diagnostics', 'Artifact name must match diagnostics');
