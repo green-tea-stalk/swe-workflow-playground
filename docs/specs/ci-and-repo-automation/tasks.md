@@ -119,27 +119,27 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/ci-phase2-repo-automations`
 
 #### Tasks
-- [ ] **TASK-006**: Implement concurrent backend and frontend CI verification jobs
+- [x] **TASK-006**: Implement concurrent backend and frontend CI verification jobs
   - **Component & Requirements**: `COMP-001`, `REQ-001`
   - **Target Files**: `.github/workflows/ci.yml`
   - **Acceptance Criteria**:
-    - [ ] `.github/workflows/ci.yml` configured to trigger on `push` to `main` and `pull_request` targeting `main`.
-    - [ ] Concurrency group configured with `cancel-in-progress: true` to prevent redundant runner execution.
-    - [ ] `backend` job runs on `ubuntu-latest`, sets up Java 25 LTS (Corretto) with Gradle cache, and executes `./gradlew test` (including Testcontainers MySQL integration).
-    - [ ] `frontend` job runs on `ubuntu-latest`, sets up Node.js 22 LTS with npm cache, executes `npm ci`, runs `npm test -- --watch=false` (Vitest), and executes `npm run build`.
-    - [ ] Backend and frontend jobs execute concurrently without inter-job blocking.
+    - [x] `.github/workflows/ci.yml` configured to trigger on `push` to `main` and `pull_request` targeting `main`.
+    - [x] Concurrency group configured with `cancel-in-progress: true` to prevent redundant runner execution.
+    - [x] `backend` job runs on `ubuntu-latest`, sets up Java 25 LTS (Corretto) with Gradle cache, and executes `./gradlew test` (including Testcontainers MySQL integration).
+    - [x] `frontend` job runs on `ubuntu-latest`, sets up Node.js 22 LTS with npm cache, executes `npm ci`, runs `npm test -- --watch=false` (Vitest), and executes `npm run build`.
+    - [x] Backend and frontend jobs execute concurrently without inter-job blocking.
   - **Commit Message**: `ci(workflow): implement parallel backend and frontend verification jobs`
 
-- [ ] **TASK-007**: Implement conditional downstream E2E gate and artifact upload
+- [x] **TASK-007**: Implement conditional downstream E2E gate and artifact upload
   - **Component & Requirements**: `COMP-001`, `REQ-002`, `REQ-003`
   - **Target Files**: `.github/workflows/ci.yml`
   - **Acceptance Criteria**:
-    - [ ] `e2e` job configured with explicit dependency `needs: [backend, frontend]`.
-    - [ ] E2E job starts MySQL container via `docker compose up -d`, starts backend and frontend services in the background, and polls health check endpoints with timeout.
-    - [ ] Playwright Chromium browser installed via `npx playwright install --with-deps chromium` and executes `npx playwright test`.
-    - [ ] If either `backend` or `frontend` job fails, `e2e` job is skipped and zero runner resources are consumed for browser tests.
-    - [ ] On test failure, Playwright traces, failure screenshots, and service logs are uploaded as GitHub Actions artifacts via `actions/upload-artifact@v4`.
-    - [ ] Workflow YAML validated via actionlint or equivalent workflow validation.
+    - [x] `e2e` job configured with explicit dependency `needs: [backend, frontend]`.
+    - [x] E2E job starts MySQL container via `docker compose up -d`, starts backend and frontend services in the background, and polls health check endpoints with timeout.
+    - [x] Playwright Chromium browser installed via `npx playwright install --with-deps chromium` and executes `npx playwright test`.
+    - [x] If either `backend` or `frontend` job fails, `e2e` job is skipped and zero runner resources are consumed for browser tests.
+    - [x] On test failure, Playwright traces, failure screenshots, and service logs are uploaded as GitHub Actions artifacts via `actions/upload-artifact@v4`.
+    - [x] Workflow YAML validated via actionlint or equivalent workflow validation.
   - **Commit Message**: `ci(workflow): add conditional gated e2e verification and diagnostic artifact upload`
 
 ---
