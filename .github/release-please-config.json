@@ -1,6 +1,21 @@
 {
-  "release-type": "simple",
+  "release-type": "node",
   "packages": {
-    ".": {}
+    ".": {
+      "extra-files": [
+        "backend/build.gradle.kts",
+        "frontend/package.json",
+        {
+          "type": "json",
+          "path": "frontend/package-lock.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "frontend/package-lock.json",
+          "jsonpath": "$.packages[''].version"
+        }
+      ]
+    }
   }
 }
