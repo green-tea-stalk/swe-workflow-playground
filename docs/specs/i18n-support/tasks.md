@@ -89,7 +89,7 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests verify parameterized header parsing (`q`-values, case insensitivity, empty strings).
   - **Commit Message**: `feat(backend): implement HttpLocaleResolver for Accept-Language negotiation`
 
-- [ ] **TASK-003**: Localize RFC 9457 exception handlers and validation envelopes
+- [x] **TASK-003**: Localize RFC 9457 exception handlers and validation envelopes
   - **Component & Requirements**: `COMP-203`, `COMP-204`, `REQ-008`, `REQ-009`, `REQ-010`
   - **Target Files**:
     - `backend/src/main/java/com/example/bulletinboard/exception/ValidationExceptionHandler.java`
@@ -98,10 +98,10 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - `backend/src/test/java/com/example/bulletinboard/controller/PostControllerTest.java`
     - `backend/src/test/java/com/example/bulletinboard/exception/ExceptionHandlerTest.java`
   - **Acceptance Criteria**:
-    - [ ] `ValidationExceptionHandler` produces Problem Details with localized `title`, `detail`, and `invalid_params[].reason` matching client locale.
-    - [ ] `GlobalExceptionHandler` and `IllegalArgumentExceptionHandler` produce localized envelopes.
-    - [ ] Integration tests verify `POST /api/posts` returns Japanese Problem Details when `Accept-Language: ja` is sent, and English when `Accept-Language: en` or missing.
-    - [ ] `invalid_params` is guaranteed non-null empty array `[]` when zero violations exist.
+    - [x] `ValidationExceptionHandler` produces Problem Details with localized `title`, `detail`, and `invalid_params[].reason` matching client locale.
+    - [x] `GlobalExceptionHandler` and `IllegalArgumentExceptionHandler` produce localized envelopes.
+    - [x] Integration tests verify `POST /api/posts` returns Japanese Problem Details when `Accept-Language: ja` is sent, and English when `Accept-Language: en` or missing.
+    - [x] `invalid_params` is guaranteed non-null empty array `[]` when zero violations exist.
   - **Commit Message**: `feat(backend): localize RFC 9457 exception handlers with Accept-Language support`
 
 ---

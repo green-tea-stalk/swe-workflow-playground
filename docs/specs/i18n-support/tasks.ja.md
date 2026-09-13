@@ -89,7 +89,7 @@ upstream:
     - [x] 単体テストでパラメータ化されたヘッダー解析（`q` 値、大文字小文字の区別なし、空文字列）を検証していること。
   - **コミットメッセージ**: `feat(backend): implement HttpLocaleResolver for Accept-Language negotiation`
 
-- [ ] **TASK-003**: RFC 9457 例外ハンドラーおよびバリデーションエンベロープのローカライズ
+- [x] **TASK-003**: RFC 9457 例外ハンドラーおよびバリデーションエンベロープのローカライズ
   - **コンポーネント & 要件**: `COMP-203`, `COMP-204`, `REQ-008`, `REQ-009`, `REQ-010`
   - **対象ファイル**:
     - `backend/src/main/java/com/example/bulletinboard/exception/ValidationExceptionHandler.java`
@@ -98,10 +98,10 @@ upstream:
     - `backend/src/test/java/com/example/bulletinboard/controller/PostControllerTest.java`
     - `backend/src/test/java/com/example/bulletinboard/exception/ExceptionHandlerTest.java`
   - **受け入れ基準**:
-    - [ ] `ValidationExceptionHandler` がクライアントロケールに一致したローカライズ済み `title`, `detail`, `invalid_params[].reason` を含む Problem Details を生成すること。
-    - [ ] `GlobalExceptionHandler` および `IllegalArgumentExceptionHandler` がローカライズされたエンベロープを生成すること。
-    - [ ] 統合テストで、`Accept-Language: ja` 送信時に `POST /api/posts` が日本語の Problem Details を返し、`Accept-Language: en` またはヘッダーなし時に英語を返すことを検証していること。
-    - [ ] 違反が0件の場合、`invalid_params` が非 null の空配列 `[]` であることを保証すること。
+    - [x] `ValidationExceptionHandler` がクライアントロケールに一致したローカライズ済み `title`, `detail`, `invalid_params[].reason` を含む Problem Details を生成すること。
+    - [x] `GlobalExceptionHandler` および `IllegalArgumentExceptionHandler` がローカライズされたエンベロープを生成すること。
+    - [x] 統合テストで、`Accept-Language: ja` 送信時に `POST /api/posts` が日本語の Problem Details を返し、`Accept-Language: en` またはヘッダーなし時に英語を返すことを検証していること。
+    - [x] 違反が0件の場合、`invalid_params` が非 null の空配列 `[]` であることを保証すること。
   - **コミットメッセージ**: `feat(backend): localize RFC 9457 exception handlers with Accept-Language support`
 
 ---
