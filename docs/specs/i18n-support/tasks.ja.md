@@ -76,17 +76,17 @@ upstream:
     - [x] 単体テストでパラメータ展開、日本語検索、および英語フォールバックを検証していること。
   - **コミットメッセージ**: `feat(backend): implement MessageLocalizationService and resource bundles`
 
-- [ ] **TASK-002**: HTTP `Accept-Language` ヘッダー解析用 `LocaleResolver` の実装
+- [x] **TASK-002**: HTTP `Accept-Language` ヘッダー解析用 `LocaleResolver` の実装
   - **コンポーネント & 要件**: `COMP-201`, `REQ-002`, `REQ-009`, `REQ-010`
   - **対象ファイル**:
     - `backend/src/main/java/com/example/bulletinboard/util/LocaleResolver.java`
     - `backend/src/main/java/com/example/bulletinboard/util/HttpLocaleResolver.java`
     - `backend/src/test/java/com/example/bulletinboard/util/LocaleResolverTest.java`
   - **受け入れ基準**:
-    - [ ] `ja` および `ja-*` タグを `Locale.JAPANESE` に解決すること。
-    - [ ] `en` および `en-*` タグを `Locale.ENGLISH` に解決すること。
-    - [ ] ヘッダーの欠落、空文字、ワイルドカード、または未サポートの言語タグをデフォルトの `Locale.ENGLISH` に解決すること。
-    - [ ] 単体テストでパラメータ化されたヘッダー解析（`q` 値、大文字小文字の区別なし、空文字列）を検証していること。
+    - [x] `ja` および `ja-*` タグを `Locale.JAPANESE` に解決すること。
+    - [x] `en` および `en-*` タグを `Locale.ENGLISH` に解決すること。
+    - [x] ヘッダーの欠落、空文字、ワイルドカード、または未サポートの言語タグをデフォルトの `Locale.ENGLISH` に解決すること。
+    - [x] 単体テストでパラメータ化されたヘッダー解析（`q` 値、大文字小文字の区別なし、空文字列）を検証していること。
   - **コミットメッセージ**: `feat(backend): implement HttpLocaleResolver for Accept-Language negotiation`
 
 - [ ] **TASK-003**: RFC 9457 例外ハンドラーおよびバリデーションエンベロープのローカライズ

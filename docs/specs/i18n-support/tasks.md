@@ -76,17 +76,17 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests verify interpolation, Japanese lookup, and English fallback.
   - **Commit Message**: `feat(backend): implement MessageLocalizationService and resource bundles`
 
-- [ ] **TASK-002**: Implement `LocaleResolver` for HTTP `Accept-Language` header parsing
+- [x] **TASK-002**: Implement `LocaleResolver` for HTTP `Accept-Language` header parsing
   - **Component & Requirements**: `COMP-201`, `REQ-002`, `REQ-009`, `REQ-010`
   - **Target Files**:
     - `backend/src/main/java/com/example/bulletinboard/util/LocaleResolver.java`
     - `backend/src/main/java/com/example/bulletinboard/util/HttpLocaleResolver.java`
     - `backend/src/test/java/com/example/bulletinboard/util/LocaleResolverTest.java`
   - **Acceptance Criteria**:
-    - [ ] Resolves `ja` and `ja-*` tags to `Locale.JAPANESE`.
-    - [ ] Resolves `en` and `en-*` tags to `Locale.ENGLISH`.
-    - [ ] Absent, empty, wildcard, or unsupported language tags resolve to default `Locale.ENGLISH`.
-    - [ ] Unit tests verify parameterized header parsing (`q`-values, case insensitivity, empty strings).
+    - [x] Resolves `ja` and `ja-*` tags to `Locale.JAPANESE`.
+    - [x] Resolves `en` and `en-*` tags to `Locale.ENGLISH`.
+    - [x] Absent, empty, wildcard, or unsupported language tags resolve to default `Locale.ENGLISH`.
+    - [x] Unit tests verify parameterized header parsing (`q`-values, case insensitivity, empty strings).
   - **Commit Message**: `feat(backend): implement HttpLocaleResolver for Accept-Language negotiation`
 
 - [ ] **TASK-003**: Localize RFC 9457 exception handlers and validation envelopes
