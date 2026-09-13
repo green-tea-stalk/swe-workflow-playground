@@ -88,6 +88,13 @@ cd frontend
 npm test -- --watch=false
 ```
 
+### End-to-End (E2E) Test Suite
+Executes Playwright E2E tests verifying scrollability, pagination visibility, and post submission flow:
+```bash
+cd frontend
+npm run e2e
+```
+
 ### Production Bundle Build
 ```bash
 cd frontend
@@ -123,7 +130,8 @@ Comprehensive requirements, contracts, and task plans:
 
 ### テスト実行
 - **バックエンドテスト (65件通過)**: `cd backend && ./gradlew test`
-- **フロントエンドテスト (40件通過)**: `cd frontend && npm test -- --watch=false`
+- **フロントエンドユニットテスト (40件通過)**: `cd frontend && npm test -- --watch=false`
+- **フロントエンド E2E テスト (Playwright 4件通過)**: `cd frontend && npm run e2e`
 - **プロダクションビルド**: `cd frontend && npm run build`
 
 </details>

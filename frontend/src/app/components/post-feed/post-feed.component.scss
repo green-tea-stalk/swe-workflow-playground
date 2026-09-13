@@ -1,7 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
 .feed-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  flex: 1;
+  min-height: 0;
   max-width: 960px;
   margin: 0 auto;
   padding: 16px 16px 8px 16px;
@@ -129,6 +139,7 @@
   }
 
   .paginator-wrapper {
+    flex-shrink: 0;
     display: flex;
     justify-content: center;
     background-color: #ffffff;
