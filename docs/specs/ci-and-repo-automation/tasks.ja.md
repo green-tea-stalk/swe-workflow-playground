@@ -43,7 +43,7 @@ upstream:
 | **REQ-011** | `COMP-005` | `TASK-003` | PR 1 | 完了 |
 | **REQ-012** | `COMP-006` | `TASK-010` | PR 5 | 保留中 |
 | **REQ-013** | `COMP-007` | `TASK-011` | PR 5 | 保留中 |
-| **REQ-014** | `COMP-008` | `TASK-008` | PR 4 | 保留中 |
+| **REQ-014** | `COMP-008` | `TASK-008` | PR 4 | 完了 |
 | **REQ-015** | `COMP-006` | `TASK-009` | PR 4 | 保留中 |
 | **REQ-016** | `COMP-001`, `COMP-006`, `COMP-007` | `TASK-010`, `TASK-011`, `TASK-012` | PR 5, PR 6 | 保留中 |
 
@@ -152,13 +152,13 @@ upstream:
 - **マージ先**: `main`
 
 #### タスク
-- [ ] **TASK-008**: リポジトリ全体の CODEOWNERS 構成の確立
+- [x] **TASK-008**: リポジトリ全体の CODEOWNERS 構成の確立
   - **コンポーネント & 要件**: `COMP-008`, `REQ-014`
   - **対象ファイル**: `.github/CODEOWNERS`
   - **受け入れ基準**:
-    - [ ] リポジトリルートに `.github/CODEOWNERS` ファイルが作成されていること。
-    - [ ] すべてのファイルにデフォルトのレビュー責任を割り当てるワイルドカードルール `* @green-tea-stalk` が構成されていること。
-    - [ ] 検証チェックにより、ファイル構文および GitHub ユーザー名の一致が確認されていること。
+    - [x] リポジトリルートに `.github/CODEOWNERS` ファイルが作成されていること。
+    - [x] すべてのファイルにデフォルトのレビュー責任を割り当てるワイルドカードルール `* @green-tea-stalk` が構成されていること。
+    - [x] 検証チェックにより、ファイル構文および GitHub ユーザー名の一致が確認されていること。
   - **コミットメッセージ**: `chore(governance): add repository-wide CODEOWNERS assigning @green-tea-stalk`
 
 - [ ] **TASK-009**: バックエンド依存関係およびプラグイン用 Gradle Version Catalog の実装

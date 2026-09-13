@@ -43,7 +43,7 @@ Every requirement (`REQ-001` through `REQ-016`) and design component (`COMP-001`
 | **REQ-011** | `COMP-005` | `TASK-003` | PR 1 | Completed |
 | **REQ-012** | `COMP-006` | `TASK-010` | PR 5 | Pending |
 | **REQ-013** | `COMP-007` | `TASK-011` | PR 5 | Pending |
-| **REQ-014** | `COMP-008` | `TASK-008` | PR 4 | Pending |
+| **REQ-014** | `COMP-008` | `TASK-008` | PR 4 | Completed |
 | **REQ-015** | `COMP-006` | `TASK-009` | PR 4 | Pending |
 | **REQ-016** | `COMP-001`, `COMP-006`, `COMP-007` | `TASK-010`, `TASK-011`, `TASK-012` | PR 5, PR 6 | Pending |
 
@@ -151,13 +151,13 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `main`
 
 #### Tasks
-- [ ] **TASK-008**: Establish repository-wide CODEOWNERS configuration
+- [x] **TASK-008**: Establish repository-wide CODEOWNERS configuration
   - **Component & Requirements**: `COMP-008`, `REQ-014`
   - **Target Files**: `.github/CODEOWNERS`
   - **Acceptance Criteria**:
-    - [ ] `.github/CODEOWNERS` file created at repository root.
-    - [ ] Wildcard rule `* @green-tea-stalk` configured to assign default review ownership across all files.
-    - [ ] Verification check confirms file syntax and GitHub username matching.
+    - [x] `.github/CODEOWNERS` file created at repository root.
+    - [x] Wildcard rule `* @green-tea-stalk` configured to assign default review ownership across all files.
+    - [x] Verification check confirms file syntax and GitHub username matching.
   - **Commit Message**: `chore(governance): add repository-wide CODEOWNERS assigning @green-tea-stalk`
 
 - [ ] **TASK-009**: Implement Gradle Version Catalog for backend dependencies and plugins
