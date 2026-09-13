@@ -75,14 +75,14 @@ upstream:
     - [x] `SIGINT` 送信時に孤立したプロセスを残さずに Java および Node の子プロセスがクリーンに停止することが検証テストで確認されていること。
   - **コミットメッセージ**: `feat(app): configure clean process lifecycle and signal trapping`
 
-- [ ] **TASK-003**: 正規 MIT ライセンスの作成、ドキュメントバッジ、および開発者ガイドの更新
+- [x] **TASK-003**: 正規 MIT ライセンスの作成、ドキュメントバッジ、および開発者ガイドの更新
   - **コンポーネント & 要件**: `COMP-005`, `REQ-010`, `REQ-011`
   - **対象ファイル**: `LICENSE`, `README.md`, `README.ja.md`, `AGENTS.md`
   - **受け入れ基準**:
-    - [ ] リポジトリルートに標準の 2026 年付 MIT ライセンス本文を含む正規の `LICENSE` ファイルが作成されていること。
-    - [ ] `README.md` および `README.ja.md` において、要求された正確な順序でバッジが構成されていること: (1) 最新リリース、(2) CI ステータス、(3) release-please ステータス、(4) Dependabot ステータス、(5) MIT ライセンス。
-    - [ ] `AGENTS.md` の Quick Start セクションが、単一情報源の技術ガイドラインと単方向参照の完全性を厳密に保持しながら、`npm run dev` ワークフローで更新されていること。
-    - [ ] 自動マークダウンリンクチェックにより、ドキュメントファイル間のリンク切れやアンカードリフトがゼロであることが確認されていること。
+    - [x] リポジトリルートに標準の 2026 年付 MIT ライセンス本文を含む正規の `LICENSE` ファイルが作成されていること。
+    - [x] `README.md` および `README.ja.md` において、要求された正確な順序でバッジが構成されていること: (1) 最新リリース、(2) CI ステータス、(3) release-please ステータス、(4) Dependabot ステータス、(5) MIT ライセンス。
+    - [x] `AGENTS.md` の Quick Start セクションが、単一情報源の技術ガイドラインと単方向参照の完全性を厳密に保持しながら、`npm run dev` ワークフローで更新されていること。
+    - [x] 自動マークダウンリンクチェックにより、ドキュメントファイル間のリンク切れやアンカードリフトがゼロであることが確認されていること。
   - **コミットメッセージ**: `docs(app): add MIT license, status badges, and consolidated quickstart instructions`
 
 ---

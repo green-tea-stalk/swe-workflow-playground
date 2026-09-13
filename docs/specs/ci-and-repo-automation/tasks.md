@@ -75,14 +75,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Verification test confirms sending `SIGINT` cleanly halts Java and Node child processes without orphaned process leaks.
   - **Commit Message**: `feat(app): configure clean process lifecycle and signal trapping`
 
-- [ ] **TASK-003**: Establish canonical MIT license, documentation badges, and developer guide updates
+- [x] **TASK-003**: Establish canonical MIT license, documentation badges, and developer guide updates
   - **Component & Requirements**: `COMP-005`, `REQ-010`, `REQ-011`
   - **Target Files**: `LICENSE`, `README.md`, `README.ja.md`, `AGENTS.md`
   - **Acceptance Criteria**:
-    - [ ] Canonical `LICENSE` file created at repository root containing standard MIT license text (2026).
-    - [ ] Badges configured in exact required order in `README.md` and `README.ja.md`: (1) Latest Release, (2) CI Status, (3) release-please Status, (4) Dependabot Status, (5) MIT License.
-    - [ ] `AGENTS.md` Quick Start section updated with `npm run dev` workflow while strictly preserving single-source technical guidelines and unidirectional reference integrity.
-    - [ ] Automated markdown link check confirms zero broken links or anchor drift across documentation files.
+    - [x] Canonical `LICENSE` file created at repository root containing standard MIT license text (2026).
+    - [x] Badges configured in exact required order in `README.md` and `README.ja.md`: (1) Latest Release, (2) CI Status, (3) release-please Status, (4) Dependabot Status, (5) MIT License.
+    - [x] `AGENTS.md` Quick Start section updated with `npm run dev` workflow while strictly preserving single-source technical guidelines and unidirectional reference integrity.
+    - [x] Automated markdown link check confirms zero broken links or anchor drift across documentation files.
   - **Commit Message**: `docs(app): add MIT license, status badges, and consolidated quickstart instructions`
 
 ---
