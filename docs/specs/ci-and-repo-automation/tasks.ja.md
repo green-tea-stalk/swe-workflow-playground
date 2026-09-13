@@ -55,24 +55,24 @@ upstream:
 - **マージ先**: `docs/ci-and-repo-automation-spec`
 
 #### タスク
-- [ ] **TASK-001**: ルート npm パッケージおよび開発スクリプトの構成
+- [x] **TASK-001**: ルート npm パッケージおよび開発スクリプトの構成
   - **コンポーネント & 要件**: `COMP-004`, `REQ-007`, `REQ-008`
   - **対象ファイル**: `package.json`, `package-lock.json`
   - **受け入れ基準**:
-    - [ ] `private: true` および名前 `"swe-workflow-playground"` を持つルート `package.json` が作成されていること。
-    - [ ] `concurrently` および `wait-on` が devDependencies としてインストールされていること。
-    - [ ] `npm run dev` スクリプトが MySQL 用の `docker compose up -d` をオーケストレートし、バックエンド（`./gradlew run`）とフロントエンド（`npm run start:ja`）を並行実行すること。
-    - [ ] 明示的なロケール開発用の `npm run dev:ja` および `npm run dev:en` スクリプトが提供されていること。
-    - [ ] データベースヘルパースクリプト（`db:up`, `db:down`）およびルートテスト集約スクリプト（`test`, `test:backend`, `test:frontend`, `test:e2e`）が構成されていること。
+    - [x] `private: true` および名前 `"swe-workflow-playground"` を持つルート `package.json` が作成されていること。
+    - [x] `concurrently` および `wait-on` が devDependencies としてインストールされていること。
+    - [x] `npm run dev` スクリプトが MySQL 用の `docker compose up -d` をオーケストレートし、バックエンド（`./gradlew run`）とフロントエンド（`npm run start:ja`）を並行実行すること。
+    - [x] 明示的なロケール開発用の `npm run dev:ja` および `npm run dev:en` スクリプトが提供されていること。
+    - [x] データベースヘルパースクリプト（`db:up`, `db:down`）およびルートテスト集約スクリプト（`test`, `test:backend`, `test:frontend`, `test:e2e`）が構成されていること。
   - **コミットメッセージ**: `feat(app): configure root npm workspace and consolidated dev scripts`
 
-- [ ] **TASK-002**: プロセスライフサイクル、エラーハンドリング、および終了トラップの実装
+- [x] **TASK-002**: プロセスライフサイクル、エラーハンドリング、および終了トラップの実装
   - **コンポーネント & 要件**: `COMP-004`, `REQ-009`
   - **対象ファイル**: `package.json`
   - **受け入れ基準**:
-    - [ ] エラー時または終了時にすべての兄弟プロセスを終了させるため、`concurrently` に `--kill-others`（`-k`）が構成されていること。
-    - [ ] 色分けされた識別可能なプロセスプレフィックス（`[backend]` および `[frontend]`）によるインターリーブ出力が構成されていること。
-    - [ ] `SIGINT` 送信時に孤立したプロセスを残さずに Java および Node の子プロセスがクリーンに停止することが検証テストで確認されていること。
+    - [x] エラー時または終了時にすべての兄弟プロセスを終了させるため、`concurrently` に `--kill-others`（`-k`）が構成されていること。
+    - [x] 色分けされた識別可能なプロセスプレフィックス（`[backend]` および `[frontend]`）によるインターリーブ出力が構成されていること。
+    - [x] `SIGINT` 送信時に孤立したプロセスを残さずに Java および Node の子プロセスがクリーンに停止することが検証テストで確認されていること。
   - **コミットメッセージ**: `feat(app): configure clean process lifecycle and signal trapping`
 
 - [ ] **TASK-003**: 正規 MIT ライセンスの作成、ドキュメントバッジ、および開発者ガイドの更新

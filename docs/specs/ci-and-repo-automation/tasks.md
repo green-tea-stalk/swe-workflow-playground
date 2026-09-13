@@ -55,24 +55,24 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `docs/ci-and-repo-automation-spec`
 
 #### Tasks
-- [ ] **TASK-001**: Configure root npm package and development scripts
+- [x] **TASK-001**: Configure root npm package and development scripts
   - **Component & Requirements**: `COMP-004`, `REQ-007`, `REQ-008`
   - **Target Files**: `package.json`, `package-lock.json`
   - **Acceptance Criteria**:
-    - [ ] Root `package.json` created with `private: true` and name `"swe-workflow-playground"`.
-    - [ ] `concurrently` and `wait-on` installed as devDependencies.
-    - [ ] `npm run dev` script orchestrates `docker compose up -d` for MySQL, then concurrently runs backend (`./gradlew run`) and frontend (`npm run start:ja`).
-    - [ ] `npm run dev:ja` and `npm run dev:en` scripts provided for explicit locale target development.
-    - [ ] Database helper scripts (`db:up`, `db:down`) and root test aggregation scripts (`test`, `test:backend`, `test:frontend`, `test:e2e`) configured.
+    - [x] Root `package.json` created with `private: true` and name `"swe-workflow-playground"`.
+    - [x] `concurrently` and `wait-on` installed as devDependencies.
+    - [x] `npm run dev` script orchestrates `docker compose up -d` for MySQL, then concurrently runs backend (`./gradlew run`) and frontend (`npm run start:ja`).
+    - [x] `npm run dev:ja` and `npm run dev:en` scripts provided for explicit locale target development.
+    - [x] Database helper scripts (`db:up`, `db:down`) and root test aggregation scripts (`test`, `test:backend`, `test:frontend`, `test:e2e`) configured.
   - **Commit Message**: `feat(app): configure root npm workspace and consolidated dev scripts`
 
-- [ ] **TASK-002**: Implement process lifecycle, error handling, and termination traps
+- [x] **TASK-002**: Implement process lifecycle, error handling, and termination traps
   - **Component & Requirements**: `COMP-004`, `REQ-009`
   - **Target Files**: `package.json`
   - **Acceptance Criteria**:
-    - [ ] `concurrently` configured with `--kill-others` (`-k`) to ensure termination of all sibling processes on error or exit.
-    - [ ] Interleaved output formatting configured with colored, identifiable process prefixes (`[backend]` and `[frontend]`).
-    - [ ] Verification test confirms sending `SIGINT` cleanly halts Java and Node child processes without orphaned process leaks.
+    - [x] `concurrently` configured with `--kill-others` (`-k`) to ensure termination of all sibling processes on error or exit.
+    - [x] Interleaved output formatting configured with colored, identifiable process prefixes (`[backend]` and `[frontend]`).
+    - [x] Verification test confirms sending `SIGINT` cleanly halts Java and Node child processes without orphaned process leaks.
   - **Commit Message**: `feat(app): configure clean process lifecycle and signal trapping`
 
 - [ ] **TASK-003**: Establish canonical MIT license, documentation badges, and developer guide updates
