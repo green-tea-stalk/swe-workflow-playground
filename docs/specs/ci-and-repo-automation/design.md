@@ -149,6 +149,7 @@ sequenceDiagram
 | `updates[].directory` | `string` | Required | `pattern: "^/.*"` | Path within repository |
 | `updates[].schedule.interval` | `string` (enum) | Required | `enum: ["weekly"]` | Checking cadence |
 | `updates[].schedule.day` | `string` (enum) | Required | `enum: ["monday"]` | Execution weekday |
+| `updates[].ignore` | `array<object>` | Optional | `item schema: { dependency-name: string, update-types?: array<string> }` | Package update exclusion rules |
 
 ### 3.3 Release Please Models & Schema Constraints
 

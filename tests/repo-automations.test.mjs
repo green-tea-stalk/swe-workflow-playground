@@ -41,6 +41,21 @@ describe('Multi-Ecosystem Dependabot Automation', () => {
       assert.equal(update.schedule?.day, 'monday', `${ecosystem} schedule day must be monday`);
     });
   }
+
+  test('dependabot configures ignore rule for typescript in /frontend to prevent incompatible updates', () => {
+    const npmUpdate = dependabotConfig.updates?.find(
+      (u) => u['package-ecosystem'] === 'npm' && u.directory === '/frontend'
+    );
+    assert.ok(npmUpdate, 'Must contain update entry for npm in /frontend');
+    assert.ok(Array.isArray(npmUpdate.ignore), 'npm update entry must have ignore array');
+    const tsIgnore = npmUpdate.ignore.find((i) => i['dependency-name'] === 'typescript');
+    assert.ok(tsIgnore, 'Must contain ignore entry for typescript');
+    assert.deepEqual(
+      tsIgnore['update-types'],
+      ['version-update:semver-major', 'version-update:semver-minor'],
+      'typescript ignore must block major and minor version updates'
+    );
+  });
 });
 
 describe('Semantic Release Please Automation', () => {
@@ -60,7 +75,7 @@ describe('Semantic Release Please Automation', () => {
 
     const actionStep = job.steps?.find((s) => s.uses?.startsWith('googleapis/release-please-action'));
     assert.ok(actionStep, 'Job must include googleapis/release-please-action step');
-    assert.equal(actionStep.uses, 'googleapis/release-please-action@v4', 'Workflow step must use exact release-please-action v4 reference');
+    assert.equal(actionStep.uses, 'googleapis/release-please-action@v5', 'Workflow step must use exact release-please-action v5 reference');
     assert.equal(actionStep.with?.['config-file'], '.github/release-please-config.json', 'Step must configure config-file parameter');
     assert.equal(actionStep.with?.['manifest-file'], '.release-please-manifest.json', 'Step must configure manifest-file parameter');
   });

@@ -149,6 +149,7 @@ sequenceDiagram
 | `updates[].directory` | `string` | 必須 | `pattern: "^/.*"` | リポジトリ内パス |
 | `updates[].schedule.interval` | `string` (enum) | 必須 | `enum: ["weekly"]` | チェック間隔 |
 | `updates[].schedule.day` | `string` (enum) | 必須 | `enum: ["monday"]` | 実行曜日 |
+| `updates[].ignore` | `array<object>` | 任意 | `アイテムスキーマ: { dependency-name: string, update-types?: array<string> }` | パッケージ更新除外ルール |
 
 ### 3.3 Release Please モデルおよびスキーマ制約
 
