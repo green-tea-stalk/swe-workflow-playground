@@ -29,14 +29,18 @@ test.describe('Bilingual Internationalization Workflows', () => {
     page,
   }) => {
     await page.addInitScript(() => {
-      window.localStorage.clear();
       Object.defineProperty(navigator, 'language', {
         get: () => 'ja-JP',
+        configurable: true,
+      });
+      Object.defineProperty(navigator, 'languages', {
+        get: () => ['ja-JP', 'ja'],
         configurable: true,
       });
     });
 
     await page.goto('/');
+    await expect(page).toHaveURL(/\/ja\//);
     const localeBadge = page.locator('app-language-switch .locale-label');
     await expect(localeBadge).toHaveText('JA');
 
@@ -46,7 +50,8 @@ test.describe('Bilingual Internationalization Workflows', () => {
     await page.evaluate(() => {
       window.localStorage.setItem('bb_locale', 'en');
     });
-    await page.goto('/en/');
+    await page.goto('/');
+    await expect(page).toHaveURL(/\/en\//);
     await expect(localeBadge).toHaveText('EN');
   });
 
@@ -67,6 +72,7 @@ test.describe('Bilingual Internationalization Workflows', () => {
     await expect(timestampElement).toHaveText(ENGLISH_DATE_PATTERN);
 
     await toggleButton.click();
+    await expect(page).toHaveURL(/\/ja\//);
 
     await expect(localeLabel).toHaveText('JA');
     await page.waitForFunction(() => window.localStorage.getItem('bb_locale') === 'ja');
@@ -79,32 +85,62 @@ test.describe('Bilingual Internationalization Workflows', () => {
   test('Scenario 3: Form validation errors and submission feedback display localized messages', async ({
     page,
   }) => {
-    await page.goto('/');
+    // 1. Verify English locale form validation and submission
+    await page.goto('/en/');
     await page.locator('.fixed-form-container').waitFor({ state: 'visible' });
 
-    const nameInput = page.locator('input[formControlName="name"]');
-    const titleInput = page.locator('input[formControlName="title"]');
-    const messageInput = page.locator('textarea[formControlName="message"]');
-    const submitButton = page.locator('.submit-button');
+    const nameInputEn = page.locator('input[formControlName="name"]');
+    const titleInputEn = page.locator('input[formControlName="title"]');
+    const messageInputEn = page.locator('textarea[formControlName="message"]');
+    const submitButtonEn = page.locator('.submit-button');
 
-    await nameInput.focus();
-    await nameInput.blur();
-    await submitButton.click();
+    await nameInputEn.focus();
+    await nameInputEn.blur();
+    await submitButtonEn.click();
 
-    const nameError = page.locator('mat-error').first();
-    await expect(nameError).toBeVisible();
-    await expect(nameError).toHaveText(/^(?:Name must not be blank|名前を入力してください)$/);
+    const nameErrorEn = page.locator('mat-error').first();
+    await expect(nameErrorEn).toBeVisible();
+    await expect(nameErrorEn).toHaveText('Name must not be blank');
 
-    const uniqueTitle = `Validation_Feedback_${Date.now()}`;
-    await nameInput.fill('Feedback Author');
-    await titleInput.fill(uniqueTitle);
-    await messageInput.fill('Submission feedback test message body.');
+    const uniqueTitleEn = `Validation_Feedback_EN_${Date.now()}`;
+    await nameInputEn.fill('English Author');
+    await titleInputEn.fill(uniqueTitleEn);
+    await messageInputEn.fill('English submission feedback test message body.');
+    await submitButtonEn.click();
 
-    await submitButton.click();
+    const snackBarEn = page.locator('mat-snack-bar-container');
+    await expect(snackBarEn).toBeVisible({ timeout: 5000 });
+    await expect(snackBarEn).toContainText('Post submitted successfully!');
 
-    const snackBar = page.locator('mat-snack-bar-container');
-    await expect(snackBar).toBeVisible({ timeout: 5000 });
-    await expect(snackBar).toContainText(/(?:Post submitted successfully!|投稿が完了しました！)/);
+    // Wait for snackbar to dismiss before next test sequence
+    await expect(snackBarEn).toBeHidden({ timeout: 6000 }).catch(() => {});
+
+    // 2. Verify Japanese locale form validation and submission
+    await page.goto('/ja/');
+    await page.locator('.fixed-form-container').waitFor({ state: 'visible' });
+
+    const nameInputJa = page.locator('input[formControlName="name"]');
+    const titleInputJa = page.locator('input[formControlName="title"]');
+    const messageInputJa = page.locator('textarea[formControlName="message"]');
+    const submitButtonJa = page.locator('.submit-button');
+
+    await nameInputJa.focus();
+    await nameInputJa.blur();
+    await submitButtonJa.click();
+
+    const nameErrorJa = page.locator('mat-error').first();
+    await expect(nameErrorJa).toBeVisible();
+    await expect(nameErrorJa).toHaveText('名前を入力してください');
+
+    const uniqueTitleJa = `検証用_投稿_${Date.now()}`;
+    await nameInputJa.fill('日本語 投稿者');
+    await titleInputJa.fill(uniqueTitleJa);
+    await messageInputJa.fill('日本語のバリデーション・フィードバック検証用本文です。');
+    await submitButtonJa.click();
+
+    const snackBarJa = page.locator('mat-snack-bar-container');
+    await expect(snackBarJa).toBeVisible({ timeout: 5000 });
+    await expect(snackBarJa).toContainText('投稿が完了しました！');
   });
 
   test('Scenario 4: User-contributed posts are displayed unaltered in original language without machine translation', async ({

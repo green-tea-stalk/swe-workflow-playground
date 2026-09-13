@@ -110,7 +110,10 @@ cd frontend
 npm start
 ```
 - Web Application URL: `http://localhost:4200/`
-- Development Server Reverse Proxy: `proxy.conf.json` automatically forwards `/api/*` to `http://localhost:8080`
+- Multi-Locale Server: `server.mjs` serves both English (`/en/`) and Japanese (`/ja/`) AOT distributions simultaneously with automatic root language detection (`/` -> `/ja/` or `/en/`) and reverse-proxies `/api/*` to `http://localhost:8080`.
+- Single-Locale HMR Dev Servers (optional for component development):
+  - English development server: `npm run start:en`
+  - Japanese development server: `npm run start:ja`
 
 ---
 
