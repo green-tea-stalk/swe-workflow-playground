@@ -3,7 +3,6 @@ package com.example.bulletinboard.util;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import jakarta.inject.Singleton;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -43,7 +42,8 @@ public class HttpLocaleResolver implements LocaleResolver {
         }
 
         List<LanguageRange> ranges = parseRanges(acceptLanguage);
-        ranges.sort(Comparator.comparingDouble(LanguageRange::quality).reversed()
+        ranges.sort(Comparator.comparingDouble(LanguageRange::quality)
+                .reversed()
                 .thenComparingInt(LanguageRange::originalIndex));
 
         for (LanguageRange range : ranges) {

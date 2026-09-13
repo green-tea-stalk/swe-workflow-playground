@@ -1,21 +1,20 @@
 package com.example.bulletinboard.dto;
 
-import com.example.bulletinboard.entity.PostEntity;
-import io.micronaut.json.JsonMapper;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import jakarta.inject.Inject;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.example.bulletinboard.entity.PostEntity;
+import io.micronaut.json.JsonMapper;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests verifying DTO construction, serialization invariants, and empty collection guarantees.
@@ -52,7 +51,8 @@ class DtoContractTest {
         assertEquals("alice@example.com", response.email());
         assertEquals("Title", response.title());
         assertEquals("Message", response.message());
-        assertEquals("2026-09-11T12:00:00Z", response.createdAt(), "Timestamp must be in ISO 8601 UTC format ending with Z");
+        assertEquals(
+                "2026-09-11T12:00:00Z", response.createdAt(), "Timestamp must be in ISO 8601 UTC format ending with Z");
     }
 
     @Test
@@ -74,10 +74,13 @@ class DtoContractTest {
         String compactJson = json.replaceAll("\\s+", "");
 
         assertAll(
-                () -> assertTrue(compactJson.contains("\"items\":[]"), "items must be serialized as empty array [] in JSON: " + json),
-                () -> assertTrue(compactJson.contains("\"total_items\":0"), "total_items must be serialized in snake_case"),
-                () -> assertTrue(compactJson.contains("\"total_pages\":0"), "total_pages must be serialized in snake_case")
-        );
+                () -> assertTrue(
+                        compactJson.contains("\"items\":[]"),
+                        "items must be serialized as empty array [] in JSON: " + json),
+                () -> assertTrue(
+                        compactJson.contains("\"total_items\":0"), "total_items must be serialized in snake_case"),
+                () -> assertTrue(
+                        compactJson.contains("\"total_pages\":0"), "total_pages must be serialized in snake_case"));
     }
 
     @Test
@@ -87,16 +90,18 @@ class DtoContractTest {
         String json = jsonMapper.writeValueAsString(post);
 
         assertAll(
-                () -> assertTrue(json.contains("\"created_at\":\"2026-09-11T12:00:00Z\""), "created_at must be serialized in snake_case"),
+                () -> assertTrue(
+                        json.contains("\"created_at\":\"2026-09-11T12:00:00Z\""),
+                        "created_at must be serialized in snake_case"),
                 () -> assertTrue(json.contains("\"name\":\"Charlie\"")),
-                () -> assertTrue(json.contains("\"id\":10"))
-        );
+                () -> assertTrue(json.contains("\"id\":10")));
     }
 
     @Test
     @DisplayName("JSON string should accurately deserialize into PagedPostResponse and PostResponse")
     void testJsonDeserialization() throws IOException {
-        String json = """
+        String json =
+                """
                 {
                     "items": [
                         {
@@ -131,7 +136,8 @@ class DtoContractTest {
     @Test
     @DisplayName("JSON string with omitted items property should fall back to empty list []")
     void testJsonDeserializationWithMissingItemsDefaultsToEmptyList() throws IOException {
-        String json = """
+        String json =
+                """
                 {
                     "page": 0,
                     "size": 50,

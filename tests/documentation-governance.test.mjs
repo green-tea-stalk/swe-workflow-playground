@@ -43,12 +43,18 @@ describe('Documentation Governance & Badges Presentation', () => {
     },
   ];
 
-  const docFiles = [
+  const badgeDocFiles = [
     { name: 'README.md', path: readmePath },
     { name: 'README.ja.md', path: readmeJaPath },
   ];
 
-  for (const { name, path } of docFiles) {
+  const allDocFiles = [
+    { name: 'README.md', path: readmePath },
+    { name: 'README.ja.md', path: readmeJaPath },
+    { name: 'AGENTS.md', path: agentsPath },
+  ];
+
+  for (const { name, path } of badgeDocFiles) {
     test(`${name} contains all 5 status badges with valid links in strict sequential order`, () => {
       assert.ok(existsSync(path), `${name} must exist`);
       const content = readFileSync(path, 'utf8');
@@ -64,7 +70,9 @@ describe('Documentation Governance & Badges Presentation', () => {
         lastIndex = match.index;
       }
     });
+  }
 
+  for (const { name, path } of allDocFiles) {
     test(`${name} contains zero broken relative links or anchor references`, () => {
       assert.ok(existsSync(path), `${name} must exist`);
       const content = readFileSync(path, 'utf8');
@@ -90,6 +98,10 @@ describe('Documentation Governance & Badges Presentation', () => {
 
         const [filePath, anchor] = target.split('#');
         const resolvedPath = filePath ? resolve(rootDir, filePath) : path;
+        assert.ok(
+          resolvedPath.startsWith(rootDir),
+          `${name} link target traverses outside repository root: ${filePath}`
+        );
         assert.ok(existsSync(resolvedPath), `${name} links to non-existent file: ${filePath}`);
 
         if (anchor) {
@@ -110,10 +122,32 @@ describe('Documentation Governance & Badges Presentation', () => {
     assert.match(content, /npm run dev/, 'AGENTS.md must document npm run dev consolidated command');
   });
 
+  test('AGENTS.md documents code formatting verification and fixing commands', () => {
+    assert.ok(existsSync(agentsPath), 'AGENTS.md must exist');
+    const content = readFileSync(agentsPath, 'utf8');
+
+    assert.match(content, /\.\/gradlew spotlessCheck/, 'AGENTS.md must document spotlessCheck');
+    assert.match(content, /\.\/gradlew spotlessApply/, 'AGENTS.md must document spotlessApply');
+    assert.match(content, /npm run format:check/, 'AGENTS.md must document npm run format:check');
+    assert.match(content, /npm run format/, 'AGENTS.md must document npm run format');
+  });
+
+  test('AGENTS.md documents Version Catalog architecture and CODEOWNERS governance', () => {
+    assert.ok(existsSync(agentsPath), 'AGENTS.md must exist');
+    const content = readFileSync(agentsPath, 'utf8');
+
+    assert.match(content, /libs\.versions\.toml/, 'AGENTS.md must document libs.versions.toml');
+    assert.match(
+      content,
+      /libs\.\w+|Version Catalog/i,
+      'AGENTS.md must document Version Catalog architecture and accessors'
+    );
+    assert.match(content, /CODEOWNERS/, 'AGENTS.md must document CODEOWNERS');
+  });
+
   test('AGENTS.md strictly preserves Unidirectional Reference Rule (never references README)', () => {
     assert.ok(existsSync(agentsPath), 'AGENTS.md must exist');
     const content = readFileSync(agentsPath, 'utf8');
-    assert.doesNotMatch(content, /README\.md/i, 'AGENTS.md must not reference README.md');
-    assert.doesNotMatch(content, /README\.ja\.md/i, 'AGENTS.md must not reference README.ja.md');
+    assert.doesNotMatch(content, /\bREADME\b/i, 'AGENTS.md must not reference README in any form');
   });
 });

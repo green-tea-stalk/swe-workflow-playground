@@ -58,7 +58,11 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       { value: '', expectedValid: false, desc: 'empty string is invalid' },
       { value: '   ', expectedValid: false, desc: 'whitespace-only is invalid' },
       { value: 'a'.repeat(50), expectedValid: true, desc: 'boundary value (50 chars) is valid' },
-      { value: 'a'.repeat(51), expectedValid: false, desc: 'exceeding limit (51 chars) is invalid' },
+      {
+        value: 'a'.repeat(51),
+        expectedValid: false,
+        desc: 'exceeding limit (51 chars) is invalid',
+      },
     ])('name validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.name;
       control.setValue(value);
@@ -68,15 +72,35 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
     it.each([
       { value: '', expectedValid: true, desc: 'empty string is optional and valid' },
       { value: '   ', expectedValid: true, desc: 'whitespace-only is optional and valid' },
-      { value: 'invalid-email-format', expectedValid: false, desc: 'invalid email format is invalid' },
+      {
+        value: 'invalid-email-format',
+        expectedValid: false,
+        desc: 'invalid email format is invalid',
+      },
       { value: 'user@example.com', expectedValid: true, desc: 'valid email format is valid' },
       {
-        value: 'a'.repeat(64) + '@' + 'b'.repeat(63) + '.' + 'c'.repeat(60) + '.' + 'd'.repeat(60) + '.com',
+        value:
+          'a'.repeat(64) +
+          '@' +
+          'b'.repeat(63) +
+          '.' +
+          'c'.repeat(60) +
+          '.' +
+          'd'.repeat(60) +
+          '.com',
         expectedValid: true,
         desc: 'boundary value (254 chars) is valid',
       },
       {
-        value: 'a'.repeat(64) + '@' + 'b'.repeat(64) + '.' + 'c'.repeat(60) + '.' + 'd'.repeat(60) + '.com',
+        value:
+          'a'.repeat(64) +
+          '@' +
+          'b'.repeat(64) +
+          '.' +
+          'c'.repeat(60) +
+          '.' +
+          'd'.repeat(60) +
+          '.com',
         expectedValid: false,
         desc: 'exceeding limit (255 chars) is invalid',
       },
@@ -90,7 +114,11 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       { value: '', expectedValid: false, desc: 'empty string is invalid' },
       { value: '   ', expectedValid: false, desc: 'whitespace-only is invalid' },
       { value: 'a'.repeat(100), expectedValid: true, desc: 'boundary value (100 chars) is valid' },
-      { value: 'a'.repeat(101), expectedValid: false, desc: 'exceeding limit (101 chars) is invalid' },
+      {
+        value: 'a'.repeat(101),
+        expectedValid: false,
+        desc: 'exceeding limit (101 chars) is invalid',
+      },
     ])('title validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.title;
       control.setValue(value);
@@ -100,8 +128,16 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
     it.each([
       { value: '', expectedValid: false, desc: 'empty string is invalid' },
       { value: '   ', expectedValid: false, desc: 'whitespace-only is invalid' },
-      { value: 'a'.repeat(4000), expectedValid: true, desc: 'boundary value (4000 chars) is valid' },
-      { value: 'a'.repeat(4001), expectedValid: false, desc: 'exceeding limit (4001 chars) is invalid' },
+      {
+        value: 'a'.repeat(4000),
+        expectedValid: true,
+        desc: 'boundary value (4000 chars) is valid',
+      },
+      {
+        value: 'a'.repeat(4001),
+        expectedValid: false,
+        desc: 'exceeding limit (4001 chars) is invalid',
+      },
     ])('message validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.message;
       control.setValue(value);
@@ -171,7 +207,7 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       expect(mockSnackBar.open).toHaveBeenCalledWith(
         'Post submitted successfully!',
         'Close',
-        expect.any(Object)
+        expect.any(Object),
       );
       expect(postCreatedEmitted).toBe(true);
       expect(component.isSubmitting()).toBe(false);
@@ -197,7 +233,7 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
 
     it('should retain form values and display error snackbar upon API submission failure', () => {
       mockPostApiService.createPost.mockReturnValue(
-        throwError(() => new Error('サーバー内部エラーが発生しました。'))
+        throwError(() => new Error('サーバー内部エラーが発生しました。')),
       );
 
       let postCreatedEmitted = false;
@@ -217,7 +253,7 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       expect(mockSnackBar.open).toHaveBeenCalledWith(
         'An error occurred while submitting the post. Please try again later.',
         'Close',
-        expect.any(Object)
+        expect.any(Object),
       );
       expect(component.postForm.value.name).toBe('鈴木一郎');
       expect(component.postForm.value.message).toBe('失敗予定本文');
@@ -249,7 +285,7 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       expect(mockSnackBar.open).toHaveBeenCalledWith(
         'An error occurred while submitting the post. Please try again later.',
         'Close',
-        expect.any(Object)
+        expect.any(Object),
       );
       expect(component.isSubmitting()).toBe(false);
     });
@@ -278,7 +314,7 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       expect(mockSnackBar.open).toHaveBeenCalledWith(
         '入力値に不正な文字が含まれています。',
         'Close',
-        expect.any(Object)
+        expect.any(Object),
       );
       expect(component.postForm.value.name).toBe('テストユーザー');
       expect(component.isSubmitting()).toBe(false);
@@ -308,7 +344,7 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       expect(mockSnackBar.open).toHaveBeenCalledWith(
         'Input payload failed validation constraints.',
         'Close',
-        expect.any(Object)
+        expect.any(Object),
       );
       expect(component.postForm.value.name).toBe('Alice');
       expect(component.isSubmitting()).toBe(false);
@@ -321,7 +357,9 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       expect(compiled.querySelector('.form-field-name mat-label')?.textContent).toContain('Name');
       expect(compiled.querySelector('.form-field-email mat-label')?.textContent).toContain('Email');
       expect(compiled.querySelector('.form-field-title mat-label')?.textContent).toContain('Title');
-      expect(compiled.querySelector('.form-field-message mat-label')?.textContent).toContain('Message');
+      expect(compiled.querySelector('.form-field-message mat-label')?.textContent).toContain(
+        'Message',
+      );
     });
 
     it('should render localized error messages when controls are touched and invalid', () => {
@@ -333,10 +371,18 @@ describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
       fixture.detectChanges();
 
       const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('.form-field-name mat-error')?.textContent).toContain('Name must not be blank');
-      expect(compiled.querySelector('.form-field-email mat-error')?.textContent).toContain('Email must be a well-formed email address');
-      expect(compiled.querySelector('.form-field-title mat-error')?.textContent).toContain('Title must not be blank');
-      expect(compiled.querySelector('.form-field-message mat-error')?.textContent).toContain('Message must not be blank');
+      expect(compiled.querySelector('.form-field-name mat-error')?.textContent).toContain(
+        'Name must not be blank',
+      );
+      expect(compiled.querySelector('.form-field-email mat-error')?.textContent).toContain(
+        'Email must be a well-formed email address',
+      );
+      expect(compiled.querySelector('.form-field-title mat-error')?.textContent).toContain(
+        'Title must not be blank',
+      );
+      expect(compiled.querySelector('.form-field-message mat-error')?.textContent).toContain(
+        'Message must not be blank',
+      );
     });
   });
 

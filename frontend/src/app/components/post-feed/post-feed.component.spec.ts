@@ -90,7 +90,9 @@ describe('PostFeedComponent (Post Feed Component Unit)', () => {
     expect(firstCard.querySelector('.post-title')?.textContent).toContain('多言語対応のテスト投稿');
     expect(firstCard.querySelector('.post-name')?.textContent).toContain('山田 太郎');
     expect(firstCard.querySelector('.post-email')?.textContent).toContain('yamada@example.com');
-    expect(firstCard.querySelector('.post-message')?.textContent).toContain('これは日本語の本文です。Emoji 🌸 も含まれます。');
+    expect(firstCard.querySelector('.post-message')?.textContent).toContain(
+      'これは日本語の本文です。Emoji 🌸 も含まれます。',
+    );
 
     // Second card (without email: element should not be rendered)
     const secondCard = cards[1];
@@ -105,9 +107,12 @@ describe('PostFeedComponent (Post Feed Component Unit)', () => {
       { invalidPage: -10, description: 'large negative integer' },
       { invalidPage: 1.5, description: 'non-integer decimal' },
       { invalidPage: Number.NaN, description: 'NaN value' },
-    ])('should throw an Error when loadPage is called with $invalidPage ($description)', ({ invalidPage }) => {
-      expect(() => component.loadPage(invalidPage)).toThrowError(/non-negative integer/i);
-    });
+    ])(
+      'should throw an Error when loadPage is called with $invalidPage ($description)',
+      ({ invalidPage }) => {
+        expect(() => component.loadPage(invalidPage)).toThrowError(/non-negative integer/i);
+      },
+    );
   });
 
   describe('locale-sensitive date formatting', () => {
@@ -124,16 +129,19 @@ describe('PostFeedComponent (Post Feed Component Unit)', () => {
         expectedRegex: /^[A-Z][a-z]{2} \d{1,2}, \d{4}, \d{1,2}:\d{2}:\d{2} [AP]M$/,
         description: 'English standard timestamp format',
       },
-    ])('should format timestamps using "$expectedPattern" ($description)', ({ locale, expectedPattern, expectedRegex }) => {
-      mockLocaleService.getActiveLocale.mockReturnValue(locale);
-      fixture.detectChanges();
+    ])(
+      'should format timestamps using "$expectedPattern" ($description)',
+      ({ locale, expectedPattern, expectedRegex }) => {
+        mockLocaleService.getActiveLocale.mockReturnValue(locale);
+        fixture.detectChanges();
 
-      expect(component.dateFormat).toBe(expectedPattern);
+        expect(component.dateFormat).toBe(expectedPattern);
 
-      const compiled = fixture.nativeElement as HTMLElement;
-      const firstDateText = compiled.querySelector('.post-date')?.textContent?.trim() ?? '';
-      expect(firstDateText).toMatch(expectedRegex);
-    });
+        const compiled = fixture.nativeElement as HTMLElement;
+        const firstDateText = compiled.querySelector('.post-date')?.textContent?.trim() ?? '';
+        expect(firstDateText).toMatch(expectedRegex);
+      },
+    );
   });
 
   it('should display placeholder message without crashing when zero records exist', () => {

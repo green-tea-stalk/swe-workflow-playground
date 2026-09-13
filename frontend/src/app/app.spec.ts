@@ -11,11 +11,7 @@ describe('App (Application Root Integration)', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        provideAnimationsAsync(),
-      ],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimationsAsync()],
     }).compileComponents();
   });
 

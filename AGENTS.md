@@ -44,12 +44,14 @@ graph TD
   - Micronaut Data JDBC & HikariCP
   - Flyway Database Migrations (MySQL dialect)
   - RFC 9457 Problem Details error handling
-  - Gradle 9.x (Kotlin DSL)
+  - Gradle 9.x (Kotlin DSL) with Version Catalog (`backend/gradle/libs.versions.toml`)
+  - Spotless Code Formatter with Palantir Java Format (4 spaces) & ktlint (`COMP-006`)
 - **Frontend SPA**:
   - Angular 22 (Standalone Component architecture, Signals)
   - Angular Material & CDK 22
   - Viewport-anchored persistent bottom submission form (`COMP-005`)
   - 50-item paginated feed with auto-scrolling viewport constraints (`COMP-004`)
+  - Prettier Code Formatter (`.prettierrc`, `.prettierignore`) (`COMP-007`)
   - Vitest test runner & Playwright E2E automation
 - **Persistence Store**:
   - MySQL 8.4 LTS
@@ -64,6 +66,16 @@ graph TD
 | **COMP-003** | `PostRepository` | Backend Data Adapter | Micronaut Data JDBC persistence interface against MySQL 8.4. |
 | **COMP-004** | `PostFeedComponent` | Frontend Feed View | Reverse-chronological card list, 50-item `MatPaginator`, and empty-feed placeholder. |
 | **COMP-005** | `PostFormComponent` | Frontend Form View | Viewport-bottom fixed form with Reactive Forms validation and toast notification. |
+| **COMP-006** | `Spotless / libs.versions.toml` | Backend Tooling | Backend code formatting (Palantir 4 spaces, ktlint) and centralized Gradle Version Catalog. |
+| **COMP-007** | `Prettier / package.json` | Frontend Tooling | Frontend code formatting (Prettier) across TypeScript, HTML, styles, and JSON. |
+| **COMP-008** | `CODEOWNERS` | Repository Governance | Automated GitHub code review routing assigning `@green-tea-stalk` repository-wide. |
+
+### 2.4 Dependency & Version Catalog Architecture (`libs.versions.toml`)
+
+Backend dependencies and Gradle plugins are centrally managed via the Gradle Version Catalog at `backend/gradle/libs.versions.toml`:
+- **Centralized Declarations**: All third-party library coordinates and Gradle plugin versions are declared within `libs.versions.toml` instead of hardcoded in build scripts.
+- **Type-Safe Accessors**: `backend/build.gradle.kts` consumes dependencies and plugins strictly via type-safe `libs.*` accessors (e.g. `libs.micronaut.http.server.netty` and `libs.plugins.spotless`).
+- **Platform Invariant**: Platform runtime and environment versions (Java 25 LTS, MySQL 8.4 LTS, Docker) MUST NOT be declared in the catalog; they are governed by runtime environment prerequisites.
 
 ---
 
@@ -138,28 +150,53 @@ npm start
 
 All changes must pass automated verification suites cleanly across both backend and frontend layers before submission.
 
-### 5.1 Backend Test Suite (JUnit 5 & Testcontainers)
+### 5.1 Code Formatting Verification (Spotless & Prettier)
+Executes deterministic style and format checks across backend Java/Kotlin scripts and frontend assets:
+- **Backend Spotless (Palantir 4 spaces & ktlint)**:
+  - Check formatting:
+    ```bash
+    cd backend
+    ./gradlew spotlessCheck
+    ```
+  - Apply formatting in-place:
+    ```bash
+    cd backend
+    ./gradlew spotlessApply
+    ```
+- **Frontend Prettier (TypeScript, HTML, Styles, JSON)**:
+  - Check formatting:
+    ```bash
+    cd frontend
+    npm run format:check
+    ```
+  - Apply formatting in-place:
+    ```bash
+    cd frontend
+    npm run format
+    ```
+
+### 5.2 Backend Test Suite (JUnit 5 & Testcontainers)
 Executes 65 unit and integration tests (including Testcontainers MySQL integration, repository queries, service logic, and RFC 9457 contract verifications):
 ```bash
 cd backend
 ./gradlew test
 ```
 
-### 5.2 Frontend Unit Test Suite (Vitest)
+### 5.3 Frontend Unit Test Suite (Vitest)
 Executes 40 unit and component integration tests verifying form states, feed rendering, pagination triggers, and API client interactions:
 ```bash
 cd frontend
 npm test -- --watch=false
 ```
 
-### 5.3 End-to-End (E2E) Test Suite (Playwright)
+### 5.4 End-to-End (E2E) Test Suite (Playwright)
 Executes browser-driven tests verifying live API integration, feed scrollability (`scrollHeight > clientHeight`), paginator non-occlusion, and post creation flows:
 ```bash
 cd frontend
 npm run e2e
 ```
 
-### 5.4 Production Bundle Build
+### 5.5 Production Bundle Build
 Verifies Ahead-of-Time compilation, CSS bundling, and production asset budget limits:
 ```bash
 cd frontend
@@ -241,3 +278,5 @@ All validation errors and unhandled exceptions must return HTTP Problem Details 
   - Append model-specific trailer to commits: `Co-Authored-By: "Antigravity Gemini 3.8 Flash (High)" <gemini@google.com>`
 - **Pull Request Protocol**:
   - Pull requests should be submitted in Draft state targeting `main` or intermediate feature branches for Stacked PR workflows.
+- **Code Ownership & Review Governance**:
+  - `.github/CODEOWNERS` assigns repository-wide review responsibility to `@green-tea-stalk` (`* @green-tea-stalk`). All pull requests automatically request review from the designated lead maintainer.

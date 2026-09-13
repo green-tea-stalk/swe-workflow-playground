@@ -9,7 +9,6 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import jakarta.inject.Singleton;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -20,7 +19,8 @@ import java.util.Objects;
  */
 @Singleton
 @Produces(MediaType.APPLICATION_JSON_PROBLEM)
-public class IllegalArgumentExceptionHandler implements ExceptionHandler<IllegalArgumentException, HttpResponse<ProblemDetails>> {
+public class IllegalArgumentExceptionHandler
+        implements ExceptionHandler<IllegalArgumentException, HttpResponse<ProblemDetails>> {
 
     private static final String PROBLEM_TYPE = "https://example.com/errors/invalid-argument";
     private static final String DEFAULT_PROBLEM_TITLE = "Invalid Argument";
@@ -35,10 +35,11 @@ public class IllegalArgumentExceptionHandler implements ExceptionHandler<Illegal
      * @param localeResolver             resolver for extracting client locale from HTTP headers
      * @param messageLocalizationService service for resolving localized messages from bundles
      */
-    public IllegalArgumentExceptionHandler(LocaleResolver localeResolver,
-                                           MessageLocalizationService messageLocalizationService) {
+    public IllegalArgumentExceptionHandler(
+            LocaleResolver localeResolver, MessageLocalizationService messageLocalizationService) {
         this.localeResolver = Objects.requireNonNull(localeResolver, "LocaleResolver must not be null");
-        this.messageLocalizationService = Objects.requireNonNull(messageLocalizationService, "MessageLocalizationService must not be null");
+        this.messageLocalizationService =
+                Objects.requireNonNull(messageLocalizationService, "MessageLocalizationService must not be null");
     }
 
     /**
@@ -59,20 +60,17 @@ public class IllegalArgumentExceptionHandler implements ExceptionHandler<Illegal
 
         String rawMessage = exception.getMessage();
         String detail;
-        if (rawMessage == null || rawMessage.isBlank() || rawMessage.contains("com.example.") || rawMessage.contains("Exception")) {
+        if (rawMessage == null
+                || rawMessage.isBlank()
+                || rawMessage.contains("com.example.")
+                || rawMessage.contains("Exception")) {
             detail = title;
         } else {
             detail = rawMessage;
         }
 
         ProblemDetails problem = new ProblemDetails(
-                PROBLEM_TYPE,
-                title,
-                HttpStatus.BAD_REQUEST.getCode(),
-                detail,
-                request.getPath(),
-                List.of()
-        );
+                PROBLEM_TYPE, title, HttpStatus.BAD_REQUEST.getCode(), detail, request.getPath(), List.of());
 
         return HttpResponse.<ProblemDetails>status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON_PROBLEM_TYPE)

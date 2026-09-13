@@ -28,7 +28,10 @@
             <mat-card-subtitle class="post-meta">
               <span class="post-name">{{ post.name }}</span>
               @if (post.email) {
-                <span class="post-email">&lt;<a [href]="'mailto:' + post.email">{{ post.email }}</a>&gt;</span>
+                <span class="post-email"
+                  >&lt;<a [href]="'mailto:' + post.email">{{ post.email }}</a
+                  >&gt;</span
+                >
               }
               <span class="post-date">{{ post.created_at | date: dateFormat }}</span>
             </mat-card-subtitle>
@@ -50,7 +53,8 @@
       [showFirstLastButtons]="true"
       (page)="onPageChange($event)"
       aria-label="Select page"
-      i18n-aria-label="@@app.feed.paginator_label">
+      i18n-aria-label="@@app.feed.paginator_label"
+    >
     </mat-paginator>
   </div>
 </section>

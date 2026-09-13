@@ -10,6 +10,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
     "e2e": "playwright test"
   },
   "private": true,

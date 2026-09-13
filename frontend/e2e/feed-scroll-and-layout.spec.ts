@@ -27,7 +27,9 @@ test.describe('Bulletin board feed scroll and layout verification', () => {
     await page.locator('.post-cards-list').waitFor({ state: 'visible' });
   });
 
-  test('should display toolbar, message feed, paginator, and fixed bottom form', async ({ page }) => {
+  test('should display toolbar, message feed, paginator, and fixed bottom form', async ({
+    page,
+  }) => {
     // Toolbar
     await expect(page.locator('.app-toolbar')).toBeVisible();
 
@@ -41,7 +43,9 @@ test.describe('Bulletin board feed scroll and layout verification', () => {
     await expect(page.locator('.fixed-form-container')).toBeVisible();
   });
 
-  test('should allow message feed to scroll when content exceeds viewport (regression prevention)', async ({ page }) => {
+  test('should allow message feed to scroll when content exceeds viewport (regression prevention)', async ({
+    page,
+  }) => {
     const cardsList = page.locator('.post-cards-list');
     await expect(cardsList).toBeVisible();
 
@@ -66,7 +70,9 @@ test.describe('Bulletin board feed scroll and layout verification', () => {
     expect(scrollTop).toBeGreaterThan(0);
   });
 
-  test('paginator must remain visible and unobstructed above fixed bottom form (regression prevention)', async ({ page }) => {
+  test('paginator must remain visible and unobstructed above fixed bottom form (regression prevention)', async ({
+    page,
+  }) => {
     const paginator = page.locator('.paginator-wrapper');
     const form = page.locator('.fixed-form-container');
 
@@ -85,7 +91,9 @@ test.describe('Bulletin board feed scroll and layout verification', () => {
     }
   });
 
-  test('submitting a new post from bottom form should prepend it to top of message feed', async ({ page }) => {
+  test('submitting a new post from bottom form should prepend it to top of message feed', async ({
+    page,
+  }) => {
     const uniqueTitle = `E2E自動テスト_${Date.now()}`;
     const uniqueMessage = 'Playwright による E2E 自動検証投稿メッセージです。';
 

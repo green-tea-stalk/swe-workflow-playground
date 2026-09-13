@@ -1,0 +1,44 @@
+[versions]
+micronaut = "5.0.2"
+shadow = "9.6.1"
+spotless = "7.0.2"
+mockito = "5.23.0"
+testcontainers = "1.21.4"
+
+[libraries]
+# Annotation processors
+micronaut-data-processor = { module = "io.micronaut.data:micronaut-data-processor" }
+micronaut-http-validation = { module = "io.micronaut:micronaut-http-validation" }
+micronaut-serde-processor = { module = "io.micronaut.serde:micronaut-serde-processor" }
+micronaut-validation-processor = { module = "io.micronaut.validation:micronaut-validation-processor" }
+
+# Implementation dependencies
+micronaut-data-jdbc = { module = "io.micronaut.data:micronaut-data-jdbc" }
+micronaut-flyway = { module = "io.micronaut.flyway:micronaut-flyway" }
+micronaut-serde-jackson = { module = "io.micronaut.serde:micronaut-serde-jackson" }
+micronaut-sql-hikari = { module = "io.micronaut.sql:micronaut-jdbc-hikari" }
+micronaut-validation = { module = "io.micronaut.validation:micronaut-validation" }
+jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api" }
+
+# Compile only
+micronaut-http-client = { module = "io.micronaut:micronaut-http-client" }
+
+# Runtime only
+logback-classic = { module = "ch.qos.logback:logback-classic" }
+mysql-connector-j = { module = "com.mysql:mysql-connector-j" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql" }
+yaml-snakeyaml = { module = "org.yaml:snakeyaml" }
+
+# Test dependencies
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+testcontainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+[plugins]
+micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut" }

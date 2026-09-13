@@ -27,7 +27,7 @@
 
 情報の重複を排除し、単一の真実の情報源 (Single Source of Truth) を維持するため、すべての技術詳細・実行コマンド・アーキテクチャ規約は [AGENTS.md](AGENTS.md) に集約されています。各項目については以下のセクションを参照してください：
 
-- **システムアーキテクチャ & コンポーネント構成**: アーキテクチャ図、技術スタック、およびコンポーネント境界 (`COMP-001` 〜 `COMP-005`) については [AGENTS.md#2-system-architecture--component-inventory](AGENTS.md#2-system-architecture--component-inventory) を参照してください。
+- **システムアーキテクチャ & コンポーネント構成**: アーキテクチャ図、技術スタック、およびコンポーネント境界 (`COMP-001` 〜 `COMP-008`) については [AGENTS.md#2-system-architecture--component-inventory](AGENTS.md#2-system-architecture--component-inventory) を参照してください。
 - **動作環境 & 前提条件**: JDK 25、Node.js、および Docker の要件については [AGENTS.md#3-prerequisites--environment-setup](AGENTS.md#3-prerequisites--environment-setup) を参照してください。
 - **クイックスタート (起動手順)**: MySQL 8.4、Micronaut バックエンド、および Angular フロントエンドの起動コマンドについては [AGENTS.md#4-quick-start--service-execution-guide](AGENTS.md#4-quick-start--service-execution-guide) を参照してください。
 - **検証 & テスト実行手順**: バックエンドテスト、フロントエンド Vitest テスト、Playwright E2E テスト、およびビルドコマンドについては [AGENTS.md#5-verification--testing-protocol](AGENTS.md#5-verification--testing-protocol) を参照してください。

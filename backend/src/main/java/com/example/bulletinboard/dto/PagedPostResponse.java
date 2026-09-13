@@ -3,7 +3,6 @@ package com.example.bulletinboard.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
-
 import java.util.List;
 
 /**
@@ -20,15 +19,11 @@ import java.util.List;
 @Serdeable
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public record PagedPostResponse(
-        @JsonInclude(JsonInclude.Include.ALWAYS)
-        List<PostResponse> items,
+        @JsonInclude(JsonInclude.Include.ALWAYS) List<PostResponse> items,
         int page,
         int size,
-        @JsonProperty("total_items")
-        long totalItems,
-        @JsonProperty("total_pages")
-        int totalPages
-) {
+        @JsonProperty("total_items") long totalItems,
+        @JsonProperty("total_pages") int totalPages) {
     /**
      * Compact constructor enforcing contract invariants, collection absence safety, and defensive immutability.
      */

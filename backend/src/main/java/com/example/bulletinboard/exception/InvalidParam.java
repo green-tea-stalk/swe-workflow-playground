@@ -9,7 +9,4 @@ import io.micronaut.serde.annotation.Serdeable;
  * @param reason a human-readable explanation describing the violation
  */
 @Serdeable
-public record InvalidParam(
-        String name,
-        String reason
-) {}
+public record InvalidParam(String name, String reason) {}

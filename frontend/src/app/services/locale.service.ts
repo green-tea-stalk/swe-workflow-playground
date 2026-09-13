@@ -56,7 +56,10 @@ export class LocaleService {
     }
     try {
       const stored = localStorage.getItem(LocaleService.STORAGE_KEY);
-      if (stored !== null && (LocaleService.SUPPORTED_LOCALES as readonly string[]).includes(stored)) {
+      if (
+        stored !== null &&
+        (LocaleService.SUPPORTED_LOCALES as readonly string[]).includes(stored)
+      ) {
         return stored as SupportedLocale;
       }
       return null;
@@ -78,7 +81,10 @@ export class LocaleService {
     }
 
     try {
-      const browserLang = (typeof navigator !== 'undefined' && navigator.language) ? navigator.language.toLowerCase() : '';
+      const browserLang =
+        typeof navigator !== 'undefined' && navigator.language
+          ? navigator.language.toLowerCase()
+          : '';
       if (browserLang.startsWith('ja')) {
         return 'ja';
       }
@@ -101,7 +107,9 @@ export class LocaleService {
       !LocaleService.LOCALE_CODE_REGEX.test(locale) ||
       !(LocaleService.SUPPORTED_LOCALES as readonly string[]).includes(locale)
     ) {
-      throw new Error(`Unsupported locale: "${locale}". Supported locales are: ${LocaleService.SUPPORTED_LOCALES.join(', ')}`);
+      throw new Error(
+        `Unsupported locale: "${locale}". Supported locales are: ${LocaleService.SUPPORTED_LOCALES.join(', ')}`,
+      );
     }
 
     if (typeof localStorage !== 'undefined') {

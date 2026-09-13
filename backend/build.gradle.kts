@@ -1,7 +1,8 @@
 plugins {
-    id("io.micronaut.application") version "5.0.2"
-    id("com.gradleup.shadow") version "9.6.1"
-    id("io.micronaut.aot") version "5.0.2"
+    alias(libs.plugins.micronaut.application)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.micronaut.aot)
 }
 
 version = "0.1"
@@ -12,32 +13,32 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("io.micronaut.data:micronaut-data-processor")
-    annotationProcessor("io.micronaut:micronaut-http-validation")
-    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
-    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    annotationProcessor(libs.micronaut.data.processor)
+    annotationProcessor(libs.micronaut.http.validation)
+    annotationProcessor(libs.micronaut.serde.processor)
+    annotationProcessor(libs.micronaut.validation.processor)
 
-    implementation("io.micronaut.data:micronaut-data-jdbc")
-    implementation("io.micronaut.flyway:micronaut-flyway")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("io.micronaut.validation:micronaut-validation")
-    implementation("jakarta.validation:jakarta.validation-api")
+    implementation(libs.micronaut.data.jdbc)
+    implementation(libs.micronaut.flyway)
+    implementation(libs.micronaut.serde.jackson)
+    implementation(libs.micronaut.sql.hikari)
+    implementation(libs.micronaut.validation)
+    implementation(libs.jakarta.validation.api)
 
-    compileOnly("io.micronaut:micronaut-http-client")
+    compileOnly(libs.micronaut.http.client)
 
-    runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("com.mysql:mysql-connector-j")
-    runtimeOnly("org.flywaydb:flyway-mysql")
-    runtimeOnly("org.yaml:snakeyaml")
+    runtimeOnly(libs.logback.classic)
+    runtimeOnly(libs.mysql.connector.j)
+    runtimeOnly(libs.flyway.mysql)
+    runtimeOnly(libs.yaml.snakeyaml)
 
-    testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
-    testImplementation("org.mockito:mockito-core:5.23.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
-    testImplementation("org.testcontainers:mysql:1.21.4")
-    testImplementation("org.testcontainers:junit-jupiter:1.21.4")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation(libs.micronaut.http.client)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit.jupiter)
+    testImplementation(libs.testcontainers.mysql)
+    testImplementation(libs.testcontainers.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 application {
@@ -70,4 +71,15 @@ micronaut {
 
 tasks.withType<AbstractTestTask>().configureEach {
     failOnNoDiscoveredTests = false
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        palantirJavaFormat("2.71.0")
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint()
+    }
 }

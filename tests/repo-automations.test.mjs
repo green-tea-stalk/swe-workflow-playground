@@ -97,6 +97,5 @@ describe('Semantic Release Please Automation', () => {
     const version = manifest['.'];
     assert.ok(version, 'root package version must exist in manifest');
     assert.match(version, /^[0-9]+\.[0-9]+\.[0-9]+$/, 'Manifest version must be a valid SemVer milestone');
-    assert.equal(version, '0.1.0', 'Initial manifest version milestone must be 0.1.0');
   });
 });

@@ -9,12 +9,11 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.server.exceptions.ExceptionHandler;
 import jakarta.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Global fallback exception handler translating unhandled exceptions into RFC 9457 Problem Details envelopes
@@ -41,10 +40,11 @@ public class GlobalExceptionHandler implements ExceptionHandler<Throwable, HttpR
      * @param localeResolver             resolver for extracting client locale from HTTP headers
      * @param messageLocalizationService service for resolving localized messages from bundles
      */
-    public GlobalExceptionHandler(LocaleResolver localeResolver,
-                                  MessageLocalizationService messageLocalizationService) {
+    public GlobalExceptionHandler(
+            LocaleResolver localeResolver, MessageLocalizationService messageLocalizationService) {
         this.localeResolver = Objects.requireNonNull(localeResolver, "LocaleResolver must not be null");
-        this.messageLocalizationService = Objects.requireNonNull(messageLocalizationService, "MessageLocalizationService must not be null");
+        this.messageLocalizationService =
+                Objects.requireNonNull(messageLocalizationService, "MessageLocalizationService must not be null");
     }
 
     /**
@@ -69,13 +69,7 @@ public class GlobalExceptionHandler implements ExceptionHandler<Throwable, HttpR
         String detail = messageLocalizationService.getMessageOrDefault(MSG_KEY_DETAIL, locale, DEFAULT_PROBLEM_DETAIL);
 
         ProblemDetails problem = new ProblemDetails(
-                PROBLEM_TYPE,
-                title,
-                HttpStatus.INTERNAL_SERVER_ERROR.getCode(),
-                detail,
-                request.getPath(),
-                List.of()
-        );
+                PROBLEM_TYPE, title, HttpStatus.INTERNAL_SERVER_ERROR.getCode(), detail, request.getPath(), List.of());
 
         return HttpResponse.<ProblemDetails>status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON_PROBLEM_TYPE)
