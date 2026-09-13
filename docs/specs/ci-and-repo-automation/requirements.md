@@ -1,7 +1,7 @@
 ---
 feature: ci-and-repo-automation
 document_type: requirements
-version: 1.0.0
+version: 1.1.0
 status: approved
 updated_at: 2026-09-13
 ---
@@ -13,16 +13,21 @@ updated_at: 2026-09-13
 ### 1.1 Problem Statement
 The bulletin board application currently lacks continuous integration workflows, automated dependency vulnerability checking, and semantic release publishing. Contributors must execute tests manually on local machines, increasing the risk of regressions entering the main branch. Furthermore, running the full-stack application locally requires navigating into separate directories and executing disjoint commands across database, backend, and frontend environments without a unified orchestration mechanism. In addition, repository status and licensing are not prominently visible in project documentation.
 
+In addition, without automated code style enforcement and formatting quality gates across backend (Java, Kotlin DSL) and frontend (TypeScript, HTML, SCSS, JSON) codebases, code formatting inconsistencies and style debate friction occur during reviews. Furthermore, backend dependency coordinates and versions are hardcoded across build scripts rather than centrally managed, and pull requests lack default reviewer assignment rules through explicit repository ownership configuration.
+
 ### 1.2 Business & Technical Goals
 - **Automated Quality Gates**: Ensure every pull request and push to the canonical branch passes unit tests, contract tests, production builds, and end-to-end browser tests automatically before merge.
+- **Automated Code Style Enforcement**: Guarantee consistent formatting across backend Java sources (Palantir Java Format, 4-space indentation), Kotlin Gradle scripts (ktlint), and frontend codebases (Prettier), failing CI immediately on any formatting violation.
+- **Centralized Dependency Management**: Centralize backend build plugins and external library dependencies using a standard Gradle Version Catalog (`libs.versions.toml`).
+- **Explicit Repository Governance & Review Ownership**: Enforce code review accountability across the entire repository by establishing a canonical `CODEOWNERS` mapping assigned to `@green-tea-stalk`.
 - **Efficient Resource Usage**: Execute backend and frontend verification in parallel, and run end-to-end browser tests only when both upstream verification suites pass cleanly.
 - **Automated Lifecycle Maintenance**: Continuously track and update dependencies across all supported ecosystems (Gradle, npm, GitHub Actions, Docker) on a weekly cadence.
-- **Frictionless Developer Experience**: Provide a single, consolidated root development command that boots database persistence and runs backend and frontend services with live hot-reloading and clean termination.
+- **Frictionless Developer Experience**: Provide a single, consolidated root development command that boots database persistence and runs backend and frontend services with live hot-reloading and clean termination, alongside one-command formatting fixers.
 - **Transparent Project Governance**: Automate semantic versioning and changelog publishing via release automation, and display status badges in documentation in a standardized order alongside a canonical MIT license.
 
 ### 1.3 Target Personas & Stakeholders
-- **Repository Contributor / Developer**: Submits changes via pull requests, expects prompt automated CI feedback, and requires a single-command local development setup.
-- **Maintainer / Release Manager**: Oversees project governance, releases, dependency hygiene, and repository security.
+- **Repository Contributor / Developer**: Submits changes via pull requests, expects prompt automated CI feedback (including formatting and test verification), and requires single-command local development and formatting tools.
+- **Maintainer / Release Manager (@green-tea-stalk)**: Oversees project governance, releases, dependency hygiene, and repository security, and serves as the designated default reviewer for all repository contributions.
 - **External Visitor / Consumer**: Evaluates project quality, release version, CI health, and licensing terms via repository documentation.
 - **Automation Service (GitHub Actions & Dependabot)**: Interacts with repository webhooks and APIs to execute verification, submit dependency updates, and publish releases.
 
@@ -35,14 +40,14 @@ The bulletin board application currently lacks continuous integration workflows,
 - **Preconditions**: Contributor pushes commits to the `main` branch or opens a pull request targeting `main`.
 - **Trigger**: GitHub webhook delivers `push` or `pull_request` event.
 - **Basic Flow**:
-  1. System initiates backend verification (compilation, unit tests, and integration tests) and frontend verification (unit tests and production build) concurrently.
+  1. System initiates backend verification (formatting validation, compilation, unit tests, and integration tests) and frontend verification (formatting validation, unit tests, and production build) concurrently.
   2. Both backend and frontend verification jobs complete with zero errors.
   3. System triggers the end-to-end (E2E) verification job.
   4. E2E job initializes persistence services, launches backend and frontend application servers, and executes browser-driven end-to-end tests.
   5. All E2E scenarios succeed, and the system reports a passing status check to the pull request.
 - **Alternative Flows**: None.
 - **Exception Flows**:
-  - *Backend or Frontend Failure*: If either backend or frontend verification fails, the system immediately marks the respective job as failed, bypasses the E2E verification job, and marks the overall pull request check as failed.
+  - *Backend or Frontend Failure*: If either backend or frontend verification (including format check, tests, or build) fails, the system immediately marks the respective job as failed, bypasses the E2E verification job, and marks the overall pull request check as failed.
   - *E2E Test Failure*: If any end-to-end scenario fails, the system captures diagnostic traces and failure screenshots, marks the E2E check as failed, and reports failure to the pull request.
 - **Postconditions**: Pull request displays an unambiguous green or red verification status indicator.
 
@@ -89,11 +94,36 @@ The bulletin board application currently lacks continuous integration workflows,
 - **Exception Flows**: None.
 - **Postconditions**: Official releases and release notes are systematically published in lockstep with the codebase.
 
+### 2.5 Use Case 5: Local Code Formatting Enforcement
+- **Actor**: Developer
+- **Preconditions**: Developer has authored or modified code in backend or frontend modules.
+- **Trigger**: Developer executes local formatting commands before commit.
+- **Basic Flow**:
+  1. Developer triggers backend formatting fix command; system formats Java code with Palantir Java Format (4 spaces) and Gradle Kotlin scripts with ktlint.
+  2. Developer triggers frontend formatting fix command; system formats TypeScript, HTML, SCSS, CSS, and JSON files via Prettier.
+  3. All source code is uniformly formatted in place.
+- **Alternative Flows**:
+  - *Format Verification Check*: Developer executes format checking commands; system outputs any style discrepancies and exits with non-zero status if violations exist.
+- **Exception Flows**: None.
+- **Postconditions**: Modified source files conform cleanly to project style guidelines.
+
+### 2.6 Use Case 6: Repository Ownership Review Routing
+- **Actor**: Repository Contributor
+- **Preconditions**: Pull request is created targeting any branch in the repository.
+- **Trigger**: Pull request creation event on GitHub.
+- **Basic Flow**:
+  1. Contributor opens a pull request on GitHub.
+  2. System reads the canonical repository ownership definition.
+  3. System automatically requests review from `@green-tea-stalk`.
+- **Alternative Flows**: None.
+- **Exception Flows**: None.
+- **Postconditions**: Pull request is assigned to `@green-tea-stalk` for code review.
+
 ---
 
 ## 3. Visual Modeling
 
-### 3.1 Interaction Sequence: Continuous Integration Quality Gate
+### 3.1 Interaction Sequence: Continuous Integration Quality Gate with Formatting
 ```mermaid
 sequenceDiagram
     actor Contributor as Repository Contributor
@@ -101,10 +131,12 @@ sequenceDiagram
 
     Note over Contributor,System: Pull Request Quality Gate
     Contributor->>System: Submit Pull Request (Trigger CI)
-    Note over System: Concurrent Execution of Backend & Frontend
-    alt Backend or Frontend Verification Fails
+    Note over System: Concurrent Execution of Backend & Frontend Verification
+    alt Formatting Violation Detected in Backend or Frontend
+        System-->>Contributor: Report Failure Status Check (Fail-Closed, Bypass E2E Suite)
+    else Test or Build Failure Detected
         System-->>Contributor: Report Failure Status Check (Bypass E2E Suite)
-    else Both Backend and Frontend Verification Succeed
+    else Both Backend and Frontend Verification Pass Cleanly
         Note over System: Trigger E2E Verification Job
         alt E2E Test Suite Passes
             System-->>Contributor: Report Success Status Check (Quality Gate Passed)
@@ -114,13 +146,13 @@ sequenceDiagram
     end
 ```
 
-### 3.2 Activity Flow: CI Quality Gate & Local Development Lifecycle
+### 3.2 Activity Flow: CI Quality Gate & Developer Workflow
 ```mermaid
 flowchart TD
     subgraph CI_Pipeline["Automated CI Quality Gate"]
         TriggerCI([Trigger: Code Change on main]) --> ForkCI{Fork Verification}
-        ForkCI --> VerifyBackend["Execute Backend Verification Suite"]
-        ForkCI --> VerifyFrontend["Execute Frontend Verification Suite"]
+        ForkCI --> VerifyBackend["Backend Job:<br>Spotless Check + Gradle Tests"]
+        ForkCI --> VerifyFrontend["Frontend Job:<br>Prettier Check + Unit Tests + Build"]
         VerifyBackend --> JoinCI{Both Suites Succeeded?}
         VerifyFrontend --> JoinCI
         JoinCI -- No --> FailCI["Report Verification Failure<br>(Bypass E2E Suite)"]
@@ -157,6 +189,11 @@ All functional requirements are defined using standard EARS patterns and upperca
 | **REQ-009** | Unwanted Behavior | If an interruption signal (`SIGINT`) is received during consolidated local development execution, then the system MUST terminate all child processes concurrently and MUST NOT leave orphaned background processes running. | Automated Process Test |
 | **REQ-010** | Ubiquitous | The system MUST display verified status badges in project documentation in the exact specified order: (1) Latest Release, (2) CI Status, (3) release-please Status, (4) Dependabot Status, and (5) Software License. | Documentation Inspection |
 | **REQ-011** | Ubiquitous | The system MUST provide a canonical MIT software license file located at the repository root. | File Existence Inspection |
+| **REQ-012** | Ubiquitous | The system MUST enforce backend code style formatting using Spotless configured with Palantir Java Format (4-space indentation) for Java source files and ktlint for Kotlin Gradle build script files. | Automated Linter Test |
+| **REQ-013** | Ubiquitous | The system MUST enforce frontend code style formatting using Prettier configured for TypeScript, HTML, CSS/SCSS, and JSON files. | Automated Linter Test |
+| **REQ-014** | Ubiquitous | The system MUST maintain a canonical code ownership configuration at `.github/CODEOWNERS` that assigns default code review responsibility for all repository paths (`*`) to `@green-tea-stalk`. | Configuration Inspection |
+| **REQ-015** | Ubiquitous | The system MUST maintain a centralized Gradle Version Catalog at `backend/gradle/libs.versions.toml` defining backend build plugin and external library dependency coordinates and versions. | Build Script Inspection |
+| **REQ-016** | Unwanted Behavior | If any backend or frontend source file fails code formatting constraints during automated CI verification, then the system MUST fail the corresponding verification job with a non-zero exit code and MUST NOT permit the pull request check to pass. | CI Automated Test |
 
 ---
 
@@ -164,9 +201,10 @@ All functional requirements are defined using standard EARS patterns and upperca
 
 - **NFR-PERF-001 (Concurrency)**: The CI workflow MUST fork backend and frontend verification tasks into distinct concurrent runner jobs to minimize overall pipeline wall-clock execution time.
 - **NFR-SEC-001 (Least Privilege)**: Automated workflows MUST operate under the principle of least privilege, granting write permissions exclusively to jobs that generate releases or update pull request state.
-- **NFR-REL-001 (Fail-Closed Quality Gate)**: The CI pipeline MUST fail-closed: any failure in compilation, linting, unit tests, integration tests, or end-to-end tests MUST result in a non-zero exit status and block pull request merge approval.
+- **NFR-REL-001 (Fail-Closed Quality Gate)**: The CI pipeline MUST fail-closed: any failure in compilation, formatting check, linting, unit tests, integration tests, or end-to-end tests MUST result in a non-zero exit status and block pull request merge approval.
 - **NFR-COMP-001 (Cross-Platform Development)**: The consolidated local development scripts MUST function identically across supported developer platforms (macOS, Linux) running Node.js 22 LTS and Docker.
 - **NFR-MAINT-001 (Documentation Consistency)**: Status badges and local execution instructions MUST be maintained consistently across English (`README.md`) and Japanese (`README.ja.md`) documentation files.
+- **NFR-STYLE-001 (Deterministic Formatting)**: Formatting tools (Spotless with Palantir Java Format and Prettier) MUST produce deterministic code layouts across all environments with zero non-reproducible style variations.
 
 ---
 
@@ -176,3 +214,5 @@ The following items are explicitly excluded from this specification:
 - Continuous deployment (CD) pipelines to external production cloud platforms (e.g. AWS, GCP, Azure, or Kubernetes).
 - Standalone native desktop or mobile application packaging.
 - Multi-container production deployment orchestration (e.g. production Docker Compose stack or Helm charts).
+- Managing runtime platform environment versions (Java 25 LTS, MySQL 8.4 LTS, Node.js 22 LTS) within the Gradle Version Catalog (version catalog is strictly restricted to Gradle build plugins and library dependencies).
+- Granular directory-level or path-specific CODEOWNERS routing (code review ownership is repository-wide).

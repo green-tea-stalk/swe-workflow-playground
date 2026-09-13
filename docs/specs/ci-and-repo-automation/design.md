@@ -1,11 +1,11 @@
 ---
 feature: ci-and-repo-automation
 document_type: design
-version: 1.0.0
+version: 1.1.0
 status: approved
 updated_at: 2026-09-13
 upstream:
-  requirements: 1.0.0
+  requirements: 1.1.0
 ---
 
 # Architecture & Component Design: CI & Repository Automation
@@ -13,7 +13,7 @@ upstream:
 ## 1. Component Boundaries & Scope Overview
 
 ### 1.1 Architecture & Component Map
-The CI & Repository Automation feature introduces five major operational and infrastructure components that govern continuous integration, automated dependency hygiene, semantic release lifecycle, consolidated local development, and repository documentation integrity.
+The CI & Repository Automation feature governs continuous integration, automated code style enforcement, automated dependency hygiene, semantic release lifecycle, centralized Gradle dependency management, consolidated local development, repository governance, and documentation integrity across eight discrete architectural components.
 
 ```mermaid
 graph TD
@@ -21,10 +21,13 @@ graph TD
         CI["COMP-001: CI Workflow Engine<br>(.github/workflows/ci.yml)"]
         Dependabot["COMP-002: Dependabot Config<br>(.github/dependabot.yml)"]
         ReleasePlease["COMP-003: Release Please Automation<br>(.github/workflows/release-please.yml)"]
+        Codeowners["COMP-008: Code Ownership Governance<br>(.github/CODEOWNERS)"]
     end
 
     subgraph Local_Dev["Local Developer Environment"]
         DevOrchestrator["COMP-004: Root Dev Orchestrator<br>(package.json)"]
+        BackendSpotless["COMP-006: Backend Formatting & Version Catalog<br>(build.gradle.kts, libs.versions.toml)"]
+        FrontendPrettier["COMP-007: Frontend Prettier Formatter<br>(.prettierrc, .prettierignore, package.json)"]
         BackendSvc["Backend Service (Java 25)"]
         FrontendSvc["Frontend SPA Server (Node 22)"]
         MySQLContainer["MySQL 8.4 Container"]
@@ -37,8 +40,11 @@ graph TD
     DevOrchestrator -->|docker compose up -d| MySQLContainer
     DevOrchestrator -->|concurrently| BackendSvc
     DevOrchestrator -->|concurrently| FrontendSvc
-    CI -->|Verifies| BackendSvc
-    CI -->|Verifies| FrontendSvc
+    BackendSpotless -->|enforces style on| BackendSvc
+    FrontendPrettier -->|enforces style on| FrontendSvc
+    CI -->|Format check & verifies| BackendSvc
+    CI -->|Format check & verifies| FrontendSvc
+    Codeowners -.->|Assigns review to @green-tea-stalk| GitHub_Actions
     DocBadges -.->|Reflects status of| CI
     DocBadges -.->|Reflects status of| ReleasePlease
     DocBadges -.->|Reflects status of| Dependabot
@@ -47,38 +53,53 @@ graph TD
 ### 1.2 Component Inventory
 | Component ID | Component / File Boundary | Scope / Boundary | Linked Requirements |
 | :--- | :--- | :--- | :--- |
-| **COMP-001** | `.github/workflows/ci.yml` | GitHub Actions CI Workflow | `REQ-001`, `REQ-002`, `REQ-003` |
+| **COMP-001** | `.github/workflows/ci.yml` | GitHub Actions CI Workflow | `REQ-001`, `REQ-002`, `REQ-003`, `REQ-016` |
 | **COMP-002** | `.github/dependabot.yml` | Dependabot Automation Manifest | `REQ-004` |
 | **COMP-003** | `.github/workflows/release-please.yml`, `.github/release-please-config.json`, `.release-please-manifest.json` | Semantic Release Engine | `REQ-005`, `REQ-006` |
 | **COMP-004** | `package.json` (Repository Root) | Local Development Orchestrator | `REQ-007`, `REQ-008`, `REQ-009` |
 | **COMP-005** | `README.md`, `README.ja.md`, `LICENSE`, `AGENTS.md` | Repository Documentation & Badges | `REQ-010`, `REQ-011` |
+| **COMP-006** | `backend/build.gradle.kts`, `backend/gradle/libs.versions.toml` | Backend Code Formatter & Version Catalog | `REQ-012`, `REQ-015`, `REQ-016` |
+| **COMP-007** | `frontend/.prettierrc`, `frontend/.prettierignore`, `frontend/package.json` | Frontend Code Formatter & Scripts | `REQ-013`, `REQ-016` |
+| **COMP-008** | `.github/CODEOWNERS` | Repository Code Ownership Governance | `REQ-014` |
 
 ---
 
 ## 2. Interaction Modeling
 
-### 2.1 Continuous Integration Workflow Pipeline
+### 2.1 Continuous Integration Workflow Pipeline with Formatting Quality Gate
 ```mermaid
 sequenceDiagram
     autonumber
     actor GitHub as GitHub Event Trigger
     participant Runner as GitHub Actions Runner
-    participant BackendJob as Backend Job (Java 25)
-    participant FrontendJob as Frontend Job (Node 22)
+    participant BackendJob as Backend Job (COMP-001 / COMP-006)
+    participant FrontendJob as Frontend Job (COMP-001 / COMP-007)
     participant E2EJob as E2E Job (Playwright)
 
     GitHub->>Runner: Push / Pull Request to main
     par Parallel Verification
-        Runner->>BackendJob: Execute ./gradlew test (Unit + Testcontainers)
+        Runner->>BackendJob: Step 1: Execute ./gradlew spotlessCheck
+        alt Backend Formatting Fails
+            BackendJob-->>Runner: Exit code 1 (Spotless failure)
+            Runner-->>GitHub: Mark Workflow Failed (Fail-Fast, Bypass E2E)
+        else Backend Formatting Passes
+            BackendJob->>BackendJob: Step 2: Execute ./gradlew test (Unit + Integration)
+            BackendJob-->>Runner: Zero exit code (Success)
+        end
     and
-        Runner->>FrontendJob: Execute npm test & npm run build
+        Runner->>FrontendJob: Step 1: Execute npm run format:check
+        alt Frontend Formatting Fails
+            FrontendJob-->>Runner: Exit code 1 (Prettier failure)
+            Runner-->>GitHub: Mark Workflow Failed (Fail-Fast, Bypass E2E)
+        else Frontend Formatting Passes
+            FrontendJob->>FrontendJob: Step 2: Execute npm test && npm run build
+            FrontendJob-->>Runner: Zero exit code (Success)
+        end
     end
-    alt Either Backend or Frontend Fails
-        BackendJob-->>Runner: Non-zero exit code / failure
-        Runner-->>GitHub: Mark Workflow Failed (Bypass E2E Job)
-    else Both Backend and Frontend Pass
-        BackendJob-->>Runner: Zero exit code (Success)
-        FrontendJob-->>Runner: Zero exit code (Success)
+
+    alt Either Backend or Frontend Failed
+        Runner-->>GitHub: Report Workflow Check FAILURE (Bypass E2E)
+    else Both Backend and Frontend Succeeded
         Runner->>E2EJob: Trigger E2E Job (needs: [backend, frontend])
         E2EJob->>E2EJob: Start MySQL & Boot Backend and Frontend
         E2EJob->>E2EJob: Run npx playwright test
@@ -92,66 +113,69 @@ sequenceDiagram
     end
 ```
 
-### 2.2 Consolidated Local Development Lifecycle
+### 2.2 Local Code Formatting Execution Flow
 ```mermaid
 sequenceDiagram
     autonumber
     actor Dev as Developer
-    participant Orchestrator as Root npm Runner (COMP-004)
-    participant Docker as Docker Daemon
-    participant Backend as Backend Process (Gradle)
-    participant Frontend as Frontend Process (Angular)
+    participant BackendCLI as Backend Gradle Runner (COMP-006)
+    participant FrontendCLI as Frontend npm Runner (COMP-007)
 
-    Dev->>Orchestrator: Run npm run dev (or dev:ja / dev:en)
-    Orchestrator->>Docker: Execute docker compose up -d (MySQL)
-    Docker-->>Orchestrator: MySQL container healthy
-    par Concurrent Execution via concurrently
-        Orchestrator->>Backend: cd backend && ./gradlew run
-    and
-        Orchestrator->>Frontend: cd frontend && npm run start:ja
-    end
-    Orchestrator-->>Dev: Stream prefixed, color-coded live logs
-    Note over Dev,Frontend: Live Hot-Reload Active
-    Dev->>Orchestrator: Send SIGINT (Ctrl+C)
-    Orchestrator->>Backend: SIGINT / Terminate child process
-    Orchestrator->>Frontend: SIGINT / Terminate child process
-    Orchestrator-->>Dev: Clean exit (Zero orphaned processes)
+    Note over Dev,BackendCLI: Local Formatting Correction
+    Dev->>BackendCLI: Execute ./gradlew spotlessApply
+    BackendCLI->>BackendCLI: Format Java files via Palantir Java Format (4 spaces)
+    BackendCLI->>BackendCLI: Format *.gradle.kts scripts via ktlint
+    BackendCLI-->>Dev: All backend files formatted in place
+
+    Dev->>FrontendCLI: Execute npm run format (in frontend/)
+    FrontendCLI->>FrontendCLI: Format TS, HTML, SCSS, CSS, JSON via Prettier
+    FrontendCLI-->>Dev: All frontend files formatted in place
 ```
 
 ---
 
 ## 3. Data Models & Schema Constraints
 
-### 3.1 `CIWorkflowModel` (`.github/workflows/ci.yml`)
-- **Format**: GitHub Actions Workflow YAML Schema
+All configuration structures, workflow definitions, version catalogs, and manifests are defined using structured Markdown tables conforming to standard constraint vocabulary.
+
+### 3.1 CI Workflow Models (`.github/workflows/ci.yml`)
+
+#### 3.1.1 `CiWorkflowSchema`
+- **Format**: GitHub Actions Workflow Schema
 
 | Field Name | Type | Required / Optional | Constraints | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| `name` | `string` | Required | Value: `"CI"` | Workflow display name |
-| `on` | `object` | Required | Defines `push` and `pull_request` | Trigger specifications |
-| `on.push.branches` | `array<string>` | Required | `minItems: 1, non-nullable, cannot be omitted; exact elements: ["main"]` | Monitored push branches |
-| `on.pull_request.branches` | `array<string>` | Required | `minItems: 1, non-nullable, cannot be omitted; exact elements: ["main"]` | Monitored PR target branches |
-| `concurrency` | `object` | Required | Group by workflow and ref/PR, `cancel-in-progress: true` | Redundant run cancellation |
-| `jobs` | `object` | Required | Keys: `backend`, `frontend`, `e2e` | Distinct pipeline execution jobs |
-| `jobs.backend.runs-on` | `string` | Required | `"ubuntu-latest"` | Backend execution environment |
-| `jobs.frontend.runs-on` | `string` | Required | `"ubuntu-latest"` | Frontend execution environment |
-| `jobs.e2e.runs-on` | `string` | Required | `"ubuntu-latest"` | E2E execution environment |
-| `jobs.e2e.needs` | `array<string>` | Required | `minItems: 2, maxItems: 2, non-nullable; exact elements: ["backend", "frontend"]` | Strict upstream job dependencies |
+| `name` | `string` | Required | `const: "CI"` | Name of workflow |
+| `on.push.branches` | `array<string>` | Required | `minItems: 1, non-nullable; exact elements: ["main"]` | Monitored branch for pushes |
+| `on.pull_request.branches` | `array<string>` | Required | `minItems: 1, non-nullable; exact elements: ["main"]` | Monitored branch for PRs |
+| `permissions.contents` | `string` | Required | `const: "read"` | Least-privilege checkout permission |
+| `concurrency.group` | `string` | Required | Format: `${{ github.workflow }}-${{ github.ref }}` | Concurrency lock key |
+| `concurrency.cancel-in-progress` | `boolean` | Required | Value: `true` | Aborts redundant active runs |
+| `jobs.backend` | `object` | Required | - | Backend parallel verification job |
+| `jobs.backend.steps` | `array<object>` | Required | `minItems: 5, non-nullable` | Step sequence: checkout, java setup, mysql start, spotless check, test |
+| `jobs.frontend` | `object` | Required | - | Frontend parallel verification job |
+| `jobs.frontend.steps` | `array<object>` | Required | `minItems: 6, non-nullable` | Step sequence: checkout, node setup, npm ci, format check, unit test, build |
+| `jobs.e2e` | `object` | Required | `needs: ["backend", "frontend"]` | Downstream browser test gate |
 
-### 3.2 `DependabotConfigModel` (`.github/dependabot.yml`)
-- **Format**: Dependabot Configuration v2 Schema
+### 3.2 Dependabot Models & Schema Constraints (`.github/dependabot.yml`)
+
+#### 3.2.1 `DependabotConfigSchema`
+- **Format**: Dependabot v2 Configuration Schema
 
 | Field Name | Type | Required / Optional | Constraints | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `version` | `integer` | Required | Value: `2` | Dependabot schema version |
-| `updates` | `array<object>` | Required | `minItems: 4, maxItems: 4, non-nullable (exactly 4 configured ecosystems; cannot be omitted or empty)` | Monitored package ecosystems |
-| `updates[].package-ecosystem` | `string` (enum) | Required | `enum: ["gradle", "npm", "github-actions", "docker"]` | Target package manager |
-| `updates[].directory` | `string` | Required | `pattern: "^/.*"` | Path within repository |
-| `updates[].schedule.interval` | `string` (enum) | Required | `enum: ["weekly"]` | Checking cadence |
-| `updates[].schedule.day` | `string` (enum) | Required | `enum: ["monday"]` | Execution weekday |
-| `updates[].ignore` | `array<object>` | Optional | `item schema: { dependency-name: string, update-types?: array<string> }` | Package update exclusion rules |
+| `updates` | `array<DependabotUpdateRule>` | Required | `minItems: 4, maxItems: 4, non-nullable (guaranteed [] on empty)` | Package ecosystem update configurations |
 
-### 3.3 Release Please Models & Schema Constraints
+#### 3.2.2 `DependabotUpdateRule` (Sub-model)
+| Field Name | Type | Required / Optional | Constraints | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `package-ecosystem` | `string` (enum) | Required | `enum: ["gradle", "npm", "github-actions", "docker"]` | Target package manager |
+| `directory` | `string` | Required | `enum: ["/backend", "/frontend", "/"]` | Target filesystem directory |
+| `schedule.interval` | `string` (enum) | Required | `enum: ["weekly"]` | Checking cadence |
+| `schedule.day` | `string` (enum) | Required | `enum: ["monday"]` | Execution weekday |
+
+### 3.3 Release Please Models (`.github/workflows/release-please.yml`, `.github/release-please-config.json`, `.release-please-manifest.json`)
 
 #### 3.3.1 `ReleasePleaseWorkflowSchema` (`.github/workflows/release-please.yml`)
 - **Format**: GitHub Actions Workflow Schema
@@ -159,9 +183,9 @@ sequenceDiagram
 | Field Name | Type | Required / Optional | Constraints | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `name` | `string` | Required | `const: "release-please"` | Workflow identifier |
-| `on.push.branches` | `array<string>` | Required | `minItems: 1, non-nullable; exact elements: ["main"]` | Monitored trigger branch |
-| `permissions.contents` | `string` | Required | `const: "write"` | Scope required for tagging and release assets |
-| `permissions.pull-requests` | `string` | Required | `const: "write"` | Scope required for release PR management |
+| `on.push.branches` | `array<string>` | Required | `minItems: 1, maxItems: 1, non-nullable; exact elements: ["main"]` | Monitored trigger branch |
+| `permissions.contents` | `string` | Required | `const: "write"` | Required for tagging and release assets |
+| `permissions.pull-requests` | `string` | Required | `const: "write"` | Required for release PR management |
 | `jobs.release-please.runs-on` | `string` | Required | `const: "ubuntu-latest"` | Runner environment |
 | `jobs.release-please.steps[].uses` | `string` | Required | `const: "googleapis/release-please-action@v4"` | Google release-please action reference |
 
@@ -180,7 +204,7 @@ sequenceDiagram
 | :--- | :--- | :--- | :--- | :--- |
 | `.` | `string` | Required | SemVer pattern `^[0-9]+\.[0-9]+\.[0-9]+$` | Current repository version milestone |
 
-### 3.4 `RootDevPackageModel` (`package.json`)
+### 3.4 Root Development Package Model (`package.json`)
 - **Format**: Standard npm `package.json` Schema
 
 | Field Name | Type | Required / Optional | Constraints | Description |
@@ -193,7 +217,7 @@ sequenceDiagram
 | `scripts.dev:en` | `string` | Required | Explicit English development start | English dev server target |
 | `scripts.db:up` | `string` | Required | Value: `"docker compose up -d"` | Database container startup |
 | `scripts.db:down` | `string` | Required | Value: `"docker compose down"` | Database container teardown |
-| `devDependencies` | `object` | Required | Includes `concurrently` and `wait-on` | Tooling dependencies |
+| `devDependencies` | `object` | Required | Includes `concurrently`, `wait-on`, `yaml` | Tooling dependencies |
 
 ### 3.5 Badges Presentation Models (`README.md` & `README.ja.md`)
 
@@ -214,25 +238,83 @@ sequenceDiagram
 | `badge_url` | `string` | Required | `format: "uri"` | Image rendering source URL |
 | `target_url` | `string` | Required | `format: "uri"` or relative filepath | Click destination URL or relative link |
 
+### 3.6 Gradle Version Catalog Model (`backend/gradle/libs.versions.toml`)
+- **Format**: TOML Schema conforming to Gradle 9.x Version Catalog
+
+| Field Name | Type | Required / Optional | Constraints | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `versions` | `table` | Required | Contains string keys and SemVer string values | Shared version variables |
+| `versions.micronaut` | `string` | Required | `pattern: "^[0-9]+\.[0-9]+\.[0-9]+$"` | Micronaut framework version |
+| `versions.shadow` | `string` | Required | `pattern: "^[0-9]+\.[0-9]+\.[0-9]+$"` | Shadow plugin version |
+| `versions.spotless` | `string` | Required | `pattern: "^[0-9]+\.[0-9]+\.[0-9]+$"` | Spotless formatting plugin version |
+| `libraries` | `table` | Required | Key format `lowercase-kebab-case` | External library definitions |
+| `libraries.*.module` | `string` | Required | Format: `"group:artifact"` | Maven group and artifact ID |
+| `libraries.*.version.ref` | `string` | Optional | References key in `[versions]` | Version reference |
+| `libraries.*.version` | `string` | Optional | Fixed version string | Fixed version specification |
+| `plugins` | `table` | Required | Key format `lowercase-kebab-case` | Gradle plugin definitions |
+| `plugins.*.id` | `string` | Required | Valid Gradle plugin ID | Plugin coordinate |
+| `plugins.*.version.ref` | `string` | Required | References key in `[versions]` | Version reference |
+
+### 3.7 Frontend Prettier Configuration Models (`frontend/.prettierrc`, `frontend/package.json`)
+
+#### 3.7.1 `PrettierConfigModel` (`frontend/.prettierrc`)
+- **Format**: JSON Schema / Prettier Configuration
+
+| Field Name | Type | Required / Optional | Constraints | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `tabWidth` | `integer` | Required | Value: `2` | Number of spaces per indentation level |
+| `useTabs` | `boolean` | Required | Value: `false` | Indent with spaces rather than tabs |
+| `singleQuote` | `boolean` | Required | Value: `true` | Use single quotes for JS/TS strings |
+| `semi` | `boolean` | Required | Value: `true` | Print semicolons at ends of statements |
+| `trailingComma` | `string` (enum) | Required | Value: `"all"` | Print trailing commas wherever possible in multi-line |
+| `printWidth` | `integer` | Required | Value: `100` | Specify the line length that the printer will wrap on |
+| `bracketSpacing` | `boolean` | Required | Value: `true` | Print spaces between brackets in object literals |
+| `arrowParens` | `string` (enum) | Required | Value: `"always"` | Include parentheses around a sole arrow function parameter |
+
+#### 3.7.2 `PrettierScriptsModel` (`frontend/package.json`)
+- **Format**: Standard npm `package.json` Schema (Scripts Block)
+
+| Field Name | Type | Required / Optional | Constraints | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `scripts.format:check` | `string` | Required | `Value: "prettier --check ."` | Verifies formatting across files; exits with code 1 on mismatch |
+| `scripts.format` | `string` | Required | `Value: "prettier --write ."` | Formats all matching files in-place |
+
+### 3.8 Codeowners Governance Model (`.github/CODEOWNERS`)
+- **Format**: Standard GitHub CODEOWNERS Pattern Syntax
+
+| Pattern | Owner / Assignee | Description |
+| :--- | :--- | :--- |
+| `*` | `@green-tea-stalk` | Assigns repository-wide review responsibility to lead maintainer |
+
 ---
 
 ## 4. Input / Output Protocols & Execution Contracts
 
-### 4.1 CLI Protocol (Local Dev Orchestration - COMP-004)
-- **Standard Streams**:
-  - `stdout`: Prefixed, color-coded stream interleaved by `concurrently` (e.g. `[backend]` in blue, `[frontend]` in green).
-  - `stderr`: Interleaved error output from child processes without buffering suppression.
+### 4.1 CLI Protocol (Local Formatting & Dev Orchestration - COMP-004, COMP-006, COMP-007)
+- **Formatting Verification Commands**:
+  - Backend: `cd backend && ./gradlew spotlessCheck` (exits `0` on match, `1` on style violation).
+  - Frontend: `cd frontend && npm run format:check` (exits `0` on match, `1` on style violation).
+- **In-Place Formatting Fix Commands**:
+  - Backend: `cd backend && ./gradlew spotlessApply` (formats Java sources and Kotlin Gradle scripts).
+  - Frontend: `cd frontend && npm run format` (formats TS, HTML, SCSS, CSS, JSON).
 - **Exit Codes**:
-  - `0`: Clean shutdown upon receiving termination signal (`SIGINT`) or user command termination.
-  - `1`: Failure in child process execution (e.g. Docker startup failure or compilation failure).
-- **Signal Handling**:
-  - Upon receiving `SIGINT` (Ctrl+C), `concurrently` MUST issue `SIGINT` to both `backend` and `frontend` child processes and wait for exit within 5 seconds before escalating to `SIGKILL`.
+  - `0`: Formatting conforms to rules or successfully corrected.
+  - `1`: Formatting violations detected in check mode, or execution syntax error.
 
 ### 4.2 GitHub Actions Execution Protocol (COMP-001 & COMP-003)
-- **Environment & Caching**:
-  - Backend runner MUST use `actions/setup-java@v4` with `distribution: 'corretto'` and `java-version: '25'`, utilizing Gradle build cache.
-  - Frontend runner MUST use `actions/setup-node@v4` with `node-version: 22` and `cache: 'npm'` rooted at `frontend/`.
-  - E2E runner MUST launch MySQL via `docker compose up -d`, start backend and frontend distributions in the background, poll readiness endpoints via `curl` retry loops, install Playwright Chromium dependencies via `npx playwright install --with-deps chromium`, and execute `npx playwright test`.
+- **Fail-Fast Order in Backend Job**:
+  1. `actions/checkout@v7`
+  2. `actions/setup-java@v6` (Corretto 25, Gradle cache)
+  3. Start MySQL container via `docker compose up -d --wait`
+  4. Spotless format check: `cd backend && ./gradlew spotlessCheck`
+  5. Gradle tests: `cd backend && ./gradlew test`
+- **Fail-Fast Order in Frontend Job**:
+  1. `actions/checkout@v7`
+  2. `actions/setup-node@v7` (Node 22, npm cache)
+  3. `cd frontend && npm ci`
+  4. Prettier format check: `cd frontend && npm run format:check`
+  5. Unit tests: `cd frontend && npm test -- --watch=false`
+  6. Production build: `cd frontend && npm run build`
 - **Artifact Preservation**:
   - On E2E test failure, the workflow MUST upload Playwright traces and failure screenshots as GitHub Actions workflow artifacts with a 14-day retention limit.
 
@@ -245,11 +327,13 @@ sequenceDiagram
 - **Public Signature**: GitHub Actions Workflow Event Handler (`push`, `pull_request`).
 - **Preconditions (Caller Obligations)**:
   - Caller MUST trigger workflow with valid Git refs targeting `main` or pull requests targeting `main`.
-  - Repository runner MUST have Docker virtualization enabled (default in `ubuntu-latest`).
+  - Repository runner MUST have Docker virtualization enabled.
 - **Postconditions (Callee Guarantees)**:
   - The workflow MUST execute `backend` and `frontend` jobs concurrently.
+  - In `backend` job, the workflow MUST execute `./gradlew spotlessCheck` prior to `./gradlew test`.
+  - In `frontend` job, the workflow MUST execute `npm run format:check` prior to unit tests and build.
+  - If any format check fails in either job, the workflow MUST immediately terminate the job with failure and MUST NOT permit downstream E2E execution.
   - If both `backend` and `frontend` jobs succeed, the workflow MUST execute the `e2e` job.
-  - If either `backend` or `frontend` job fails, the workflow MUST NOT execute the `e2e` job and MUST fail the workflow run.
   - If any job fails, the workflow MUST return a non-zero exit status and report a failure status check to GitHub.
 - **Invariants (State Consistency)**:
   - Redundant in-progress workflow runs for the same branch or pull request MUST be cancelled via concurrency groups.
@@ -258,7 +342,7 @@ sequenceDiagram
 - **Role**: Automated multi-ecosystem dependency monitoring and upgrade submission.
 - **Public Signature**: Dependabot v2 Configuration Parser.
 - **Preconditions (Caller Obligations)**:
-  - Manifest directories (`/backend`, `/frontend`, `/`) MUST contain valid ecosystem lock/build files (`build.gradle.kts`, `package.json`, workflow YAMLs, `docker-compose.yml`).
+  - Manifest directories (`/backend`, `/frontend`, `/`) MUST contain valid ecosystem lock/build files (`build.gradle.kts`, `gradle/libs.versions.toml`, `package.json`, workflow YAMLs, `docker-compose.yml`).
 - **Postconditions (Callee Guarantees)**:
   - The engine MUST evaluate dependency states weekly on Monday.
   - For any detected outdated or insecure package, the engine MUST open an isolated pull request with standard Conventional Commits prefixing.
@@ -299,16 +383,48 @@ sequenceDiagram
 - **Preconditions (Caller Obligations)**:
   - Upstream repositories and workflows MUST be public or have accessible status badges.
 - **Postconditions (Callee Guarantees)**:
-  - `README.md` and `README.ja.md` MUST display badges in the exact specified order:
-    1. Latest Release: `[![GitHub Release](https://img.shields.io/github/v/release/green-tea-stalk/swe-workflow-playground)](https://github.com/green-tea-stalk/swe-workflow-playground/releases)`
-    2. CI Status: `[![CI](https://github.com/green-tea-stalk/swe-workflow-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/green-tea-stalk/swe-workflow-playground/actions/workflows/ci.yml)`
-    3. release-please Status: `[![release-please](https://github.com/green-tea-stalk/swe-workflow-playground/actions/workflows/release-please.yml/badge.svg)](https://github.com/green-tea-stalk/swe-workflow-playground/actions/workflows/release-please.yml)`
-    4. Dependabot Status: `[![Dependabot](https://img.shields.io/badge/dependabot-enabled-blue.svg?logo=dependabot)](https://github.com/green-tea-stalk/swe-workflow-playground/network/updates)`
-    5. License Badge: `[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)`
+  - `README.md` and `README.ja.md` MUST display badges in the exact specified order: (1) Latest Release, (2) CI Status, (3) release-please Status, (4) Dependabot Status, (5) License Badge.
   - `LICENSE` file MUST contain standard MIT License text dated 2026.
-  - `AGENTS.md` Quick Start section MUST be updated to document the consolidated `npm run dev` workflow as the primary local launch mechanism while preserving all existing technical guidelines and unidirectional references.
+  - `AGENTS.md` MUST document the consolidated `npm run dev` workflow and formatting commands while strictly preserving single-source technical guidelines and unidirectional reference integrity.
 - **Invariants (State Consistency)**:
   - Both English and Japanese README documents MUST maintain identical badge configurations and link destinations.
+
+### 5.6 COMP-006: Backend Code Formatter & Version Catalog (`backend/build.gradle.kts`, `backend/gradle/libs.versions.toml`)
+- **Role**: Backend code style formatting governance (Java & Kotlin DSL) and centralized dependency management.
+- **Public Signature**: Gradle tasks `./gradlew spotlessCheck`, `./gradlew spotlessApply`, and Version Catalog accessor `libs.*`.
+- **Preconditions (Caller Obligations)**:
+  - Java source files MUST reside under `backend/src/` and Kotlin DSL build scripts MUST end in `.gradle.kts`.
+  - Version catalog at `backend/gradle/libs.versions.toml` MUST be well-formed TOML syntax.
+- **Postconditions (Callee Guarantees)**:
+  - When zero (0) formatting violations exist across Java and Kotlin build files, `./gradlew spotlessCheck` MUST complete with exit code `0`.
+  - `spotlessCheck` MUST fail with exit code `1` if any Java file diverges from Palantir Java Format (4 spaces) or if any Kotlin Gradle script diverges from ktlint standards.
+  - `spotlessApply` MUST reformat non-compliant files in place to achieve compliance.
+  - `backend/build.gradle.kts` MUST reference dependencies and plugins via type-safe `libs` accessors rather than inline version coordinates.
+- **Invariants (State Consistency)**:
+  - Version catalog MUST NOT contain platform environment versions (Java 25, MySQL 8.4, Docker).
+
+### 5.7 COMP-007: Frontend Prettier Formatter & Scripts (`frontend/.prettierrc`, `frontend/.prettierignore`, `frontend/package.json`)
+- **Role**: Frontend code style formatting governance across TypeScript, HTML, styles, and configuration.
+- **Public Signature**: npm scripts `npm run format:check` and `npm run format`.
+- **Preconditions (Caller Obligations)**:
+  - Node.js 22 LTS runtime and npm dependencies MUST be installed in `frontend/`.
+- **Postconditions (Callee Guarantees)**:
+  - `npm run format:check` MUST exit with code `0` when all target files (`.ts`, `.html`, `.scss`, `.css`, `.json`) conform to `.prettierrc` rules, and exit with code `1` when any file requires formatting.
+  - `npm run format` MUST write formatted content in-place across all un-ignored files.
+  - Ignore patterns in `.prettierignore` (`dist/`, `.angular/`, `node_modules/`, `coverage/`) MUST be respected.
+- **Invariants (State Consistency)**:
+  - Formatting results MUST be deterministic across developer workstations and CI runners.
+
+### 5.8 COMP-008: Repository Code Ownership Governance (`.github/CODEOWNERS`)
+- **Role**: Automated code review assignment and governance routing on GitHub.
+- **Public Signature**: GitHub CODEOWNERS Syntax Engine.
+- **Preconditions (Caller Obligations)**:
+  - File MUST be placed at `.github/CODEOWNERS` in the default branch.
+  - Declared owner `@green-tea-stalk` MUST be a valid GitHub user with repository access.
+- **Postconditions (Callee Guarantees)**:
+  - GitHub MUST automatically assign `@green-tea-stalk` as a required reviewer for all incoming pull requests touching any file in the repository (`*`).
+- **Invariants (State Consistency)**:
+  - Wildcard pattern `*` guarantees zero un-owned orphan paths in the repository.
 
 ---
 
@@ -349,13 +465,35 @@ sequenceDiagram
 - **SemVer Tag Collision**:
   - If a Git tag matching the calculated next semantic version already exists on remote, release-please halts without overwriting the existing tag and emits a collision warning.
 - **Non-Standard or Malformed Commit Messages**:
-  - Commits that fail to match Conventional Commits format (`feat:`, `fix:`, etc.) are ignored by the version parser without causing workflow crashes, ensuring normal non-release commits do not break automation.
+  - Commits that fail to match Conventional Commits format (`feat:`, `fix:`, etc.) are ignored by the version parser without causing workflow crashes.
 
 ### 6.5 Documentation & Badges Presentation Failure Modes (COMP-005)
 - **External Badge Service Outage**:
   - In the event of upstream network disruption with Shields.io or GitHub Actions badge endpoints, Markdown renderers fall back to displaying the badge alt-text without altering document layout or breaking links.
 - **Documentation Drift or Broken Anchor References**:
   - If `AGENTS.md` section anchors are renamed without updating human entry point links in `README.md` and `README.ja.md`, link checker audits fail-closed in automated checks, alerting contributors before merge.
+
+### 6.6 Backend Formatting Failure (COMP-006)
+- **Spotless Verification Mismatch**:
+  - If any Java file or `.gradle.kts` file diverges from Palantir Java Format or ktlint rules, `./gradlew spotlessCheck` halts execution, prints a diff of violations to stderr, and exits with code `1`.
+  - In CI, this immediately fails the `backend` job before executing Gradle tests or starting Testcontainers.
+  - Remediation: Contributor runs `./gradlew spotlessApply` locally and commits the resulting formatting changes.
+
+### 6.7 Frontend Formatting Failure (COMP-007)
+- **Prettier Verification Mismatch**:
+  - If any frontend file (`.ts`, `.html`, `.scss`, `.css`, `.json`) diverges from `.prettierrc` rules, `npm run format:check` prints the non-compliant filenames to stderr and exits with code `1`.
+  - In CI, this immediately fails the `frontend` job before running Vitest tests or building the production bundle.
+  - Remediation: Contributor runs `npm run format` in `frontend/` and commits the resulting formatting changes.
+
+### 6.8 Version Catalog Parse or Resolution Failure (COMP-006)
+- **Malformed TOML or Missing Accessor**:
+  - If `backend/gradle/libs.versions.toml` contains syntax errors or an invalid version reference, Gradle build initialization fails immediately during configuration time with a descriptive parse error.
+  - Remediation: Fix TOML syntax error in `libs.versions.toml` and re-run `./gradlew buildEnvironment`.
+
+### 6.9 CODEOWNERS Syntax & Mention Resolution Failure (COMP-008)
+- **Invalid Handle or Pattern Syntax**:
+  - If `.github/CODEOWNERS` references a non-existent GitHub handle or malformed path pattern, GitHub silently falls back to omitting review requests or flags syntax errors in the repository settings view.
+  - Verification: Inspected statically via automated check confirming pattern `* @green-tea-stalk`.
 
 ---
 
@@ -385,3 +523,28 @@ sequenceDiagram
   - **Selected Approach**: A strict 5-badge visual hierarchy ordered by operational criticality: (1) Latest Release, (2) CI Status, (3) release-please Status, (4) Dependabot Status, and (5) Software License (MIT) across both `README.md` and `README.ja.md`, paired with establishing `AGENTS.md` as the authoritative Single Source of Truth (SSOT) for all CLI commands (documenting `npm run dev`) while strictly maintaining the Unidirectional Reference Rule (human entry points link into `AGENTS.md`, but `AGENTS.md` never links back to human entry points) (`COMP-005`, `REQ-010`, `REQ-011`, `NFR-MAINT-001`).
   - **Alternative Considered**: Ad-hoc or alphabetical badge ordering with duplicated command instructions across `README.md`, `README.ja.md`, and `AGENTS.md`, and permissive bidirectional cross-links.
   - **Rationale & Trade-off**: Eliminates documentation drift across multi-language documentation files by maintaining a single authoritative reference for operational instructions, while providing visitors and evaluators with a consistent, instantly scannable overview of release stability, automated pipeline health, security posture, and legal licensing terms. The accepted trade-off is requiring strict contributor discipline to prevent duplicating CLI snippets in human entry points and ensuring anchor link stability when modifying `AGENTS.md`.
+
+- **Backend Code Style Enforcement & Formatting Engine (Java & Kotlin DSL)**:
+  - **Selected Approach**: Spotless Gradle plugin (`com.diffplug.spotless`) integrating Palantir Java Format (`palantirJavaFormat()`) configured for 4-space indentation across all Java source files (`src/**/*.java`), combined with `ktlint()` for Kotlin Gradle DSL build scripts (`*.gradle.kts`), exposing automated verification (`./gradlew spotlessCheck`) and in-place correction (`./gradlew spotlessApply`) tasks (`COMP-006`, `REQ-012`, `REQ-016`, `NFR-STYLE-001`).
+  - **Alternative Considered**: Google Java Format (`googleJavaFormat()`, which enforces 2-space indentation by default), AOSP format (which uses 4-space indentation but introduces unconventional lambda expression and builder chain line breaks), or relying on manual IDE code formatting without automated build-level enforcement.
+  - **Rationale & Trade-off**: Palantir Java Format provides deterministic, zero-configuration formatting that strictly adheres to standard 4-space indentation conventions widely established in enterprise Java and Micronaut codebases, eliminating all subjective style debates in code reviews. Pairing it with ktlint extends automated formatting governance to Kotlin Gradle build scripts. The accepted trade-off is adopting an unbending, opinionated formatter that may refactor bespoke multi-line alignments or custom method chaining, and requiring contributors to run `./gradlew spotlessApply` prior to pushing commits.
+
+- **Frontend Code Formatter & Tooling Separation (TypeScript, HTML, Styles, JSON)**:
+  - **Selected Approach**: Prettier code formatter configured via root `.prettierrc` and `.prettierignore`, integrated with npm lifecycle scripts (`npm run format:check` and `npm run format`), enforcing deterministic formatting across TypeScript (`.ts`), HTML templates (`.html`), styles (`.scss`/`.css`), and configuration (`.json`) files (`COMP-007`, `REQ-013`, `REQ-016`, `NFR-STYLE-001`).
+  - **Alternative Considered**: Relying solely on ESLint formatting rules (e.g. `@typescript-eslint` styling rules or stylistic plugins) or standalone Angular CLI formatters without Prettier.
+  - **Rationale & Trade-off**: Prettier is an industry-standard, AST-aware formatter that provides comprehensive, uniform formatting across the entire frontend multi-language stack (TypeScript, Angular HTML templates, SCSS, JSON) with minimal configuration overhead and fast execution. Decoupling formatting (Prettier) from static semantic analysis and linting (ESLint) prevents rule collisions, avoids circular fixer conflicts, and preserves single-responsibility tool boundaries. The accepted trade-off is adding explicit Prettier configuration files and formatting scripts to the frontend workspace and accepting Prettier's strict line-wrapping and quote conventions.
+
+- **CI Formatting Quality Gate Integration & Execution Topology**:
+  - **Selected Approach**: Embedding formatting verification checks (`./gradlew spotlessCheck` and `npm run format:check`) as the initial fail-fast execution steps directly inside the existing concurrent `backend` and `frontend` CI jobs in `.github/workflows/ci.yml`, prior to executing compilation, unit tests, or integration tests (`COMP-001`, `REQ-001`, `REQ-016`, `NFR-PERF-001`, `NFR-REL-001`).
+  - **Alternative Considered**: Creating dedicated standalone CI runner jobs (e.g. separate `backend-lint` and `frontend-lint` jobs) or executing a global formatting check job at the repository root prior to launching backend and frontend jobs.
+  - **Rationale & Trade-off**: Executing formatting checks inside the existing concurrent runner jobs reuses already checked-out workspaces and initialized runtime environments (Java 25 LTS, Gradle daemon/cache, Node.js 22 LTS, npm cache) with zero additional runner virtualization overhead and zero billable runner spin-up latency. Positioning format verification before compilation and tests ensures immediate fail-fast termination within seconds on style violations, saving compute resources and preventing downstream test suites or Docker containers from booting when formatting fails. The accepted trade-off is that a formatting violation halts subsequent test execution within that specific job, requiring contributors to fix formatting before observing test outcomes.
+
+- **Repository Code Ownership Governance & Review Routing**:
+  - **Selected Approach**: Establishing a canonical `.github/CODEOWNERS` configuration with a repository-wide wildcard ownership rule (`* @green-tea-stalk`), designating the lead maintainer as the mandatory default reviewer for all file paths and pull requests across the repository (`COMP-008`, `REQ-014`).
+  - **Alternative Considered**: Defining granular, directory-level ownership patterns (e.g. separate path entries for `/backend/`, `/frontend/`, `/.github/`, and `/docs/`), or relying solely on GitHub branch protection reviewer rules without a version-controlled `CODEOWNERS` manifest.
+  - **Rationale & Trade-off**: As a cohesive full-stack application overseen by a lead maintainer, repository-wide wildcard routing guarantees complete review coverage with zero orphan paths, eliminates path drift when new modules or documentation files are added, and provides clear, version-controlled governance transparency for external contributors. The accepted trade-off is that all pull requests—regardless of whether they touch docs, backend, frontend, or CI workflows—route review requests to `@green-tea-stalk`, which will require decomposition into granular path mappings if code ownership is later delegated across multiple specialized teams.
+
+- **Centralized Dependency Management via Gradle Version Catalog**:
+  - **Selected Approach**: Implementing a standard Gradle Version Catalog at `backend/gradle/libs.versions.toml` to centralize all Gradle build plugin IDs, versions, and external library dependency coordinates for the backend, while strictly scoping the catalog to build dependencies and deliberately excluding platform runtime environment versions (Java 25 LTS, MySQL 8.4 LTS, Docker) (`COMP-006`, `REQ-015`).
+  - **Alternative Considered**: Retaining hardcoded inline string literals in `backend/build.gradle.kts`, establishing a multi-project root catalog at `/gradle/libs.versions.toml` encompassing non-Gradle tooling, or attempting to track host/container runtime versions (JDK, MySQL, Node.js) inside the Gradle catalog.
+  - **Rationale & Trade-off**: The standard `backend/gradle/libs.versions.toml` catalog leverages native Gradle mechanisms to generate type-safe dependency accessors in Kotlin DSL (`libs.micronaut...`), centralizes version bumps into a single editable manifest, and integrates seamlessly with Dependabot's Gradle ecosystem parser for automated weekly updates. Deliberately excluding host/container runtime environment versions respects architectural separation of concerns: platform runtimes are governed by CI setup actions, Docker Compose definitions, and container base images, rather than the Java build tool. The accepted trade-off is the initial migration overhead of replacing inline dependency coordinates with catalog accessors in `build.gradle.kts` and managing the catalog file in addition to the build script.
