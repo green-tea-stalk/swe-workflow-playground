@@ -208,16 +208,16 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Production build (`npm run build`) cleanly succeeds for both `en` and `ja` distributions without missing translation warnings.
   - **Commit Message**: `i18n(frontend): populate Japanese XLIFF translation catalog`
 
-- [ ] **TASK-011**: Build Playwright E2E automated test suite for bilingual verification
+- [x] **TASK-011**: Build Playwright E2E automated test suite for bilingual verification
   - **Component & Requirements**: `COMP-101`, `COMP-102`, `COMP-103`, `COMP-104`, `COMP-105`, `REQ-001` through `REQ-011`
   - **Target Files**:
     - `frontend/e2e/i18n-language-switch.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Scenario 1: Initial access verifies language detection (browser language matching).
-    - [ ] Scenario 2: Toolbar language toggle switches UI, changes timestamps format, and persists `bb_locale` in `localStorage`.
-    - [ ] Scenario 3: Form validation errors and submission feedback display in the active language.
-    - [ ] Scenario 4: User-contributed posts are displayed unaltered in both locales.
-    - [ ] All Playwright E2E tests pass cleanly in headless Chromium.
+    - [x] Scenario 1: Initial access verifies language detection (browser language matching).
+    - [x] Scenario 2: Toolbar language toggle switches UI, changes timestamps format, and persists `bb_locale` in `localStorage`.
+    - [x] Scenario 3: Form validation errors and submission feedback display in the active language.
+    - [x] Scenario 4: User-contributed posts are displayed unaltered in both locales.
+    - [x] All Playwright E2E tests pass cleanly in headless Chromium.
   - **Commit Message**: `test(e2e): add Playwright automated test suite for bilingual i18n workflows`
 
 ---
