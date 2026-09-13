@@ -171,17 +171,17 @@ upstream:
 - **マージ対象**: `feat/i18n-phase2-frontend-foundation`
 
 #### タスク一覧
-- [ ] **TASK-008**: `PostFeedComponent` の多言語化およびロケール対応日時フォーマットの設定
+- [x] **TASK-008**: `PostFeedComponent` の多言語化およびロケール対応日時フォーマットの設定
   - **コンポーネント & 要件**: `COMP-103`, `REQ-001`, `REQ-006`, `REQ-007`, `REQ-011`
   - **対象ファイル**:
     - `frontend/src/app/components/post-feed/post-feed.component.html`
     - `frontend/src/app/components/post-feed/post-feed.component.ts`
     - `frontend/src/app/components/post-feed/post-feed.component.spec.ts`
   - **受け入れ基準**:
-    - [ ] フィードテンプレートのテキスト（空表示プレースホルダー、エラーバナー、再試行ボタン、ページネーターラベル）に `i18n` 属性が付与されていること。
-    - [ ] 投稿日時が `DatePipe` を使用して `ja` では `yyyy/MM/dd HH:mm:ss`、`en` では `MMM d, y, h:mm:ss a` でフォーマットされること。
-    - [ ] ユーザーの投稿内容（`name`, `title`, `message`）が翻訳されずに元の形式で保持されること。
-    - [ ] 単体テストで両ロケールでのフィード描画を検証していること。
+    - [x] フィードテンプレートのテキスト（空表示プレースホルダー、エラーバナー、再試行ボタン、ページネーターラベル）に `i18n` 属性が付与されていること。
+    - [x] 投稿日時が `DatePipe` を使用して `ja` では `yyyy/MM/dd HH:mm:ss`、`en` では `MMM d, y, h:mm:ss a` でフォーマットされること。
+    - [x] ユーザーの投稿内容（`name`, `title`, `message`）が翻訳されずに元の形式で保持されること。
+    - [x] 単体テストで両ロケールでのフィード描画を検証していること。
   - **コミットメッセージ**: `feat(frontend): localize PostFeedComponent and configure DatePipe locale formatting`
 
 - [ ] **TASK-009**: `PostFormComponent` のラベル、プレースホルダー、およびエラーメッセージの多言語化

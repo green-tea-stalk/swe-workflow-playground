@@ -10,6 +10,18 @@
         <source>No posts found. Be the first to post!</source>
         <target>投稿がまだありません。最初の投稿をしてみましょう！</target>
       </trans-unit>
+      <trans-unit id="app.feed.aria_label" datatype="html">
+        <source>Posts feed</source>
+        <target>投稿一覧フィード</target>
+      </trans-unit>
+      <trans-unit id="app.feed.retry" datatype="html">
+        <source>Retry</source>
+        <target>再試行</target>
+      </trans-unit>
+      <trans-unit id="app.feed.paginator_label" datatype="html">
+        <source>Select page</source>
+        <target>ページ選択</target>
+      </trans-unit>
       <trans-unit id="app.form.title" datatype="html">
         <source>New Post</source>
         <target>新規投稿</target>

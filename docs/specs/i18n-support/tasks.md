@@ -171,17 +171,17 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/i18n-phase2-frontend-foundation`
 
 #### Tasks
-- [ ] **TASK-008**: Localize `PostFeedComponent` and configure locale-aware date formatting
+- [x] **TASK-008**: Localize `PostFeedComponent` and configure locale-aware date formatting
   - **Component & Requirements**: `COMP-103`, `REQ-001`, `REQ-006`, `REQ-007`, `REQ-011`
   - **Target Files**:
     - `frontend/src/app/components/post-feed/post-feed.component.html`
     - `frontend/src/app/components/post-feed/post-feed.component.ts`
     - `frontend/src/app/components/post-feed/post-feed.component.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Feed template text (empty placeholder, error banner, retry button, paginator labels) annotated with `i18n` attributes.
-    - [ ] Post creation timestamp formatted with `DatePipe` using `yyyy/MM/dd HH:mm:ss` under `ja` and `MMM d, y, h:mm:ss a` under `en`.
-    - [ ] User post content (`name`, `title`, `message`) preserved in original form without translation.
-    - [ ] Unit tests verify feed rendering under both locales.
+    - [x] Feed template text (empty placeholder, error banner, retry button, paginator labels) annotated with `i18n` attributes.
+    - [x] Post creation timestamp formatted with `DatePipe` using `yyyy/MM/dd HH:mm:ss` under `ja` and `MMM d, y, h:mm:ss a` under `en`.
+    - [x] User post content (`name`, `title`, `message`) preserved in original form without translation.
+    - [x] Unit tests verify feed rendering under both locales.
   - **Commit Message**: `feat(frontend): localize PostFeedComponent and configure DatePipe locale formatting`
 
 - [ ] **TASK-009**: Localize `PostFormComponent` labels, placeholders, and error messages

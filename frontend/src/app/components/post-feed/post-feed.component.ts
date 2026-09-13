@@ -1,22 +1,23 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PostApiService } from '../../services/post-api.service';
+import { LocaleService } from '../../services/locale.service';
 import { PostResponse } from '../../models/post.model';
 
 /**
  * Component displaying the reverse-chronological bulletin board feed,
  * empty state placeholder, and 50-item pagination controls.
+ * Applies locale-sensitive date formatting for post timestamps.
  */
 @Component({
   selector: 'app-post-feed',
   standalone: true,
   imports: [
-    CommonModule,
     DatePipe,
     MatCardModule,
     MatPaginatorModule,
@@ -29,6 +30,19 @@ import { PostResponse } from '../../models/post.model';
 })
 export class PostFeedComponent implements OnInit {
   private readonly postApiService = inject(PostApiService);
+  private readonly localeService = inject(LocaleService);
+
+  /**
+   * Resolves the date formatting pattern matching the active locale contract.
+   * Japanese uses 'yyyy/MM/dd HH:mm:ss', while English uses 'MMM d, y, h:mm:ss a'.
+   *
+   * @returns date format pattern matching the active locale
+   */
+  get dateFormat(): string {
+    return this.localeService.getActiveLocale() === 'ja'
+      ? 'yyyy/MM/dd HH:mm:ss'
+      : 'MMM d, y, h:mm:ss a';
+  }
 
   /** Current list of displayed posts on the active page. */
   readonly posts = signal<readonly PostResponse[]>([]);
@@ -55,21 +69,26 @@ export class PostFeedComponent implements OnInit {
   /**
    * Fetches the specified page of posts from the backend API.
    *
-   * @param page zero-based page index to load
+   * @param page zero-based page index to load (must be a non-negative integer)
+   * @throws Error if page is negative or not an integer
    */
   loadPage(page: number): void {
+    if (page < 0 || !Number.isInteger(page)) {
+      throw new Error(`Page index must be a non-negative integer: received ${page}`);
+    }
+
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
     this.postApiService.getPosts(page, this.pageSize).subscribe({
       next: (response) => {
         this.posts.set(response.items ?? []);
-        this.totalItems.set(response.total_items);
-        this.pageIndex.set(response.page);
+        this.totalItems.set(response.total_items ?? 0);
+        this.pageIndex.set(response.page ?? page);
         this.isLoading.set(false);
       },
       error: (err: unknown) => {
-        const errorDetail = err instanceof Error ? err.message : '投稿一覧の取得に失敗しました。';
+        const errorDetail = err instanceof Error ? err.message : 'Failed to load posts.';
         this.errorMessage.set(errorDetail);
         this.isLoading.set(false);
       },
@@ -81,7 +100,7 @@ export class PostFeedComponent implements OnInit {
    *
    * @param event the page change event emitted by MatPaginator
    */
-  onPageChange(event: { pageIndex: number; pageSize?: number; length?: number }): void {
+  onPageChange(event: PageEvent): void {
     this.loadPage(event.pageIndex);
   }
 
