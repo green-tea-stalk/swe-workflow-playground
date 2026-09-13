@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" target-language="ja" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="app.title" datatype="html">
+        <source>Bulletin Board</source>
+        <target>掲示板</target>
+      </trans-unit>
+      <trans-unit id="app.feed.empty" datatype="html">
+        <source>No posts found. Be the first to post!</source>
+        <target>投稿がまだありません。最初の投稿をしてみましょう！</target>
+      </trans-unit>
+      <trans-unit id="app.form.title" datatype="html">
+        <source>New Post</source>
+        <target>新規投稿</target>
+      </trans-unit>
+      <trans-unit id="app.form.name" datatype="html">
+        <source>Name</source>
+        <target>お名前</target>
+      </trans-unit>
+      <trans-unit id="app.form.name.placeholder" datatype="html">
+        <source>Enter your name</source>
+        <target>お名前を入力してください</target>
+      </trans-unit>
+      <trans-unit id="app.form.email" datatype="html">
+        <source>Email</source>
+        <target>メールアドレス</target>
+      </trans-unit>
+      <trans-unit id="app.form.email.placeholder" datatype="html">
+        <source>Optional email</source>
+        <target>メールアドレス（任意）</target>
+      </trans-unit>
+      <trans-unit id="app.form.post_title" datatype="html">
+        <source>Title</source>
+        <target>タイトル</target>
+      </trans-unit>
+      <trans-unit id="app.form.post_title.placeholder" datatype="html">
+        <source>Enter title</source>
+        <target>タイトルを入力してください</target>
+      </trans-unit>
+      <trans-unit id="app.form.message" datatype="html">
+        <source>Message</source>
+        <target>本文</target>
+      </trans-unit>
+      <trans-unit id="app.form.message.placeholder" datatype="html">
+        <source>Enter your message</source>
+        <target>本文を入力してください</target>
+      </trans-unit>
+      <trans-unit id="app.form.submit" datatype="html">
+        <source>Submit</source>
+        <target>投稿する</target>
+      </trans-unit>
+      <trans-unit id="app.form.submitting" datatype="html">
+        <source>Submitting...</source>
+        <target>送信中...</target>
+      </trans-unit>
+      <trans-unit id="app.form.success" datatype="html">
+        <source>Post submitted successfully!</source>
+        <target>投稿が完了しました！</target>
+      </trans-unit>
+      <trans-unit id="app.lang.switch" datatype="html">
+        <source>Switch Language</source>
+        <target>言語切替</target>
+      </trans-unit>
+
+      <!-- Section 3.3 Semantic Property Hierarchy for Error & Validation Messages -->
+      <trans-unit id="error.validation.title" datatype="html">
+        <source>Validation Failed</source>
+        <target>入力値検証エラー</target>
+      </trans-unit>
+      <trans-unit id="error.validation.detail" datatype="html">
+        <source>Input payload failed validation constraints.</source>
+        <target>入力内容に不備があります。制約条件を確認してください。</target>
+      </trans-unit>
+      <trans-unit id="error.internal.title" datatype="html">
+        <source>Internal Server Error</source>
+        <target>サーバー内部エラー</target>
+      </trans-unit>
+      <trans-unit id="error.internal.detail" datatype="html">
+        <source>An unexpected error occurred while processing the request.</source>
+        <target>リクエストの処理中に予期せぬエラーが発生しました。</target>
+      </trans-unit>
+      <trans-unit id="error.invalid_arg.title" datatype="html">
+        <source>Invalid Argument</source>
+        <target>不正な引数</target>
+      </trans-unit>
+      <trans-unit id="validation.name.required" datatype="html">
+        <source>Name must not be blank</source>
+        <target>名前を入力してください</target>
+      </trans-unit>
+      <trans-unit id="validation.name.size" datatype="html">
+        <source>Name must be between 1 and 50 characters</source>
+        <target>名前は1〜50文字以内で入力してください</target>
+      </trans-unit>
+      <trans-unit id="validation.email.format" datatype="html">
+        <source>Email must be a well-formed email address</source>
+        <target>有効なメールアドレス形式で入力してください</target>
+      </trans-unit>
+      <trans-unit id="validation.email.size" datatype="html">
+        <source>Email must not exceed 254 characters</source>
+        <target>メールアドレスは254文字以内で入力してください</target>
+      </trans-unit>
+      <trans-unit id="validation.title.required" datatype="html">
+        <source>Title must not be blank</source>
+        <target>タイトルを入力してください</target>
+      </trans-unit>
+      <trans-unit id="validation.title.size" datatype="html">
+        <source>Title must be between 1 and 100 characters</source>
+        <target>タイトルは1〜100文字以内で入力してください</target>
+      </trans-unit>
+      <trans-unit id="validation.message.required" datatype="html">
+        <source>Message must not be blank</source>
+        <target>メッセージ本文を入力してください</target>
+      </trans-unit>
+      <trans-unit id="validation.message.size" datatype="html">
+        <source>Message must be between 1 and 4000 characters</source>
+        <target>メッセージ本文は1〜4,000文字以内で入力してください</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -111,17 +111,17 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/i18n-phase1-backend-localization`
 
 #### Tasks
-- [ ] **TASK-004**: Configure `@angular/localize` and multi-locale build architecture
+- [x] **TASK-004**: Configure `@angular/localize` and multi-locale build architecture
   - **Component & Requirements**: `COMP-101`, `COMP-102`, `REQ-001`, `REQ-002`
   - **Target Files**:
     - `frontend/package.json`
     - `frontend/angular.json`
     - `frontend/src/locale/messages.ja.xlf`
   - **Acceptance Criteria**:
-    - [ ] `@angular/localize` added to project dependencies.
-    - [ ] `angular.json` configured with `i18n` sourceLocale `en` and locale `ja` pointing to `src/locale/messages.ja.xlf`.
-    - [ ] Build targets configure base Hrefs (`/en/` and `/ja/`).
-    - [ ] Production build succeeds generating multi-locale output distributions.
+    - [x] `@angular/localize` added to project dependencies.
+    - [x] `angular.json` configured with `i18n` sourceLocale `en` and locale `ja` pointing to `src/locale/messages.ja.xlf`.
+    - [x] Build targets configure base Hrefs (`/en/` and `/ja/`).
+    - [x] Production build succeeds generating multi-locale output distributions.
   - **Commit Message**: `build(frontend): configure @angular/localize and multi-locale build targets`
 
 - [ ] **TASK-005**: Implement `LocaleService` for storage, discovery, and navigation

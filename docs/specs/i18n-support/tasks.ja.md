@@ -111,17 +111,17 @@ upstream:
 - **マージ対象**: `feat/i18n-phase1-backend-localization`
 
 #### タスク一覧
-- [ ] **TASK-004**: `@angular/localize` の設定および複数ロケールビルド構成の構築
+- [x] **TASK-004**: `@angular/localize` の設定および複数ロケールビルド構成の構築
   - **コンポーネント & 要件**: `COMP-101`, `COMP-102`, `REQ-001`, `REQ-002`
   - **対象ファイル**:
     - `frontend/package.json`
     - `frontend/angular.json`
     - `frontend/src/locale/messages.ja.xlf`
   - **受け入れ基準**:
-    - [ ] プロジェクトの依存関係に `@angular/localize` が追加されていること。
-    - [ ] `angular.json` に `i18n` の sourceLocale `en` および `src/locale/messages.ja.xlf` を指すロケール `ja` が設定されていること。
-    - [ ] ビルドターゲットに Base Href（`/en/` および `/ja/`）が設定されていること。
-    - [ ] プロダクションビルドが正常に完了し、複数ロケールの配布パッケージが生成されること。
+    - [x] プロジェクトの依存関係に `@angular/localize` が追加されていること。
+    - [x] `angular.json` に `i18n` の sourceLocale `en` および `src/locale/messages.ja.xlf` を指すロケール `ja` が設定されていること。
+    - [x] ビルドターゲットに Base Href（`/en/` および `/ja/`）が設定されていること。
+    - [x] プロダクションビルドが正常に完了し、複数ロケールの配布パッケージが生成されること。
   - **コミットメッセージ**: `build(frontend): configure @angular/localize and multi-locale build targets`
 
 - [ ] **TASK-005**: 保存・検出・遷移用 `LocaleService` の実装
