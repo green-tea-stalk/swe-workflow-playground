@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { App } from './app';
 import { PostFeedComponent } from './components/post-feed/post-feed.component';
 
@@ -28,7 +29,7 @@ describe('App (Application Root Integration)', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.app-toolbar')?.textContent).toContain('掲示板アプリケーション');
+    expect(compiled.querySelector('.app-toolbar')?.textContent).toContain('Bulletin Board');
   });
 
   it('should correctly include feed component, fixed bottom form component, and language switch in toolbar', async () => {

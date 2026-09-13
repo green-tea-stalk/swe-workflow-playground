@@ -197,15 +197,15 @@ upstream:
     - [x] 単体テストで英語および日本語のフォーム操作とバリデーションエラーを検証していること。
   - **コミットメッセージ**: `feat(frontend): localize PostFormComponent inputs, errors, and snackbars`
 
-- [ ] **TASK-010**: XLIFF 翻訳カタログの抽出および生成
+- [x] **TASK-010**: XLIFF 翻訳カタログの抽出および生成
   - **コンポーネント & 要件**: `COMP-101`, `COMP-103`, `COMP-104`, `REQ-001`
   - **対象ファイル**:
     - `frontend/src/locale/messages.ja.xlf`
     - `frontend/src/locale/messages.xlf`
   - **受け入れ基準**:
-    - [ ] `ng extract-i18n` を実行して元の翻訳カタログを生成すること。
-    - [ ] すべてのテンプレート `i18n` ID を網羅した完全な日本語翻訳が `messages.ja.xlf` に格納されていること。
-    - [ ] プロダクションビルド（`npm run build`）が、翻訳漏れ警告なしに `en` および `ja` 配布パッケージの両方で正常に成功すること。
+    - [x] `ng extract-i18n` を実行して元の翻訳カタログを生成すること。
+    - [x] すべてのテンプレート `i18n` ID を網羅した完全な日本語翻訳が `messages.ja.xlf` に格納されていること。
+    - [x] プロダクションビルド（`npm run build`）が、翻訳漏れ警告なしに `en` および `ja` 配布パッケージの両方で正常に成功すること。
   - **コミットメッセージ**: `i18n(frontend): populate Japanese XLIFF translation catalog`
 
 - [ ] **TASK-011**: 二言語検証用 Playwright E2E 自動テストスイートの構築

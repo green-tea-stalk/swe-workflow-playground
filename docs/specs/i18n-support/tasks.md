@@ -197,15 +197,15 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests verify form interactions and validation errors in English and Japanese.
   - **Commit Message**: `feat(frontend): localize PostFormComponent inputs, errors, and snackbars`
 
-- [ ] **TASK-010**: Extract and populate XLIFF translation bundles
+- [x] **TASK-010**: Extract and populate XLIFF translation bundles
   - **Component & Requirements**: `COMP-101`, `COMP-103`, `COMP-104`, `REQ-001`
   - **Target Files**:
     - `frontend/src/locale/messages.ja.xlf`
     - `frontend/src/locale/messages.xlf`
   - **Acceptance Criteria**:
-    - [ ] Run `ng extract-i18n` to generate source translation catalog.
-    - [ ] Complete Japanese translations populated in `messages.ja.xlf` covering all template `i18n` IDs.
-    - [ ] Production build (`npm run build`) cleanly succeeds for both `en` and `ja` distributions without missing translation warnings.
+    - [x] Run `ng extract-i18n` to generate source translation catalog.
+    - [x] Complete Japanese translations populated in `messages.ja.xlf` covering all template `i18n` IDs.
+    - [x] Production build (`npm run build`) cleanly succeeds for both `en` and `ja` distributions without missing translation warnings.
   - **Commit Message**: `i18n(frontend): populate Japanese XLIFF translation catalog`
 
 - [ ] **TASK-011**: Build Playwright E2E automated test suite for bilingual verification

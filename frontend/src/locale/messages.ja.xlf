@@ -22,10 +22,6 @@
         <source>Select page</source>
         <target>ページ選択</target>
       </trans-unit>
-      <trans-unit id="app.form.title" datatype="html">
-        <source>New Post</source>
-        <target>新規投稿</target>
-      </trans-unit>
       <trans-unit id="app.form.name" datatype="html">
         <source>Name</source>
         <target>お名前</target>
@@ -81,28 +77,6 @@
       <trans-unit id="app.lang.switch" datatype="html">
         <source>Switch Language</source>
         <target>言語切替</target>
-      </trans-unit>
-
-      <!-- Section 3.3 Semantic Property Hierarchy for Error & Validation Messages -->
-      <trans-unit id="error.validation.title" datatype="html">
-        <source>Validation Failed</source>
-        <target>入力値検証エラー</target>
-      </trans-unit>
-      <trans-unit id="error.validation.detail" datatype="html">
-        <source>Input payload failed validation constraints.</source>
-        <target>入力内容に不備があります。制約条件を確認してください。</target>
-      </trans-unit>
-      <trans-unit id="error.internal.title" datatype="html">
-        <source>Internal Server Error</source>
-        <target>サーバー内部エラー</target>
-      </trans-unit>
-      <trans-unit id="error.internal.detail" datatype="html">
-        <source>An unexpected error occurred while processing the request.</source>
-        <target>リクエストの処理中に予期せぬエラーが発生しました。</target>
-      </trans-unit>
-      <trans-unit id="error.invalid_arg.title" datatype="html">
-        <source>Invalid Argument</source>
-        <target>不正な引数</target>
       </trans-unit>
       <trans-unit id="validation.name.required" datatype="html">
         <source>Name must not be blank</source>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="app.title" datatype="html">
+        <source>Bulletin Board</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.html</context>
+          <context context-type="linenumber">3,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.lang.switch" datatype="html">
+        <source>Switch Language</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/language-switch/language-switch.component.html</context>
+          <context context-type="linenumber">6,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.feed.aria_label" datatype="html">
+        <source>Posts feed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-feed/post-feed.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.feed.retry" datatype="html">
+        <source>Retry</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-feed/post-feed.component.html</context>
+          <context context-type="linenumber">12,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.feed.empty" datatype="html">
+        <source>No posts found. Be the first to post!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-feed/post-feed.component.html</context>
+          <context context-type="linenumber">19,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.feed.paginator_label" datatype="html">
+        <source>Select page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-feed/post-feed.component.html</context>
+          <context context-type="linenumber">52,53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.name" datatype="html">
+        <source>Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.name.placeholder" datatype="html">
+        <source>Enter your name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.name.required" datatype="html">
+        <source>Name must not be blank</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.name.size" datatype="html">
+        <source>Name must be between 1 and 50 characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">15,17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.email" datatype="html">
+        <source>Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">20,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.email.placeholder" datatype="html">
+        <source>Optional email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.email.format" datatype="html">
+        <source>Email must be a well-formed email address</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">24,25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.email.size" datatype="html">
+        <source>Email must not exceed 254 characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">26,28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.post_title" datatype="html">
+        <source>Title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.post_title.placeholder" datatype="html">
+        <source>Enter title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.title.required" datatype="html">
+        <source>Title must not be blank</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">35,36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.title.size" datatype="html">
+        <source>Title must be between 1 and 100 characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">37,39</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.message" datatype="html">
+        <source>Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">44,46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.message.placeholder" datatype="html">
+        <source>Enter your message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">48,49</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.message.required" datatype="html">
+        <source>Message must not be blank</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">54,55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="validation.message.size" datatype="html">
+        <source>Message must be between 1 and 4000 characters</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">56,58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.submitting" datatype="html">
+        <source>Submitting...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">70,72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.submit" datatype="html">
+        <source>Submit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.html</context>
+          <context context-type="linenumber">72,74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.success" datatype="html">
+        <source>Post submitted successfully!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.close" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.ts</context>
+          <context context-type="linenumber">139</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="app.form.generic_error" datatype="html">
+        <source>An error occurred while submitting the post. Please try again later.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/post-form/post-form.component.ts</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

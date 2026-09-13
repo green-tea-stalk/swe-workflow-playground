@@ -15,9 +15,6 @@ import { PostFormComponent } from './components/post-form/post-form.component';
   styleUrl: './app.scss',
 })
 export class App {
-  /** Application display title. */
-  readonly title = '掲示板アプリケーション';
-
   /** Reference to the feed child component for triggering refreshes. */
   @ViewChild(PostFeedComponent) feedComponent?: PostFeedComponent;
 
