@@ -1,0 +1,22 @@
+{
+  "name": "swe-workflow-playground",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Playground project for swe-workflow demonstrating Spec-Driven Development (SDD)",
+  "scripts": {
+    "dev": "npm run db:up && concurrently -k --kill-timeout 5000 -p \"[{name}]\" -n \"backend,frontend\" -c \"blue,green\" \"cd backend && ./gradlew run\" \"cd frontend && npm run start:ja\"",
+    "dev:ja": "npm run db:up && concurrently -k --kill-timeout 5000 -p \"[{name}]\" -n \"backend,frontend\" -c \"blue,green\" \"cd backend && ./gradlew run\" \"cd frontend && npm run start:ja\"",
+    "dev:en": "npm run db:up && concurrently -k --kill-timeout 5000 -p \"[{name}]\" -n \"backend,frontend\" -c \"blue,green\" \"cd backend && ./gradlew run\" \"cd frontend && npm run start:en\"",
+    "start": "npm run db:up && concurrently -k --kill-timeout 5000 -p \"[{name}]\" -n \"backend,frontend\" -c \"blue,green\" \"cd backend && ./gradlew run\" \"cd frontend && npm start\"",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "test": "node --test tests/dev-orchestrator.test.mjs && npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && ./gradlew test",
+    "test:frontend": "cd frontend && npm test -- --watch=false",
+    "test:e2e": "cd frontend && npm run e2e"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "wait-on": "^8.0.2"
+  }
+}
