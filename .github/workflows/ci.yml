@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25 LTS
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: '25'
+          cache: gradle
+
+      - name: Run backend tests
+        run: cd backend && ./gradlew test
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm ci
+
+      - name: Run frontend unit tests
+        run: cd frontend && npm test -- --watch=false
+
+      - name: Build frontend application
+        run: cd frontend && npm run build
+
+  e2e:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25 LTS
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: '25'
+          cache: gradle
+
+      - name: Set up Node.js 22 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Start MySQL persistence
+        run: docker compose up -d
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm ci
+
+      - name: Install Playwright Chromium dependencies
+        run: cd frontend && npx playwright install --with-deps chromium
+
+      - name: Launch backend service in background
+        run: |
+          cd backend && ./gradlew run > backend.log 2>&1 &
+          echo $! > backend.pid
+
+      - name: Launch frontend service in background
+        run: |
+          cd frontend && npm start > frontend.log 2>&1 &
+          echo $! > frontend.pid
+
+      - name: Await backend and frontend readiness
+        run: |
+          echo "Awaiting backend readiness on http://localhost:8080/api/posts..."
+          curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://localhost:8080/api/posts || {
+            echo "Backend failed to become ready in time. Log dump:"
+            cat backend/backend.log
+            exit 1
+          }
+          echo "Awaiting frontend readiness on http://localhost:4200/..."
+          curl --fail --retry 30 --retry-delay 2 --retry-connrefused http://localhost:4200/ || {
+            echo "Frontend failed to become ready in time. Log dump:"
+            cat frontend/frontend.log
+            exit 1
+          }
+
+      - name: Run Playwright end-to-end tests
+        run: cd frontend && npx playwright test
+
+      - name: Upload end-to-end failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-diagnostics
+          path: |
+            frontend/test-results/
+            frontend/playwright-report/
+            backend/backend.log
+            frontend/frontend.log
+          retention-days: 14

@@ -78,7 +78,24 @@ graph TD
 
 ## 4. Quick Start & Service Execution Guide
 
-### Step 1: Start MySQL 8.4 Database Container
+### 4.1 Consolidated Local Development (Recommended)
+Launch MySQL container, backend server, and frontend server with a single command from the repository root:
+```bash
+npm install
+npm run dev
+```
+- **Default Development**: `npm run dev` boots MySQL persistence via `docker compose up -d`, starts the Micronaut backend, and launches the Angular frontend targeting the Japanese locale (`npm run start:ja`) with live hot-reloading.
+- **Locale-Specific Development**:
+  - English development: `npm run dev:en`
+  - Japanese development: `npm run dev:ja`
+- **Multi-Locale Production Server**: `npm run start` (or `npm start`) boots MySQL and runs the multi-locale AOT server (`node server.mjs`).
+- **Database Lifecycle**:
+  - Start database only: `npm run db:up`
+  - Stop database: `npm run db:down`
+
+### 4.2 Manual / Individual Service Execution Guide
+
+#### Step 1: Start MySQL 8.4 Database Container
 ```bash
 docker run -d \
   --name bulletin-board-mysql \
