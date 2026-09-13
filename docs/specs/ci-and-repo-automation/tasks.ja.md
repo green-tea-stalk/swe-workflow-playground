@@ -44,7 +44,7 @@ upstream:
 | **REQ-012** | `COMP-006` | `TASK-010` | PR 5 | 保留中 |
 | **REQ-013** | `COMP-007` | `TASK-011` | PR 5 | 保留中 |
 | **REQ-014** | `COMP-008` | `TASK-008` | PR 4 | 完了 |
-| **REQ-015** | `COMP-006` | `TASK-009` | PR 4 | 保留中 |
+| **REQ-015** | `COMP-006` | `TASK-009` | PR 4 | 完了 |
 | **REQ-016** | `COMP-001`, `COMP-006`, `COMP-007` | `TASK-010`, `TASK-011`, `TASK-012` | PR 5, PR 6 | 保留中 |
 
 ---
@@ -161,15 +161,15 @@ upstream:
     - [x] 検証チェックにより、ファイル構文および GitHub ユーザー名の一致が確認されていること。
   - **コミットメッセージ**: `chore(governance): add repository-wide CODEOWNERS assigning @green-tea-stalk`
 
-- [ ] **TASK-009**: バックエンド依存関係およびプラグイン用 Gradle Version Catalog の実装
+- [x] **TASK-009**: バックエンド依存関係およびプラグイン用 Gradle Version Catalog の実装
   - **コンポーネント & 要件**: `COMP-006`, `REQ-015`
   - **対象ファイル**: `backend/gradle/libs.versions.toml`, `backend/build.gradle.kts`
   - **受け入れ基準**:
-    - [ ] `[versions]`, `[libraries]`, `[plugins]` セクションを含む `backend/gradle/libs.versions.toml` が作成されていること。
-    - [ ] すべてのバックエンドプラグイン（`io.micronaut.application`, `com.gradleup.shadow`, `io.micronaut.aot`）および依存関係がカタログ化されていること。
-    - [ ] ハードコードされた依存関係バージョン文字列を排除し、型安全な `libs.plugins...` および `libs...` アクセサを使用するように `backend/build.gradle.kts` がリファクタリングされていること。
-    - [ ] プラットフォーム環境バージョン（Java 25 LTS, MySQL 8.4 LTS）がカタログから厳格に除外されていること。
-    - [ ] `./gradlew buildEnvironment` および `./gradlew test` の実行が解決エラーなしで成功すること。
+    - [x] `[versions]`, `[libraries]`, `[plugins]` セクションを含む `backend/gradle/libs.versions.toml` が作成されていること。
+    - [x] すべてのバックエンドプラグイン（`io.micronaut.application`, `com.gradleup.shadow`, `io.micronaut.aot`）および依存関係がカタログ化されていること。
+    - [x] ハードコードされた依存関係バージョン文字列を排除し、型安全な `libs.plugins...` および `libs...` アクセサを使用するように `backend/build.gradle.kts` がリファクタリングされていること。
+    - [x] プラットフォーム環境バージョン（Java 25 LTS, MySQL 8.4 LTS）がカタログから厳格に除外されていること。
+    - [x] `./gradlew buildEnvironment` および `./gradlew test` の実行が解決エラーなしで成功すること。
   - **コミットメッセージ**: `build(backend): introduce gradle version catalog and migrate build dependencies`
 
 ---

@@ -44,7 +44,7 @@ Every requirement (`REQ-001` through `REQ-016`) and design component (`COMP-001`
 | **REQ-012** | `COMP-006` | `TASK-010` | PR 5 | Pending |
 | **REQ-013** | `COMP-007` | `TASK-011` | PR 5 | Pending |
 | **REQ-014** | `COMP-008` | `TASK-008` | PR 4 | Completed |
-| **REQ-015** | `COMP-006` | `TASK-009` | PR 4 | Pending |
+| **REQ-015** | `COMP-006` | `TASK-009` | PR 4 | Completed |
 | **REQ-016** | `COMP-001`, `COMP-006`, `COMP-007` | `TASK-010`, `TASK-011`, `TASK-012` | PR 5, PR 6 | Pending |
 
 ---
@@ -160,15 +160,15 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Verification check confirms file syntax and GitHub username matching.
   - **Commit Message**: `chore(governance): add repository-wide CODEOWNERS assigning @green-tea-stalk`
 
-- [ ] **TASK-009**: Implement Gradle Version Catalog for backend dependencies and plugins
+- [x] **TASK-009**: Implement Gradle Version Catalog for backend dependencies and plugins
   - **Component & Requirements**: `COMP-006`, `REQ-015`
   - **Target Files**: `backend/gradle/libs.versions.toml`, `backend/build.gradle.kts`
   - **Acceptance Criteria**:
-    - [ ] `backend/gradle/libs.versions.toml` created with `[versions]`, `[libraries]`, and `[plugins]` sections.
-    - [ ] All backend plugins (`io.micronaut.application`, `com.gradleup.shadow`, `io.micronaut.aot`) and dependencies cataloged.
-    - [ ] `backend/build.gradle.kts` refactored to use type-safe `libs.plugins...` and `libs...` accessors with zero hardcoded dependency version strings.
-    - [ ] Platform environment versions (Java 25 LTS, MySQL 8.4 LTS) remain strictly outside the catalog.
-    - [ ] Execution of `./gradlew buildEnvironment` and `./gradlew test` succeeds without resolution errors.
+    - [x] `backend/gradle/libs.versions.toml` created with `[versions]`, `[libraries]`, and `[plugins]` sections.
+    - [x] All backend plugins (`io.micronaut.application`, `com.gradleup.shadow`, `io.micronaut.aot`) and dependencies cataloged.
+    - [x] `backend/build.gradle.kts` refactored to use type-safe `libs.plugins...` and `libs...` accessors with zero hardcoded dependency version strings.
+    - [x] Platform environment versions (Java 25 LTS, MySQL 8.4 LTS) remain strictly outside the catalog.
+    - [x] Execution of `./gradlew buildEnvironment` and `./gradlew test` succeeds without resolution errors.
   - **Commit Message**: `build(backend): introduce gradle version catalog and migrate build dependencies`
 
 ---
