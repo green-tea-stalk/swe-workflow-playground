@@ -17,7 +17,7 @@ class ApplicationTest {
     EmbeddedApplication<?> application;
 
     @Test
-    @DisplayName("Micronaut アプリケーションコンテキストが正常に起動すること")
+    @DisplayName("Micronaut application context should start up cleanly")
     void testApplicationContextStarts() {
         Assertions.assertTrue(application.isRunning());
     }

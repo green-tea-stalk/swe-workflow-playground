@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '../../models/post.model';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
-describe('PostFormComponent (画面下部固定投稿フォームコンポーネントテスト)', () => {
+describe('PostFormComponent (Fixed Bottom Post Form Unit)', () => {
   let component: PostFormComponent;
   let fixture: ComponentFixture<PostFormComponent>;
   let mockPostApiService: { createPost: ReturnType<typeof vi.fn> };
@@ -43,8 +43,8 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
     fixture.detectChanges();
   });
 
-  describe('初期表示・入力バリデーション', () => {
-    it('初期状態で全入力フィールドが空であり、フォームが無効(invalid)であること', () => {
+  describe('Initial display and input validation', () => {
+    it('should have all fields empty and form marked invalid initially', () => {
       expect(component.postForm.value).toEqual({
         name: '',
         email: '',
@@ -55,53 +55,53 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
     });
 
     it.each([
-      { value: '', expectedValid: false, desc: '空文字は無効' },
-      { value: '   ', expectedValid: false, desc: '空白のみは無効' },
-      { value: 'a'.repeat(50), expectedValid: true, desc: '境界値(50文字)は有効' },
-      { value: 'a'.repeat(51), expectedValid: false, desc: '上限超過(51文字)は無効' },
-    ])('お名前 (name) バリデーション: $desc', ({ value, expectedValid }) => {
+      { value: '', expectedValid: false, desc: 'empty string is invalid' },
+      { value: '   ', expectedValid: false, desc: 'whitespace-only is invalid' },
+      { value: 'a'.repeat(50), expectedValid: true, desc: 'boundary value (50 chars) is valid' },
+      { value: 'a'.repeat(51), expectedValid: false, desc: 'exceeding limit (51 chars) is invalid' },
+    ])('name validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.name;
       control.setValue(value);
       expect(control.valid).toBe(expectedValid);
     });
 
     it.each([
-      { value: '', expectedValid: true, desc: '空文字は任意のため有効' },
-      { value: '   ', expectedValid: true, desc: '空白のみは任意のため有効' },
-      { value: 'invalid-email-format', expectedValid: false, desc: '不正なメール形式は無効' },
-      { value: 'user@example.com', expectedValid: true, desc: '正常なメール形式は有効' },
-      { value: 'a'.repeat(243) + '@example.com', expectedValid: false, desc: '上限超過(255文字)は無効' },
-    ])('メールアドレス (email) バリデーション: $desc', ({ value, expectedValid }) => {
+      { value: '', expectedValid: true, desc: 'empty string is optional and valid' },
+      { value: '   ', expectedValid: true, desc: 'whitespace-only is optional and valid' },
+      { value: 'invalid-email-format', expectedValid: false, desc: 'invalid email format is invalid' },
+      { value: 'user@example.com', expectedValid: true, desc: 'valid email format is valid' },
+      { value: 'a'.repeat(243) + '@example.com', expectedValid: false, desc: 'exceeding limit (255 chars) is invalid' },
+    ])('email validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.email;
       control.setValue(value);
       expect(control.valid).toBe(expectedValid);
     });
 
     it.each([
-      { value: '', expectedValid: false, desc: '空文字は無効' },
-      { value: '   ', expectedValid: false, desc: '空白のみは無効' },
-      { value: 'a'.repeat(100), expectedValid: true, desc: '境界値(100文字)は有効' },
-      { value: 'a'.repeat(101), expectedValid: false, desc: '上限超過(101文字)は無効' },
-    ])('タイトル (title) バリデーション: $desc', ({ value, expectedValid }) => {
+      { value: '', expectedValid: false, desc: 'empty string is invalid' },
+      { value: '   ', expectedValid: false, desc: 'whitespace-only is invalid' },
+      { value: 'a'.repeat(100), expectedValid: true, desc: 'boundary value (100 chars) is valid' },
+      { value: 'a'.repeat(101), expectedValid: false, desc: 'exceeding limit (101 chars) is invalid' },
+    ])('title validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.title;
       control.setValue(value);
       expect(control.valid).toBe(expectedValid);
     });
 
     it.each([
-      { value: '', expectedValid: false, desc: '空文字は無効' },
-      { value: '   ', expectedValid: false, desc: '空白のみは無効' },
-      { value: 'a'.repeat(4000), expectedValid: true, desc: '境界値(4000文字)は有効' },
-      { value: 'a'.repeat(4001), expectedValid: false, desc: '上限超過(4001文字)は無効' },
-    ])('メッセージ本文 (message) バリデーション: $desc', ({ value, expectedValid }) => {
+      { value: '', expectedValid: false, desc: 'empty string is invalid' },
+      { value: '   ', expectedValid: false, desc: 'whitespace-only is invalid' },
+      { value: 'a'.repeat(4000), expectedValid: true, desc: 'boundary value (4000 chars) is valid' },
+      { value: 'a'.repeat(4001), expectedValid: false, desc: 'exceeding limit (4001 chars) is invalid' },
+    ])('message validation: $desc', ({ value, expectedValid }) => {
       const control = component.postForm.controls.message;
       control.setValue(value);
       expect(control.valid).toBe(expectedValid);
     });
   });
 
-  describe('フォーム送信処理 (onSubmit)', () => {
-    it('送信処理中(isSubmittingがtrue)の場合、onSubmit()が再度呼び出されても重複してAPIを呼び出さないこと', () => {
+  describe('Form submission (onSubmit)', () => {
+    it('should not duplicate API call if onSubmit() is called while isSubmitting is true', () => {
       component.isSubmitting.set(true);
       component.postForm.setValue({
         name: '重複送信テスト',
@@ -115,7 +115,7 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
       expect(mockPostApiService.createPost).not.toHaveBeenCalled();
     });
 
-    it('入力不備がある場合、APIを呼び出さず全項目をtouchedにして入力を保持すること', () => {
+    it('should mark all fields touched and retain inputs without calling API when form is invalid', () => {
       component.postForm.patchValue({
         name: '入力済み名前',
         email: 'invalid-email-format',
@@ -131,7 +131,7 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
       expect(component.postForm.controls.message.value).toBe('入力済みメッセージ');
     });
 
-    it('正常入力時、トリムされた値でAPIを呼び出し、成功時にフォーム初期化・スナックバー表示・イベント発火を行うこと', () => {
+    it('should call API with trimmed values, reset form, show snackbar, and emit event upon success', () => {
       let postCreatedEmitted = false;
       component.postCreated.subscribe(() => {
         postCreatedEmitted = true;
@@ -168,7 +168,7 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
       expect(component.isSubmitting()).toBe(false);
     });
 
-    it('メールアドレスが空欄または空白の場合、APIへnullとして正規化して送信すること', () => {
+    it('should normalize blank or whitespace email to null when sending to API', () => {
       component.postForm.setValue({
         name: '佐藤花子',
         email: '   ',
@@ -186,7 +186,7 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
       });
     });
 
-    it('API送信失敗時、入力値を消去せず保持し、エラースナックバーを表示すること', () => {
+    it('should retain form values and display error snackbar upon API submission failure', () => {
       mockPostApiService.createPost.mockReturnValue(
         throwError(() => new Error('サーバー内部エラーが発生しました。'))
       );
@@ -216,7 +216,7 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
       expect(component.isSubmitting()).toBe(false);
     });
 
-    it('API送信失敗時(RFC 9457 Problem Details形式)、detailのエラー内容をスナックバーに表示すること', () => {
+    it('should display problem details error detail in snackbar upon RFC 9457 error', () => {
       const problemError = {
         error: {
           type: 'https://example.com/errors/validation-failed',
@@ -248,7 +248,7 @@ describe('PostFormComponent (画面下部固定投稿フォームコンポーネ
   });
 
   describe('resetForm()', () => {
-    it('フォーム入力をリセットし、未入力状態に戻すこと', () => {
+    it('should reset form inputs back to pristine unpopulated state', () => {
       component.postForm.setValue({
         name: 'リセット前名前',
         email: 'reset@example.com',

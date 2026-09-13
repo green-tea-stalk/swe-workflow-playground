@@ -27,12 +27,12 @@ class DtoContractTest {
     JsonMapper jsonMapper;
 
     @Test
-    @DisplayName("PagedPostResponse に null の items を渡した場合でも、空リスト [] を保証して保持すること")
+    @DisplayName("PagedPostResponse should guarantee non-null empty list when items is null")
     void testPagedPostResponseGuaranteesEmptyListOnNull() {
         PagedPostResponse response = new PagedPostResponse(null, 0, 50, 0, 0);
 
-        assertNotNull(response.items(), "items は決してnullであってはならない");
-        assertTrue(response.items().isEmpty(), "nullが渡された場合は空リストでなければならない");
+        assertNotNull(response.items(), "items must never be null");
+        assertTrue(response.items().isEmpty(), "items must be empty list [] when null is supplied");
         assertEquals(0, response.page());
         assertEquals(50, response.size());
         assertEquals(0, response.totalItems());
@@ -40,7 +40,7 @@ class DtoContractTest {
     }
 
     @Test
-    @DisplayName("PostResponse.fromEntity はエンティティのフィールドを正確にISO 8601 UTCタイムスタンプでDTOへマッピングすること")
+    @DisplayName("PostResponse.fromEntity should accurately map entity fields with ISO 8601 UTC timestamp")
     void testPostResponseFromEntityMapping() {
         LocalDateTime now = LocalDateTime.of(2026, 9, 11, 12, 0, 0);
         PostEntity entity = new PostEntity(1L, "Alice", "alice@example.com", "Title", "Message", now);
@@ -52,49 +52,49 @@ class DtoContractTest {
         assertEquals("alice@example.com", response.email());
         assertEquals("Title", response.title());
         assertEquals("Message", response.message());
-        assertEquals("2026-09-11T12:00:00Z", response.createdAt(), "タイムスタンプはISO 8601 UTC形式（末尾Z）でなければならない");
+        assertEquals("2026-09-11T12:00:00Z", response.createdAt(), "Timestamp must be in ISO 8601 UTC format ending with Z");
     }
 
     @Test
-    @DisplayName("PostResponse.fromEntity はメールアドレスが null の場合でも正常に null を許容してマッピングすること")
+    @DisplayName("PostResponse.fromEntity should accept and retain null email")
     void testPostResponseFromEntityWithNullEmail() {
         PostEntity entity = new PostEntity(2L, "Bob", null, "Title", "Message", LocalDateTime.now());
 
         PostResponse response = PostResponse.fromEntity(entity);
 
         assertEquals(2L, response.id());
-        assertNull(response.email(), "メールアドレスが未入力の場合はnullでなければならない");
+        assertNull(response.email(), "email must be null when entity email is omitted");
     }
 
     @Test
-    @DisplayName("PagedPostResponse を JSON シリアライズした際、snake_case キーと空配列 [] が保証されること")
+    @DisplayName("PagedPostResponse JSON serialization should guarantee snake_case keys and empty array []")
     void testPagedPostResponseJsonSerialization() throws IOException {
         PagedPostResponse response = new PagedPostResponse(List.of(), 0, 50, 0, 0);
         String json = jsonMapper.writeValueAsString(response);
         String compactJson = json.replaceAll("\\s+", "");
 
         assertAll(
-                () -> assertTrue(compactJson.contains("\"items\":[]"), "items は JSON 上で空配列 [] としてシリアライズされること: " + json),
-                () -> assertTrue(compactJson.contains("\"total_items\":0"), "total_items は snake_case でシリアライズされること"),
-                () -> assertTrue(compactJson.contains("\"total_pages\":0"), "total_pages は snake_case でシリアライズされること")
+                () -> assertTrue(compactJson.contains("\"items\":[]"), "items must be serialized as empty array [] in JSON: " + json),
+                () -> assertTrue(compactJson.contains("\"total_items\":0"), "total_items must be serialized in snake_case"),
+                () -> assertTrue(compactJson.contains("\"total_pages\":0"), "total_pages must be serialized in snake_case")
         );
     }
 
     @Test
-    @DisplayName("PostResponse を JSON シリアライズした際、created_at が snake_case で出力されること")
+    @DisplayName("PostResponse JSON serialization should output created_at in snake_case")
     void testPostResponseJsonSerialization() throws IOException {
         PostResponse post = new PostResponse(10L, "Charlie", null, "Title", "Body", "2026-09-11T12:00:00Z");
         String json = jsonMapper.writeValueAsString(post);
 
         assertAll(
-                () -> assertTrue(json.contains("\"created_at\":\"2026-09-11T12:00:00Z\""), "created_at は snake_case で出力されること"),
+                () -> assertTrue(json.contains("\"created_at\":\"2026-09-11T12:00:00Z\""), "created_at must be serialized in snake_case"),
                 () -> assertTrue(json.contains("\"name\":\"Charlie\"")),
                 () -> assertTrue(json.contains("\"id\":10"))
         );
     }
 
     @Test
-    @DisplayName("JSON 文字列から PagedPostResponse および PostResponse が正確にデシリアライズされること")
+    @DisplayName("JSON string should accurately deserialize into PagedPostResponse and PostResponse")
     void testJsonDeserialization() throws IOException {
         String json = """
                 {
@@ -119,17 +119,17 @@ class DtoContractTest {
 
         assertNotNull(paged);
         assertEquals(1, paged.items().size());
-        assertEquals(1L, paged.totalItems(), "total_items がマッピングされること");
-        assertEquals(1, paged.totalPages(), "total_pages がマッピングされること");
+        assertEquals(1L, paged.totalItems(), "total_items must be mapped properly");
+        assertEquals(1, paged.totalPages(), "total_pages must be mapped properly");
 
         PostResponse item = paged.items().get(0);
         assertEquals(1L, item.id());
         assertEquals("David", item.name());
-        assertEquals("2026-09-11T10:00:00Z", item.createdAt(), "created_at がマッピングされること");
+        assertEquals("2026-09-11T10:00:00Z", item.createdAt(), "created_at must be mapped properly");
     }
 
     @Test
-    @DisplayName("JSON 文字列で items プロパティが省略されている場合でも、空リスト [] にフォールバックすること")
+    @DisplayName("JSON string with omitted items property should fall back to empty list []")
     void testJsonDeserializationWithMissingItemsDefaultsToEmptyList() throws IOException {
         String json = """
                 {
@@ -143,7 +143,7 @@ class DtoContractTest {
         PagedPostResponse paged = jsonMapper.readValue(json, PagedPostResponse.class);
 
         assertNotNull(paged);
-        assertNotNull(paged.items(), "items は決してnullであってはならない");
-        assertTrue(paged.items().isEmpty(), "省略時は空リスト [] でなければならない");
+        assertNotNull(paged.items(), "items must never be null");
+        assertTrue(paged.items().isEmpty(), "items must default to empty list [] when omitted");
     }
 }
