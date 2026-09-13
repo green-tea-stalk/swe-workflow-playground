@@ -61,7 +61,7 @@ upstream:
 - **マージ対象**: `docs/i18n-support-spec`
 
 #### タスク一覧
-- [ ] **TASK-001**: `MessageLocalizationService` の実装およびリソースバンドルの作成
+- [x] **TASK-001**: `MessageLocalizationService` の実装およびリソースバンドルの作成
   - **コンポーネント & 要件**: `COMP-202`, `REQ-001`, `REQ-009`, `REQ-010`
   - **対象ファイル**:
     - `backend/src/main/resources/messages.properties`
@@ -70,10 +70,10 @@ upstream:
     - `backend/src/main/java/com/example/bulletinboard/service/DefaultMessageLocalizationService.java`
     - `backend/src/test/java/com/example/bulletinboard/service/MessageLocalizationServiceTest.java`
   - **受け入れ基準**:
-    - [ ] `messages.properties`（英語）および `messages_ja.properties`（日本語）が設計書セクション 3.3 に一致する同一のキー階層を定義していること。
-    - [ ] `MessageLocalizationService` がコードと `Locale` に基づいてメッセージを解決し、英語へフォールバックできること。
-    - [ ] 存在しないキーに対して未処理例外をスローせず、安全にデフォルトメッセージを返却すること。
-    - [ ] 単体テストでパラメータ展開、日本語検索、および英語フォールバックを検証していること。
+    - [x] `messages.properties`（英語）および `messages_ja.properties`（日本語）が設計書セクション 3.3 に一致する同一のキー階層を定義していること。
+    - [x] `MessageLocalizationService` がコードと `Locale` に基づいてメッセージを解決し、英語へフォールバックできること。
+    - [x] 存在しないキーに対して未処理例外をスローせず、安全にデフォルトメッセージを返却すること。
+    - [x] 単体テストでパラメータ展開、日本語検索、および英語フォールバックを検証していること。
   - **コミットメッセージ**: `feat(backend): implement MessageLocalizationService and resource bundles`
 
 - [ ] **TASK-002**: HTTP `Accept-Language` ヘッダー解析用 `LocaleResolver` の実装

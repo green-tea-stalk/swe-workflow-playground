@@ -61,7 +61,7 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `docs/i18n-support-spec`
 
 #### Tasks
-- [ ] **TASK-001**: Implement `MessageLocalizationService` and create resource bundles
+- [x] **TASK-001**: Implement `MessageLocalizationService` and create resource bundles
   - **Component & Requirements**: `COMP-202`, `REQ-001`, `REQ-009`, `REQ-010`
   - **Target Files**:
     - `backend/src/main/resources/messages.properties`
@@ -70,10 +70,10 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - `backend/src/main/java/com/example/bulletinboard/service/DefaultMessageLocalizationService.java`
     - `backend/src/test/java/com/example/bulletinboard/service/MessageLocalizationServiceTest.java`
   - **Acceptance Criteria**:
-    - [ ] `messages.properties` (English) and `messages_ja.properties` (Japanese) define identical key hierarchies matching design Section 3.3.
-    - [ ] `MessageLocalizationService` resolves messages by code and `Locale` with fallback to English.
-    - [ ] Missing keys safely return default message without throwing unhandled exceptions.
-    - [ ] Unit tests verify interpolation, Japanese lookup, and English fallback.
+    - [x] `messages.properties` (English) and `messages_ja.properties` (Japanese) define identical key hierarchies matching design Section 3.3.
+    - [x] `MessageLocalizationService` resolves messages by code and `Locale` with fallback to English.
+    - [x] Missing keys safely return default message without throwing unhandled exceptions.
+    - [x] Unit tests verify interpolation, Japanese lookup, and English fallback.
   - **Commit Message**: `feat(backend): implement MessageLocalizationService and resource bundles`
 
 - [ ] **TASK-002**: Implement `LocaleResolver` for HTTP `Accept-Language` header parsing
