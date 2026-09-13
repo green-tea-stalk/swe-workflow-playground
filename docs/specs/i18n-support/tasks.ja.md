@@ -154,14 +154,14 @@ upstream:
     - [x] 単体テストでクリック操作およびサービスの委譲を検証していること。
   - **コミットメッセージ**: `feat(frontend): implement LanguageSwitchComponent in navigation toolbar`
 
-- [ ] **TASK-007**: `PostApiService` における `Accept-Language` ヘッダーの付与
+- [x] **TASK-007**: `PostApiService` における `Accept-Language` ヘッダーの付与
   - **コンポーネント & 要件**: `COMP-105`, `REQ-009`
   - **対象ファイル**:
     - `frontend/src/app/services/post-api.service.ts`
     - `frontend/src/app/services/post-api.service.spec.ts`
   - **受け入れ基準**:
-    - [ ] すべての HTTP GET および POST リクエストに、`LocaleService.getActiveLocale()` に一致する `Accept-Language: {locale}` を付与すること。
-    - [ ] Vitest 単体テストで、`HttpTestingController` を使用して `'en'` および `'ja'` の両方で送信ヘッダーを検査していること。
+    - [x] すべての HTTP GET および POST リクエストに、`LocaleService.getActiveLocale()` に一致する `Accept-Language: {locale}` を付与すること。
+    - [x] Vitest 単体テストで、`HttpTestingController` を使用して `'en'` および `'ja'` 両方の送信リクエストヘッダーを検査・検証すること。
   - **コミットメッセージ**: `feat(frontend): inject Accept-Language header in PostApiService calls`
 
 ---

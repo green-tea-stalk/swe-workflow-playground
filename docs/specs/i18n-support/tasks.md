@@ -154,14 +154,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Unit tests verify click interactions and service delegation.
   - **Commit Message**: `feat(frontend): implement LanguageSwitchComponent in navigation toolbar`
 
-- [ ] **TASK-007**: Inject `Accept-Language` header in `PostApiService`
+- [x] **TASK-007**: Inject `Accept-Language` header in `PostApiService`
   - **Component & Requirements**: `COMP-105`, `REQ-009`
   - **Target Files**:
     - `frontend/src/app/services/post-api.service.ts`
     - `frontend/src/app/services/post-api.service.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] All HTTP GET and POST requests attach `Accept-Language: {locale}` matching `LocaleService.getActiveLocale()`.
-    - [ ] Vitest unit tests verify `HttpTestingController` inspects outgoing request headers for both `'en'` and `'ja'`.
+    - [x] All HTTP GET and POST requests attach `Accept-Language: {locale}` matching `LocaleService.getActiveLocale()`.
+    - [x] Vitest unit tests verify `HttpTestingController` inspects outgoing request headers for both `'en'` and `'ja'`.
   - **Commit Message**: `feat(frontend): inject Accept-Language header in PostApiService calls`
 
 ---
