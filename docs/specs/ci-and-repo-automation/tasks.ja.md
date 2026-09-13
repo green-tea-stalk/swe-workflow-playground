@@ -119,27 +119,27 @@ upstream:
 - **マージ先**: `feat/ci-phase2-repo-automations`
 
 #### タスク
-- [ ] **TASK-006**: 並列バックエンドおよびフロントエンド CI 検証ジョブの実装
+- [x] **TASK-006**: 並列バックエンドおよびフロントエンド CI 検証ジョブの実装
   - **コンポーネント & 要件**: `COMP-001`, `REQ-001`
   - **対象ファイル**: `.github/workflows/ci.yml`
   - **受け入れ基準**:
-    - [ ] `main` への `push` および `main` を対象とする `pull_request` で起動するように `.github/workflows/ci.yml` が構成されていること。
-    - [ ] 重複したランナー実行を防止するため、`cancel-in-progress: true` の concurrency グループが構成されていること。
-    - [ ] `backend` ジョブが `ubuntu-latest` 上で動作し、Gradle キャッシュ付きで Java 25 LTS（Corretto）をセットアップし、`./gradlew test`（Testcontainers MySQL 結合テスト含む）を実行すること。
-    - [ ] `frontend` ジョブが `ubuntu-latest` 上で動作し、npm キャッシュ付きで Node.js 22 LTS をセットアップし、`npm ci`、`npm test -- --watch=false`（Vitest）、および `npm run build` を実行すること。
-    - [ ] バックエンドジョブとフロントエンドジョブがジョブ間のブロックなしに並行して実行されること。
+    - [x] `main` への `push` および `main` を対象とする `pull_request` で起動するように `.github/workflows/ci.yml` が構成されていること。
+    - [x] 重複したランナー実行を防止するため、`cancel-in-progress: true` の concurrency グループが構成されていること。
+    - [x] `backend` ジョブが `ubuntu-latest` 上で動作し、Gradle キャッシュ付きで Java 25 LTS（Corretto）をセットアップし、`./gradlew test`（Testcontainers MySQL 結合テスト含む）を実行すること。
+    - [x] `frontend` ジョブが `ubuntu-latest` 上で動作し、npm キャッシュ付きで Node.js 22 LTS をセットアップし、`npm ci`、`npm test -- --watch=false`（Vitest）、および `npm run build` を実行すること。
+    - [x] バックエンドジョブとフロントエンドジョブがジョブ間のブロックなしに並行して実行されること。
   - **コミットメッセージ**: `ci(workflow): implement parallel backend and frontend verification jobs`
 
-- [ ] **TASK-007**: 条件付き後続 E2E ゲートおよび成果物アップロードの実装
+- [x] **TASK-007**: 条件付き後続 E2E ゲートおよび成果物アップロードの実装
   - **コンポーネント & 要件**: `COMP-001`, `REQ-002`, `REQ-003`
   - **対象ファイル**: `.github/workflows/ci.yml`
   - **受け入れ基準**:
-    - [ ] 明示的な依存関係 `needs: [backend, frontend]` を持つ `e2e` ジョブが構成されていること。
-    - [ ] E2E ジョブが `docker compose up -d` で MySQL コンテナを起動し、バックグラウンドでバックエンドおよびフロントエンドサービスを起動し、タイムアウト付きで健全性チェックエンドポイントをポーリングすること。
-    - [ ] `npx playwright install --with-deps chromium` で Playwright Chromium ブラウザをインストールし、`npx playwright test` を実行すること。
-    - [ ] `backend` または `frontend` ジョブのいずれかが失敗した場合、`e2e` ジョブがスキップされ、ブラウザテストにランナーリソースが消費されないこと。
-    - [ ] テスト失敗時に、Playwright トレース、失敗スクリーンショット、およびサービスログが `actions/upload-artifact@v4` を介して GitHub Actions 成果物としてアップロードされること。
-    - [ ] actionlint または同等のワークフロー検証ツールによってワークフロー YAML が検証されていること。
+    - [x] 明示的な依存関係 `needs: [backend, frontend]` を持つ `e2e` ジョブが構成されていること。
+    - [x] E2E ジョブが `docker compose up -d` で MySQL コンテナを起動し、バックグラウンドでバックエンドおよびフロントエンドサービスを起動し、タイムアウト付きで健全性チェックエンドポイントをポーリングすること。
+    - [x] `npx playwright install --with-deps chromium` で Playwright Chromium ブラウザをインストールし、`npx playwright test` を実行すること。
+    - [x] `backend` または `frontend` ジョブのいずれかが失敗した場合、`e2e` ジョブがスキップされ、ブラウザテストにランナーリソースが消費されないこと。
+    - [x] テスト失敗時に、Playwright トレース、失敗スクリーンショット、およびサービスログが `actions/upload-artifact@v4` を介して GitHub Actions 成果物としてアップロードされること。
+    - [x] actionlint または同等のワークフロー検証ツールによってワークフロー YAML が検証されていること。
   - **コミットメッセージ**: `ci(workflow): add conditional gated e2e verification and diagnostic artifact upload`
 
 ---
