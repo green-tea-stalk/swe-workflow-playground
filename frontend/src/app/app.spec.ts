@@ -4,7 +4,6 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { App } from './app';
 import { PostFeedComponent } from './components/post-feed/post-feed.component';
-import { PostFormComponent } from './components/post-form/post-form.component';
 
 describe('App (Application Root Integration)', () => {
   beforeEach(async () => {
@@ -21,7 +20,7 @@ describe('App (Application Root Integration)', () => {
   it('should instantiate application root component successfully', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(app).toBeInstanceOf(App);
   });
 
   it('should display bulletin board title in toolbar', async () => {
@@ -32,11 +31,12 @@ describe('App (Application Root Integration)', () => {
     expect(compiled.querySelector('.app-toolbar')?.textContent).toContain('掲示板アプリケーション');
   });
 
-  it('should correctly include feed component and fixed bottom form component', async () => {
+  it('should correctly include feed component, fixed bottom form component, and language switch in toolbar', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.app-toolbar app-language-switch')).not.toBeNull();
     expect(compiled.querySelector('app-post-feed')).not.toBeNull();
     expect(compiled.querySelector('app-post-form')).not.toBeNull();
   });

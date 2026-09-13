@@ -1,0 +1,11 @@
+<button
+  type="button"
+  mat-button
+  class="language-switch-button"
+  (click)="toggleLocale()"
+  aria-label="Switch Language"
+  i18n-aria-label="@@app.lang.switch"
+>
+  <mat-icon>language</mat-icon>
+  <span class="locale-label">{{ currentLocale().toUpperCase() }}</span>
+</button>

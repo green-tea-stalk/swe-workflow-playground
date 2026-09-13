@@ -137,7 +137,7 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Vitest unit tests achieve 100% branch coverage with mocked storage and window location.
   - **Commit Message**: `feat(frontend): implement LocaleService for discovery, persistence, and navigation`
 
-- [ ] **TASK-006**: Implement `LanguageSwitchComponent` in toolbar
+- [x] **TASK-006**: Implement `LanguageSwitchComponent` in toolbar
   - **Component & Requirements**: `COMP-101`, `REQ-001`, `REQ-003`
   - **Target Files**:
     - `frontend/src/app/components/language-switch/language-switch.component.ts`
@@ -148,10 +148,10 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - `frontend/src/app/app.html`
     - `frontend/src/app/app.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] Renders language toggle button in toolbar displaying current locale (`EN` or `JA`).
-    - [ ] Activating switch invokes `LocaleService.setLocale()` with target locale.
-    - [ ] Button includes localized accessible label (`aria-label`).
-    - [ ] Unit tests verify click interactions and service delegation.
+    - [x] Renders language toggle button in toolbar displaying current locale (`EN` or `JA`).
+    - [x] Activating switch invokes `LocaleService.setLocale()` with target locale.
+    - [x] Button includes localized accessible label (`aria-label`).
+    - [x] Unit tests verify click interactions and service delegation.
   - **Commit Message**: `feat(frontend): implement LanguageSwitchComponent in navigation toolbar`
 
 - [ ] **TASK-007**: Inject `Accept-Language` header in `PostApiService`

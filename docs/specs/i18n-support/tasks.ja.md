@@ -137,7 +137,7 @@ upstream:
     - [x] Vitest 単体テストで、モック化したストレージおよびウィンドウロケーションを用いて 100% のブランチカバレッジを達成すること。
   - **コミットメッセージ**: `feat(frontend): implement LocaleService for discovery, persistence, and navigation`
 
-- [ ] **TASK-006**: ツールバー内の `LanguageSwitchComponent` の実装
+- [x] **TASK-006**: ツールバー内の `LanguageSwitchComponent` の実装
   - **コンポーネント & 要件**: `COMP-101`, `REQ-001`, `REQ-003`
   - **対象ファイル**:
     - `frontend/src/app/components/language-switch/language-switch.component.ts`
@@ -148,10 +148,10 @@ upstream:
     - `frontend/src/app/app.html`
     - `frontend/src/app/app.spec.ts`
   - **受け入れ基準**:
-    - [ ] 現在のロケール（`EN` または `JA`）を表示する言語切り替えボタンをツールバーに描画すること。
-    - [ ] 切り替えの操作により、対象ロケールで `LocaleService.setLocale()` が呼び出されること。
-    - [ ] ボタンにローカライズされたアクセシビリティラベル（`aria-label`）が含まれていること。
-    - [ ] 単体テストでクリック操作とサービス委譲を検証していること。
+    - [x] ツールバー内に現在のロケール（`EN` または `JA`）を表示する言語切替トグルボタンを描画すること。
+    - [x] 切替ボタンの活性化により、遷移先ロケールを指定して `LocaleService.setLocale()` を呼び出すこと。
+    - [x] ボタンにローカライズされたアクセシブルなラベル（`aria-label`）が含まれていること。
+    - [x] 単体テストでクリック操作およびサービスの委譲を検証していること。
   - **コミットメッセージ**: `feat(frontend): implement LanguageSwitchComponent in navigation toolbar`
 
 - [ ] **TASK-007**: `PostApiService` における `Accept-Language` ヘッダーの付与
