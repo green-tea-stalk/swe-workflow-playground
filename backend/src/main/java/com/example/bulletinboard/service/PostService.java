@@ -9,7 +9,6 @@ import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
 import io.micronaut.data.model.Sort;
 import jakarta.inject.Singleton;
-
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -63,17 +62,10 @@ public class PostService {
         Pageable pageable = Pageable.from(page, size, Sort.of(Sort.Order.desc("createdAt")));
         Page<PostEntity> entityPage = postRepository.findAll(pageable);
 
-        List<PostResponse> items = entityPage.getContent().stream()
-                .map(PostResponse::fromEntity)
-                .toList();
+        List<PostResponse> items =
+                entityPage.getContent().stream().map(PostResponse::fromEntity).toList();
 
-        return new PagedPostResponse(
-                items,
-                page,
-                size,
-                entityPage.getTotalSize(),
-                entityPage.getTotalPages()
-        );
+        return new PagedPostResponse(items, page, size, entityPage.getTotalSize(), entityPage.getTotalPages());
     }
 
     /**
@@ -102,14 +94,7 @@ public class PostService {
 
         LocalDateTime now = LocalDateTime.now(clock);
 
-        PostEntity entityToSave = new PostEntity(
-                null,
-                name,
-                normalizedEmail,
-                title,
-                message,
-                now
-        );
+        PostEntity entityToSave = new PostEntity(null, name, normalizedEmail, title, message, now);
 
         PostEntity savedEntity = postRepository.save(entityToSave);
         return PostResponse.fromEntity(savedEntity);

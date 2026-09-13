@@ -1,7 +1,6 @@
 package com.example.bulletinboard.service;
 
 import jakarta.inject.Singleton;
-
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;

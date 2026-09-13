@@ -4,7 +4,6 @@ import com.example.bulletinboard.entity.PostEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-
 import java.time.ZoneOffset;
 
 /**
@@ -21,13 +20,10 @@ import java.time.ZoneOffset;
 public record PostResponse(
         Long id,
         String name,
-        @Nullable
-        String email,
+        @Nullable String email,
         String title,
         String message,
-        @JsonProperty("created_at")
-        String createdAt
-) {
+        @JsonProperty("created_at") String createdAt) {
     private static final java.time.format.DateTimeFormatter UTC_FORMATTER =
             java.time.format.DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss'Z'");
 
@@ -43,12 +39,6 @@ public record PostResponse(
                 : null;
 
         return new PostResponse(
-                entity.id(),
-                entity.name(),
-                entity.email(),
-                entity.title(),
-                entity.message(),
-                formattedTimestamp
-        );
+                entity.id(), entity.name(), entity.email(), entity.title(), entity.message(), formattedTimestamp);
     }
 }

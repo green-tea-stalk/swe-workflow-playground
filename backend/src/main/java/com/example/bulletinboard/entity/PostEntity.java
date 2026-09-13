@@ -5,7 +5,6 @@ import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
-
 import java.time.LocalDateTime;
 
 /**
@@ -20,20 +19,9 @@ import java.time.LocalDateTime;
  */
 @MappedEntity("posts")
 public record PostEntity(
-        @Id
-        @GeneratedValue
-        @Nullable
-        Long id,
-
+        @Id @GeneratedValue @Nullable Long id,
         String name,
-
-        @Nullable
-        String email,
-
+        @Nullable String email,
         String title,
-
         String message,
-
-        @MappedProperty("created_at")
-        LocalDateTime createdAt
-) {}
+        @MappedProperty("created_at") LocalDateTime createdAt) {}

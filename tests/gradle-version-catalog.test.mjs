@@ -32,7 +32,7 @@ describe('Backend Gradle Version Catalog Governance', () => {
     assert.match(content, /\[plugins\]/, 'Catalog must contain [plugins] section');
 
     const semVerPattern = /^[0-9]+\.[0-9]+\.[0-9]+$/;
-    const requiredVersions = ['micronaut', 'shadow', 'mockito', 'testcontainers'];
+    const requiredVersions = ['micronaut', 'shadow', 'spotless', 'mockito', 'testcontainers'];
     for (const key of requiredVersions) {
       const versionMatch = content.match(new RegExp(`^${key}\\s*=\\s*"([^"]+)"`, 'm'));
       assert.ok(versionMatch, `Catalog must define version for ${key}`);
@@ -54,6 +54,7 @@ describe('Backend Gradle Version Catalog Governance', () => {
     const expectedPlugins = [
       { alias: 'micronaut-application', id: 'io.micronaut.application', versionRef: 'micronaut' },
       { alias: 'shadow', id: 'com.gradleup.shadow', versionRef: 'shadow' },
+      { alias: 'spotless', id: 'com.diffplug.spotless', versionRef: 'spotless' },
       { alias: 'micronaut-aot', id: 'io.micronaut.aot', versionRef: 'micronaut' },
     ];
 
@@ -76,6 +77,7 @@ describe('Backend Gradle Version Catalog Governance', () => {
     const requiredPluginAccessors = [
       'libs.plugins.micronaut.application',
       'libs.plugins.shadow',
+      'libs.plugins.spotless',
       'libs.plugins.micronaut.aot',
     ];
     for (const pluginAccessor of requiredPluginAccessors) {
@@ -94,4 +96,25 @@ describe('Backend Gradle Version Catalog Governance', () => {
       assert.match(content, new RegExp(prefix.replace(/\./g, '\\.')), `build.gradle.kts must reference ${prefix} accessors`);
     }
   });
+
+  /**
+   * Verifies that Spotless configuration in build.gradle.kts configures Palantir Java Format and ktlint.
+   */
+  test('backend build.gradle.kts configures Spotless with Palantir Java Format and ktlint', () => {
+    assert.ok(existsSync(buildGradlePath), 'backend/build.gradle.kts must exist');
+    const content = readFileSync(buildGradlePath, 'utf8');
+
+    assert.match(content, /spotless\s*\{/, 'build.gradle.kts must contain spotless block');
+    assert.match(
+      content,
+      /java\s*\{[\s\S]*?target\("src\/\*\*\/\*\.java"\)[\s\S]*?palantirJavaFormat\(/,
+      'Spotless java block must target "src/**/*.java" and configure palantirJavaFormat',
+    );
+    assert.match(
+      content,
+      /kotlinGradle\s*\{[\s\S]*?target\("\*\.gradle\.kts"\)[\s\S]*?ktlint\(/,
+      'Spotless kotlinGradle block must target "*.gradle.kts" and configure ktlint',
+    );
+  });
 });
+

@@ -3,7 +3,6 @@ package com.example.bulletinboard.exception;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
-
 import java.util.List;
 
 /**
@@ -24,9 +23,7 @@ public record ProblemDetails(
         int status,
         String detail,
         String instance,
-        @JsonProperty("invalid_params")
-        List<InvalidParam> invalidParams
-) {
+        @JsonProperty("invalid_params") List<InvalidParam> invalidParams) {
     /**
      * Compact constructor guaranteeing immutability and non-null list for invalid parameters.
      */

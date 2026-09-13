@@ -179,15 +179,15 @@ upstream:
 - **マージ先**: `feat/ci-phase4-governance-and-version-catalog`
 
 #### タスク
-- [ ] **TASK-010**: Java（Palantir）および Kotlin DSL（ktlint）用 Spotless コードフォーマットの構成
+- [x] **TASK-010**: Java（Palantir）および Kotlin DSL（ktlint）用 Spotless コードフォーマットの構成
   - **コンポーネント & 要件**: `COMP-006`, `REQ-012`, `REQ-016`
   - **対象ファイル**: `backend/gradle/libs.versions.toml`, `backend/build.gradle.kts`, `backend/src/**/*.java`
   - **受け入れ基準**:
-    - [ ] Spotless Gradle プラグイン座標が `backend/gradle/libs.versions.toml` に追加され、`backend/build.gradle.kts` に適用されていること。
-    - [ ] Java ソース（`src/**/*.java`、4 スペース）用に `palantirJavaFormat()`、Kotlin Gradle スクリプト（`*.gradle.kts`）用に `ktlint()` で Spotless が構成されていること。
-    - [ ] 既存のすべての Java ファイルおよび Gradle スクリプトをその場で整形するために、初回の `./gradlew spotlessApply` が実行されていること。
-    - [ ] `./gradlew spotlessCheck` の実行が終了コード `0` で成功すること。
-    - [ ] 意図的にスタイル違反を混入させると、`./gradlew spotlessCheck` が終了コード `1` で失敗すること。
+    - [x] Spotless Gradle プラグイン座標が `backend/gradle/libs.versions.toml` に追加され、`backend/build.gradle.kts` に適用されていること。
+    - [x] Java ソース（`src/**/*.java`、4 スペース）用に `palantirJavaFormat()`、Kotlin Gradle スクリプト（`*.gradle.kts`）用に `ktlint()` で Spotless が構成されていること。
+    - [x] 既存のすべての Java ファイルおよび Gradle スクリプトをその場で整形するために、初回の `./gradlew spotlessApply` が実行されていること。
+    - [x] `./gradlew spotlessCheck` の実行が終了コード `0` で成功すること。
+    - [x] 意図的にスタイル違反を混入させると、`./gradlew spotlessCheck` が終了コード `1` で失敗すること。
   - **コミットメッセージ**: `style(backend): configure spotless with palantir java format and format codebase`
 
 - [ ] **TASK-011**: フロントエンド用 Prettier フォーマットおよびライフサイクルスクリプトの構成

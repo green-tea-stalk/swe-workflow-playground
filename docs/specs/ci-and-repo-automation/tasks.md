@@ -178,15 +178,15 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/ci-phase4-governance-and-version-catalog`
 
 #### Tasks
-- [ ] **TASK-010**: Configure Spotless code formatting for Java (Palantir) and Kotlin DSL (ktlint)
+- [x] **TASK-010**: Configure Spotless code formatting for Java (Palantir) and Kotlin DSL (ktlint)
   - **Component & Requirements**: `COMP-006`, `REQ-012`, `REQ-016`
   - **Target Files**: `backend/gradle/libs.versions.toml`, `backend/build.gradle.kts`, `backend/src/**/*.java`
   - **Acceptance Criteria**:
-    - [ ] Spotless Gradle plugin coordinate added to `backend/gradle/libs.versions.toml` and applied in `backend/build.gradle.kts`.
-    - [ ] Spotless configured with `palantirJavaFormat()` for Java sources (`src/**/*.java`, 4 spaces) and `ktlint()` for Kotlin Gradle scripts (`*.gradle.kts`).
-    - [ ] Initial formatting executed via `./gradlew spotlessApply` to format all existing Java files and Gradle scripts in-place.
-    - [ ] Execution of `./gradlew spotlessCheck` passes with exit code `0`.
-    - [ ] Intentionally introducing a style violation causes `./gradlew spotlessCheck` to fail with exit code `1`.
+    - [x] Spotless Gradle plugin coordinate added to `backend/gradle/libs.versions.toml` and applied in `backend/build.gradle.kts`.
+    - [x] Spotless configured with `palantirJavaFormat()` for Java sources (`src/**/*.java`, 4 spaces) and `ktlint()` for Kotlin Gradle scripts (`*.gradle.kts`).
+    - [x] Initial formatting executed via `./gradlew spotlessApply` to format all existing Java files and Gradle scripts in-place.
+    - [x] Execution of `./gradlew spotlessCheck` passes with exit code `0`.
+    - [x] Intentionally introducing a style violation causes `./gradlew spotlessCheck` to fail with exit code `1`.
   - **Commit Message**: `style(backend): configure spotless with palantir java format and format codebase`
 
 - [ ] **TASK-011**: Configure Prettier formatting and lifecycle scripts for frontend

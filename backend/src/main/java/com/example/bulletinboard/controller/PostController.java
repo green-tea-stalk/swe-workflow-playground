@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-
 import java.net.URI;
 import java.util.Objects;
 
@@ -47,9 +46,12 @@ public class PostController {
      */
     @Get(produces = MediaType.APPLICATION_JSON)
     public HttpResponse<PagedPostResponse> listPosts(
-            @QueryValue(defaultValue = "0") @Min(value = 0, message = "Page must be greater than or equal to 0") int page,
-            @QueryValue(defaultValue = "50") @Min(value = 1, message = "Size must be between 1 and 50") @Max(value = 50, message = "Size must be between 1 and 50") int size
-    ) {
+            @QueryValue(defaultValue = "0") @Min(value = 0, message = "Page must be greater than or equal to 0")
+                    int page,
+            @QueryValue(defaultValue = "50")
+                    @Min(value = 1, message = "Size must be between 1 and 50")
+                    @Max(value = 50, message = "Size must be between 1 and 50")
+                    int size) {
         PagedPostResponse response = postService.getPagedPosts(page, size);
         return HttpResponse.ok(response);
     }

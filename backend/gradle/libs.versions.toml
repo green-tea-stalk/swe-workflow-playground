@@ -1,6 +1,7 @@
 [versions]
 micronaut = "5.0.2"
 shadow = "9.6.1"
+spotless = "7.0.2"
 mockito = "5.23.0"
 testcontainers = "1.21.4"
 
@@ -39,4 +40,5 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 [plugins]
 micronaut-application = { id = "io.micronaut.application", version.ref = "micronaut" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 micronaut-aot = { id = "io.micronaut.aot", version.ref = "micronaut" }

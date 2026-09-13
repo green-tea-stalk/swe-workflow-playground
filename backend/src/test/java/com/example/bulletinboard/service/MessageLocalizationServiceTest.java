@@ -1,19 +1,18 @@
 package com.example.bulletinboard.service;
 
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import jakarta.inject.Inject;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
-import java.util.Locale;
-
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
+import java.util.Locale;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * Unit and integration test suite for MessageLocalizationService verifying resource bundle resolution,
@@ -34,32 +33,32 @@ class MessageLocalizationServiceTest {
 
     @ParameterizedTest(name = "Locale: {0}, Key: {1} -> Expected: {2}")
     @CsvSource({
-            "en, error.validation.title, Validation Failed",
-            "en, error.validation.detail, Input payload failed validation constraints.",
-            "en, error.internal.title, Internal Server Error",
-            "en, error.internal.detail, An unexpected error occurred while processing the request.",
-            "en, error.invalid_arg.title, Invalid Argument",
-            "en, validation.name.required, Name must not be blank",
-            "en, validation.name.size, Name must be between 1 and 50 characters",
-            "en, validation.email.format, Email must be a well-formed email address",
-            "en, validation.email.size, Email must not exceed 254 characters",
-            "en, validation.title.required, Title must not be blank",
-            "en, validation.title.size, Title must be between 1 and 100 characters",
-            "en, validation.message.required, Message must not be blank",
-            "en, validation.message.size, Message must be between 1 and 4000 characters",
-            "ja, error.validation.title, 入力値検証エラー",
-            "ja, error.validation.detail, 入力内容に不備があります。制約条件を確認してください。",
-            "ja, error.internal.title, サーバー内部エラー",
-            "ja, error.internal.detail, リクエストの処理中に予期せぬエラーが発生しました。",
-            "ja, error.invalid_arg.title, 不正な引数",
-            "ja, validation.name.required, 名前を入力してください",
-            "ja, validation.name.size, 名前は1〜50文字以内で入力してください",
-            "ja, validation.email.format, 有効なメールアドレス形式で入力してください",
-            "ja, validation.email.size, メールアドレスは254文字以内で入力してください",
-            "ja, validation.title.required, タイトルを入力してください",
-            "ja, validation.title.size, タイトルは1〜100文字以内で入力してください",
-            "ja, validation.message.required, メッセージ本文を入力してください",
-            "ja, validation.message.size, 'メッセージ本文は1〜4,000文字以内で入力してください'"
+        "en, error.validation.title, Validation Failed",
+        "en, error.validation.detail, Input payload failed validation constraints.",
+        "en, error.internal.title, Internal Server Error",
+        "en, error.internal.detail, An unexpected error occurred while processing the request.",
+        "en, error.invalid_arg.title, Invalid Argument",
+        "en, validation.name.required, Name must not be blank",
+        "en, validation.name.size, Name must be between 1 and 50 characters",
+        "en, validation.email.format, Email must be a well-formed email address",
+        "en, validation.email.size, Email must not exceed 254 characters",
+        "en, validation.title.required, Title must not be blank",
+        "en, validation.title.size, Title must be between 1 and 100 characters",
+        "en, validation.message.required, Message must not be blank",
+        "en, validation.message.size, Message must be between 1 and 4000 characters",
+        "ja, error.validation.title, 入力値検証エラー",
+        "ja, error.validation.detail, 入力内容に不備があります。制約条件を確認してください。",
+        "ja, error.internal.title, サーバー内部エラー",
+        "ja, error.internal.detail, リクエストの処理中に予期せぬエラーが発生しました。",
+        "ja, error.invalid_arg.title, 不正な引数",
+        "ja, validation.name.required, 名前を入力してください",
+        "ja, validation.name.size, 名前は1〜50文字以内で入力してください",
+        "ja, validation.email.format, 有効なメールアドレス形式で入力してください",
+        "ja, validation.email.size, メールアドレスは254文字以内で入力してください",
+        "ja, validation.title.required, タイトルを入力してください",
+        "ja, validation.title.size, タイトルは1〜100文字以内で入力してください",
+        "ja, validation.message.required, メッセージ本文を入力してください",
+        "ja, validation.message.size, 'メッセージ本文は1〜4,000文字以内で入力してください'"
     })
     @DisplayName("Should resolve localized messages for standard property keys in English and Japanese")
     void shouldResolveStandardKeys(String localeTag, String code, String expectedMessage) {
@@ -79,7 +78,8 @@ class MessageLocalizationServiceTest {
     @DisplayName("Should return provided default message when key is missing across all bundles")
     void shouldReturnDefaultMessageWhenKeyIsMissing() {
         String defaultMsg = "Fallback default message";
-        String resolved = messageLocalizationService.getMessageOrDefault("non.existent.code", Locale.JAPANESE, defaultMsg);
+        String resolved =
+                messageLocalizationService.getMessageOrDefault("non.existent.code", Locale.JAPANESE, defaultMsg);
         assertEquals(defaultMsg, resolved, "Should return provided fallback string when code does not exist");
     }
 
@@ -110,7 +110,8 @@ class MessageLocalizationServiceTest {
     @Test
     @DisplayName("Should safely handle null default message when arguments are provided")
     void shouldSafelyHandleNullDefaultMessageWithArguments() {
-        String resolved = messageLocalizationService.getMessageOrDefault("missing.code", Locale.ENGLISH, null, "paramVal");
+        String resolved =
+                messageLocalizationService.getMessageOrDefault("missing.code", Locale.ENGLISH, null, "paramVal");
         assertNull(resolved, "Should safely return null without throwing NullPointerException");
     }
 
@@ -118,7 +119,8 @@ class MessageLocalizationServiceTest {
     @DisplayName("Should gracefully handle malformed pattern in fallback without throwing unhandled exceptions")
     void shouldGracefullyHandleMalformedPatternInFallback() {
         String malformedPattern = "Invalid pattern with unclosed {bracket";
-        String resolved = messageLocalizationService.getMessageOrDefault("missing.code", Locale.ENGLISH, malformedPattern, "val");
+        String resolved =
+                messageLocalizationService.getMessageOrDefault("missing.code", Locale.ENGLISH, malformedPattern, "val");
         assertEquals(malformedPattern, resolved, "Should fall back to unformatted pattern on format error");
     }
 
@@ -126,27 +128,33 @@ class MessageLocalizationServiceTest {
     @DisplayName("Should reject null, empty, or blank code with IllegalArgumentException")
     void shouldEnforcePreconditionsOnCode() {
         assertAll(
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(
+                        IllegalArgumentException.class,
                         () -> messageLocalizationService.getMessage(null, Locale.ENGLISH),
                         "Should reject null code in getMessage"),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(
+                        IllegalArgumentException.class,
                         () -> messageLocalizationService.getMessage("", Locale.ENGLISH),
                         "Should reject empty code in getMessage"),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(
+                        IllegalArgumentException.class,
                         () -> messageLocalizationService.getMessage("   ", Locale.ENGLISH),
                         "Should reject whitespace-only code in getMessage"),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(
+                        IllegalArgumentException.class,
                         () -> messageLocalizationService.getMessage("error.validation.title", null),
                         "Should reject null locale in getMessage"),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(
+                        IllegalArgumentException.class,
                         () -> messageLocalizationService.getMessageOrDefault(null, Locale.ENGLISH, "default"),
                         "Should reject null code in getMessageOrDefault"),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(
+                        IllegalArgumentException.class,
                         () -> messageLocalizationService.getMessageOrDefault("   ", Locale.ENGLISH, "default"),
                         "Should reject blank code in getMessageOrDefault"),
-                () -> assertThrows(IllegalArgumentException.class,
+                () -> assertThrows(
+                        IllegalArgumentException.class,
                         () -> messageLocalizationService.getMessageOrDefault("code", null, "default"),
-                        "Should reject null locale in getMessageOrDefault")
-        );
+                        "Should reject null locale in getMessageOrDefault"));
     }
 }

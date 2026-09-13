@@ -16,21 +16,13 @@ import jakarta.validation.constraints.Size;
  */
 @Serdeable
 public record CreatePostRequest(
-        @NotBlank(message = "{validation.name.required}")
-        @Size(min = 1, max = 50, message = "{validation.name.size}")
-        String name,
-
-        @Nullable
-        @Size(max = 254, message = "{validation.email.size}")
-        @Email(message = "{validation.email.format}")
-        String email,
-
+        @NotBlank(message = "{validation.name.required}") @Size(min = 1, max = 50, message = "{validation.name.size}")
+                String name,
+        @Nullable @Size(max = 254, message = "{validation.email.size}") @Email(message = "{validation.email.format}")
+                String email,
         @NotBlank(message = "{validation.title.required}")
-        @Size(min = 1, max = 100, message = "{validation.title.size}")
-        String title,
-
+                @Size(min = 1, max = 100, message = "{validation.title.size}")
+                String title,
         @NotBlank(message = "{validation.message.required}")
-        @Size(min = 1, max = 4000, message = "{validation.message.size}")
-        String message
-) {}
-
+                @Size(min = 1, max = 4000, message = "{validation.message.size}")
+                String message) {}

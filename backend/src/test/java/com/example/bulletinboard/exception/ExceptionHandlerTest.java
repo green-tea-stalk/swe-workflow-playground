@@ -1,27 +1,5 @@
 package com.example.bulletinboard.exception;
 
-import io.micronaut.http.HttpRequest;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
-import io.micronaut.http.MediaType;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Path;
-import com.example.bulletinboard.service.DefaultMessageLocalizationService;
-import com.example.bulletinboard.service.MessageLocalizationService;
-import com.example.bulletinboard.util.HttpLocaleResolver;
-import com.example.bulletinboard.util.LocaleResolver;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -30,6 +8,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.example.bulletinboard.service.DefaultMessageLocalizationService;
+import com.example.bulletinboard.service.MessageLocalizationService;
+import com.example.bulletinboard.util.HttpLocaleResolver;
+import com.example.bulletinboard.util.LocaleResolver;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Path;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * Unit test suite for custom exception handlers verifying RFC 9457 Problem Details envelopes.
@@ -48,12 +46,13 @@ class ExceptionHandlerTest {
 
     @ParameterizedTest(name = "GlobalExceptionHandler with Accept-Language: {0} resolves title: {1}")
     @CsvSource({
-            "'ja', 'サーバー内部エラー', 'リクエストの処理中に予期せぬエラーが発生しました。', 'ja'",
-            "'en', 'Internal Server Error', 'An unexpected error occurred while processing the request.', 'en'",
-            "'', 'Internal Server Error', 'An unexpected error occurred while processing the request.', 'en'"
+        "'ja', 'サーバー内部エラー', 'リクエストの処理中に予期せぬエラーが発生しました。', 'ja'",
+        "'en', 'Internal Server Error', 'An unexpected error occurred while processing the request.', 'en'",
+        "'', 'Internal Server Error', 'An unexpected error occurred while processing the request.', 'en'"
     })
     @DisplayName("GlobalExceptionHandler: should return localized 500 ProblemDetails and Content-Language header")
-    void testGlobalExceptionHandlerLocalized(String acceptLanguage, String expectedTitle, String expectedDetail, String expectedLang) {
+    void testGlobalExceptionHandlerLocalized(
+            String acceptLanguage, String expectedTitle, String expectedDetail, String expectedLang) {
         GlobalExceptionHandler handler = new GlobalExceptionHandler(localeResolver, messageLocalizationService);
         HttpRequest<?> request = acceptLanguage.isBlank()
                 ? HttpRequest.GET("/api/posts")
@@ -63,7 +62,9 @@ class ExceptionHandlerTest {
         HttpResponse<ProblemDetails> response = handler.handle(request, cause);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_PROBLEM_TYPE, response.getContentType().orElse(null));
+        assertEquals(
+                MediaType.APPLICATION_JSON_PROBLEM_TYPE,
+                response.getContentType().orElse(null));
         assertEquals(expectedLang, response.getHeaders().get("Content-Language"));
 
         ProblemDetails problem = response.body();
@@ -92,14 +93,13 @@ class ExceptionHandlerTest {
     }
 
     @ParameterizedTest(name = "IllegalArgumentExceptionHandler with Accept-Language: {0} resolves title: {1}")
-    @CsvSource({
-            "'ja', '不正な引数', 'ja'",
-            "'en', 'Invalid Argument', 'en'",
-            "'', 'Invalid Argument', 'en'"
-    })
-    @DisplayName("IllegalArgumentExceptionHandler: should return localized 400 ProblemDetails and Content-Language header")
-    void testIllegalArgumentExceptionHandlerLocalized(String acceptLanguage, String expectedTitle, String expectedLang) {
-        IllegalArgumentExceptionHandler handler = new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
+    @CsvSource({"'ja', '不正な引数', 'ja'", "'en', 'Invalid Argument', 'en'", "'', 'Invalid Argument', 'en'"})
+    @DisplayName(
+            "IllegalArgumentExceptionHandler: should return localized 400 ProblemDetails and Content-Language header")
+    void testIllegalArgumentExceptionHandlerLocalized(
+            String acceptLanguage, String expectedTitle, String expectedLang) {
+        IllegalArgumentExceptionHandler handler =
+                new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
         HttpRequest<?> request = acceptLanguage.isBlank()
                 ? HttpRequest.POST("/api/posts", "{}")
                 : HttpRequest.POST("/api/posts", "{}").header("Accept-Language", acceptLanguage);
@@ -108,7 +108,9 @@ class ExceptionHandlerTest {
         HttpResponse<ProblemDetails> response = handler.handle(request, cause);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_PROBLEM_TYPE, response.getContentType().orElse(null));
+        assertEquals(
+                MediaType.APPLICATION_JSON_PROBLEM_TYPE,
+                response.getContentType().orElse(null));
         assertEquals(expectedLang, response.getHeaders().get("Content-Language"));
 
         ProblemDetails problem = response.body();
@@ -124,14 +126,15 @@ class ExceptionHandlerTest {
 
     @ParameterizedTest(name = "Sanitizing dangerous or empty message: ''{0}''")
     @CsvSource({
-            "'', 'Invalid Argument'",
-            "'   ', 'Invalid Argument'",
-            "'com.example.bulletinboard.InternalClass failure', 'Invalid Argument'",
-            "'Unexpected NullPointerException occurred', 'Invalid Argument'"
+        "'', 'Invalid Argument'",
+        "'   ', 'Invalid Argument'",
+        "'com.example.bulletinboard.InternalClass failure', 'Invalid Argument'",
+        "'Unexpected NullPointerException occurred', 'Invalid Argument'"
     })
     @DisplayName("IllegalArgumentExceptionHandler: should sanitize internal exceptions or empty message to title")
     void testIllegalArgumentExceptionHandlerSanitization(String rawMessage, String expectedDetail) {
-        IllegalArgumentExceptionHandler handler = new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
+        IllegalArgumentExceptionHandler handler =
+                new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
         HttpRequest<?> request = HttpRequest.POST("/api/posts", "{}");
         IllegalArgumentException cause = new IllegalArgumentException(rawMessage);
 
@@ -144,7 +147,8 @@ class ExceptionHandlerTest {
     @Test
     @DisplayName("IllegalArgumentExceptionHandler: should handle null exception message safely")
     void testIllegalArgumentExceptionHandlerNullMessage() {
-        IllegalArgumentExceptionHandler handler = new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
+        IllegalArgumentExceptionHandler handler =
+                new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
         HttpRequest<?> request = HttpRequest.POST("/api/posts", "{}");
         IllegalArgumentException cause = new IllegalArgumentException((String) null);
 
@@ -155,12 +159,16 @@ class ExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("IllegalArgumentExceptionHandler: should enforce non-null preconditions on constructor and handle method")
+    @DisplayName(
+            "IllegalArgumentExceptionHandler: should enforce non-null preconditions on constructor and handle method")
     void testIllegalArgumentExceptionHandlerPreconditions() {
-        assertThrows(NullPointerException.class, () -> new IllegalArgumentExceptionHandler(null, messageLocalizationService));
+        assertThrows(
+                NullPointerException.class,
+                () -> new IllegalArgumentExceptionHandler(null, messageLocalizationService));
         assertThrows(NullPointerException.class, () -> new IllegalArgumentExceptionHandler(localeResolver, null));
 
-        IllegalArgumentExceptionHandler handler = new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
+        IllegalArgumentExceptionHandler handler =
+                new IllegalArgumentExceptionHandler(localeResolver, messageLocalizationService);
         HttpRequest<?> request = HttpRequest.POST("/api/posts", "{}");
         IllegalArgumentException cause = new IllegalArgumentException("Invalid");
 
@@ -170,14 +178,19 @@ class ExceptionHandlerTest {
 
     @ParameterizedTest(name = "ValidationExceptionHandler with Accept-Language: {0} resolves title: {1}, reason: {2}")
     @CsvSource({
-            "'ja', '入力値検証エラー', '入力内容に不備があります。制約条件を確認してください。', '{validation.name.required}', '名前を入力してください', 'ja'",
-            "'en', 'Validation Failed', 'Input payload failed validation constraints.', '{validation.name.required}', 'Name must not be blank', 'en'",
-            "'', 'Validation Failed', 'Input payload failed validation constraints.', '{validation.name.required}', 'Name must not be blank', 'en'"
+        "'ja', '入力値検証エラー', '入力内容に不備があります。制約条件を確認してください。', '{validation.name.required}', '名前を入力してください', 'ja'",
+        "'en', 'Validation Failed', 'Input payload failed validation constraints.', '{validation.name.required}', 'Name must not be blank', 'en'",
+        "'', 'Validation Failed', 'Input payload failed validation constraints.', '{validation.name.required}', 'Name must not be blank', 'en'"
     })
     @DisplayName("ValidationExceptionHandler: should return localized 400 ProblemDetails and Content-Language header")
     @SuppressWarnings("unchecked")
-    void testValidationExceptionHandlerLocalized(String acceptLanguage, String expectedTitle, String expectedDetail,
-                                                String messageTemplate, String expectedReason, String expectedLang) {
+    void testValidationExceptionHandlerLocalized(
+            String acceptLanguage,
+            String expectedTitle,
+            String expectedDetail,
+            String messageTemplate,
+            String expectedReason,
+            String expectedLang) {
         ValidationExceptionHandler handler = new ValidationExceptionHandler(localeResolver, messageLocalizationService);
         HttpRequest<?> request = acceptLanguage.isBlank()
                 ? HttpRequest.POST("/api/posts", "{}")
@@ -197,7 +210,9 @@ class ExceptionHandlerTest {
         HttpResponse<ProblemDetails> response = handler.handle(request, ex);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_PROBLEM_TYPE, response.getContentType().orElse(null));
+        assertEquals(
+                MediaType.APPLICATION_JSON_PROBLEM_TYPE,
+                response.getContentType().orElse(null));
         assertEquals(expectedLang, response.getHeaders().get("Content-Language"));
 
         ProblemDetails problem = response.body();
@@ -236,7 +251,8 @@ class ExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("ValidationExceptionHandler: should deduplicate multiple identical violations and filter null violations")
+    @DisplayName(
+            "ValidationExceptionHandler: should deduplicate multiple identical violations and filter null violations")
     @SuppressWarnings("unchecked")
     void testValidationExceptionHandlerDeduplicationAndNullFilter() {
         ValidationExceptionHandler handler = new ValidationExceptionHandler(localeResolver, messageLocalizationService);
@@ -271,7 +287,8 @@ class ExceptionHandlerTest {
     @Test
     @DisplayName("ValidationExceptionHandler: should enforce non-null preconditions on constructor and handle method")
     void testValidationExceptionHandlerPreconditions() {
-        assertThrows(NullPointerException.class, () -> new ValidationExceptionHandler(null, messageLocalizationService));
+        assertThrows(
+                NullPointerException.class, () -> new ValidationExceptionHandler(null, messageLocalizationService));
         assertThrows(NullPointerException.class, () -> new ValidationExceptionHandler(localeResolver, null));
 
         ValidationExceptionHandler handler = new ValidationExceptionHandler(localeResolver, messageLocalizationService);
@@ -283,7 +300,8 @@ class ExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("ValidationExceptionHandler: should fallback to path string representation when property path node name is blank")
+    @DisplayName(
+            "ValidationExceptionHandler: should fallback to path string representation when property path node name is blank")
     @SuppressWarnings("unchecked")
     void testValidationExceptionHandlerFallbackPropertyPath() {
         ValidationExceptionHandler handler = new ValidationExceptionHandler(localeResolver, messageLocalizationService);
@@ -312,7 +330,8 @@ class ExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("Domain exception hierarchy: PostValidationException and PostStorageException should be instantiated correctly")
+    @DisplayName(
+            "Domain exception hierarchy: PostValidationException and PostStorageException should be instantiated correctly")
     void testDomainExceptionHierarchy() {
         PostValidationException validationEx = new PostValidationException("Validation failed");
         assertEquals("Validation failed", validationEx.getMessage());

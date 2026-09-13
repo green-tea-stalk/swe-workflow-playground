@@ -1,7 +1,6 @@
 package com.example.bulletinboard.util;
 
 import io.micronaut.http.HttpRequest;
-
 import java.util.Locale;
 
 /**

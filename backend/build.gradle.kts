@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.micronaut.application)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.spotless)
     alias(libs.plugins.micronaut.aot)
 }
 
@@ -70,4 +71,15 @@ micronaut {
 
 tasks.withType<AbstractTestTask>().configureEach {
     failOnNoDiscoveredTests = false
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        palantirJavaFormat("2.71.0")
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint()
+    }
 }
