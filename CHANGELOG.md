@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.3.0](https://github.com/green-tea-stalk/swe-workflow-playground/compare/swe-workflow-playground-v0.2.0...swe-workflow-playground-v0.3.0) (2026-09-13)
+## [0.3.0](https://github.com/green-tea-stalk/swe-workflow-playground/compare/v0.2.0...v0.3.0) (2026-09-13)
 
 
 ### Features
