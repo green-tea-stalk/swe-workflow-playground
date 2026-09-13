@@ -124,17 +124,17 @@ upstream:
     - [x] プロダクションビルドが正常に完了し、複数ロケールの配布パッケージが生成されること。
   - **コミットメッセージ**: `build(frontend): configure @angular/localize and multi-locale build targets`
 
-- [ ] **TASK-005**: 保存・検出・遷移用 `LocaleService` の実装
+- [x] **TASK-005**: 保存・検出・遷移用 `LocaleService` の実装
   - **コンポーネント & 要件**: `COMP-102`, `REQ-002`, `REQ-004`, `REQ-005`, `REQ-006`
   - **対象ファイル**:
     - `frontend/src/app/services/locale.service.ts`
     - `frontend/src/app/services/locale.service.spec.ts`
   - **受け入れ基準**:
-    - [ ] `getActiveLocale()` がドキュメントの Base Href またはロケーションパスからアクティブなロケールを解決すること。
-    - [ ] `getStoredLocale()` が `localStorage` から `bb_locale` を読み取り検証すること。
-    - [ ] `resolveInitialLocale()` が `localStorage` を評価し、`navigator.language.startsWith('ja') ? 'ja' : 'en'` へフォールバックすること。
-    - [ ] `setLocale(target)` が `localStorage` に設定を保存し、ロケーションを `'/' + target + '/'` へ遷移させること。
-    - [ ] Vitest 単体テストで、モック化したストレージおよびウィンドウロケーションを用いて 100% のブランチカバレッジを達成すること。
+    - [x] `getActiveLocale()` がドキュメントの Base Href またはロケーションパスからアクティブなロケールを解決すること。
+    - [x] `getStoredLocale()` が `localStorage` から `bb_locale` を読み取り検証すること。
+    - [x] `resolveInitialLocale()` が `localStorage` を評価し、`navigator.language.startsWith('ja') ? 'ja' : 'en'` へフォールバックすること。
+    - [x] `setLocale(target)` が `localStorage` に設定を保存し、ロケーションを `'/' + target + '/'` へ遷移させること。
+    - [x] Vitest 単体テストで、モック化したストレージおよびウィンドウロケーションを用いて 100% のブランチカバレッジを達成すること。
   - **コミットメッセージ**: `feat(frontend): implement LocaleService for discovery, persistence, and navigation`
 
 - [ ] **TASK-006**: ツールバー内の `LanguageSwitchComponent` の実装

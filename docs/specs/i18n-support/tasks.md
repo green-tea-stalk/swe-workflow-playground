@@ -124,17 +124,17 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Production build succeeds generating multi-locale output distributions.
   - **Commit Message**: `build(frontend): configure @angular/localize and multi-locale build targets`
 
-- [ ] **TASK-005**: Implement `LocaleService` for storage, discovery, and navigation
+- [x] **TASK-005**: Implement `LocaleService` for storage, discovery, and navigation
   - **Component & Requirements**: `COMP-102`, `REQ-002`, `REQ-004`, `REQ-005`, `REQ-006`
   - **Target Files**:
     - `frontend/src/app/services/locale.service.ts`
     - `frontend/src/app/services/locale.service.spec.ts`
   - **Acceptance Criteria**:
-    - [ ] `getActiveLocale()` resolves active locale from document base Href or location path.
-    - [ ] `getStoredLocale()` reads and validates `bb_locale` from `localStorage`.
-    - [ ] `resolveInitialLocale()` evaluates `localStorage`, falling back to `navigator.language.startsWith('ja') ? 'ja' : 'en'`.
-    - [ ] `setLocale(target)` stores preference in `localStorage` and navigates location to `'/' + target + '/'`.
-    - [ ] Vitest unit tests achieve 100% branch coverage with mocked storage and window location.
+    - [x] `getActiveLocale()` resolves active locale from document base Href or location path.
+    - [x] `getStoredLocale()` reads and validates `bb_locale` from `localStorage`.
+    - [x] `resolveInitialLocale()` evaluates `localStorage`, falling back to `navigator.language.startsWith('ja') ? 'ja' : 'en'`.
+    - [x] `setLocale(target)` stores preference in `localStorage` and navigates location to `'/' + target + '/'`.
+    - [x] Vitest unit tests achieve 100% branch coverage with mocked storage and window location.
   - **Commit Message**: `feat(frontend): implement LocaleService for discovery, persistence, and navigation`
 
 - [ ] **TASK-006**: Implement `LanguageSwitchComponent` in toolbar
