@@ -1,0 +1,77 @@
+.fixed-form-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.12);
+  border-top: 1px solid #e0e0e0;
+  z-index: 100;
+  box-sizing: border-box;
+
+  .form-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .post-form {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 12px 16px 8px 16px;
+    box-sizing: border-box;
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 8px;
+
+      .form-field-name {
+        flex: 1 1 200px;
+      }
+
+      .form-field-email {
+        flex: 1 1 240px;
+      }
+
+      .form-field-title {
+        flex: 2 1 300px;
+      }
+    }
+
+    .form-row-bottom {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+
+      .form-field-message {
+        flex: 1;
+
+        textarea {
+          resize: vertical;
+          min-height: 48px;
+        }
+      }
+
+      .form-actions {
+        padding-top: 2px;
+
+        .submit-button {
+          height: 52px;
+          min-width: 120px;
+          font-weight: 600;
+          font-size: 15px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+      }
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}

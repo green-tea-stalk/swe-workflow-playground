@@ -1,0 +1,73 @@
+<div class="fixed-form-container">
+  @if (isSubmitting()) {
+    <mat-progress-bar mode="indeterminate" class="form-progress"></mat-progress-bar>
+  }
+
+  <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="post-form" novalidate>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field-name" subscriptSizing="dynamic">
+        <mat-label>お名前 (必須)</mat-label>
+        <input matInput formControlName="name" placeholder="山田 太郎" maxlength="50" autocomplete="name" />
+        <mat-icon matPrefix>person</mat-icon>
+        @if (postForm.controls.name.touched && (postForm.controls.name.hasError('required') || postForm.controls.name.hasError('whitespace'))) {
+          <mat-error>お名前を入力してください（1〜50文字）。</mat-error>
+        } @else if (postForm.controls.name.touched && postForm.controls.name.hasError('maxlength')) {
+          <mat-error>お名前は50文字以内で入力してください。</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field-email" subscriptSizing="dynamic">
+        <mat-label>メールアドレス (任意・公開)</mat-label>
+        <input matInput formControlName="email" placeholder="example@example.com" maxlength="254" autocomplete="email" />
+        <mat-icon matPrefix>email</mat-icon>
+        @if (postForm.controls.email.touched && postForm.controls.email.hasError('email')) {
+          <mat-error>有効なメール形式で入力してください。</mat-error>
+        } @else if (postForm.controls.email.touched && postForm.controls.email.hasError('maxlength')) {
+          <mat-error>メールアドレスは254文字以内で入力してください。</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field-title" subscriptSizing="dynamic">
+        <mat-label>タイトル (必須)</mat-label>
+        <input matInput formControlName="title" placeholder="投稿の件名" maxlength="100" />
+        <mat-icon matPrefix>title</mat-icon>
+        @if (postForm.controls.title.touched && (postForm.controls.title.hasError('required') || postForm.controls.title.hasError('whitespace'))) {
+          <mat-error>タイトルを入力してください（1〜100文字）。</mat-error>
+        } @else if (postForm.controls.title.touched && postForm.controls.title.hasError('maxlength')) {
+          <mat-error>タイトルは100文字以内で入力してください。</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row-bottom">
+      <mat-form-field appearance="outline" class="form-field-message" subscriptSizing="dynamic">
+        <mat-label>メッセージ本文 (必須)</mat-label>
+        <textarea
+          matInput
+          formControlName="message"
+          placeholder="メッセージを入力してください..."
+          rows="2"
+          maxlength="4000"
+        ></textarea>
+        @if (postForm.controls.message.touched && (postForm.controls.message.hasError('required') || postForm.controls.message.hasError('whitespace'))) {
+          <mat-error>メッセージを入力してください（1〜4,000文字）。</mat-error>
+        } @else if (postForm.controls.message.touched && postForm.controls.message.hasError('maxlength')) {
+          <mat-error>メッセージは4,000文字以内で入力してください。</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="submit-button"
+          [disabled]="isSubmitting()"
+        >
+          <mat-icon>send</mat-icon>
+          <span>投稿する</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

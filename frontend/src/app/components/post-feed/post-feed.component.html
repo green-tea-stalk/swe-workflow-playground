@@ -1,0 +1,56 @@
+<section class="feed-container" aria-label="投稿一覧フィード">
+  @if (isLoading()) {
+    <div class="loading-wrapper" aria-live="polite">
+      <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-banner" role="alert">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <span class="error-text">{{ errorMessage() }}</span>
+      <button mat-button color="warn" (click)="refresh()">再試行</button>
+    </div>
+  }
+
+  @if (!isLoading() && posts().length === 0 && !errorMessage()) {
+    <div class="empty-feed-placeholder">
+      <mat-icon class="placeholder-icon">chat_bubble_outline</mat-icon>
+      <p class="placeholder-text">投稿されたメッセージはまだありません。</p>
+      <p class="placeholder-subtext">画面下部のフォームから最初のメッセージを投稿してみましょう！</p>
+    </div>
+  } @else {
+    <div class="post-cards-list">
+      @for (post of posts(); track post.id) {
+        <mat-card class="post-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="user-avatar-icon">account_circle</mat-icon>
+            <mat-card-title class="post-title">{{ post.title }}</mat-card-title>
+            <mat-card-subtitle class="post-meta">
+              <span class="post-name">{{ post.name }}</span>
+              @if (post.email) {
+                <span class="post-email">&lt;<a [href]="'mailto:' + post.email">{{ post.email }}</a>&gt;</span>
+              }
+              <span class="post-date">{{ post.created_at | date:'yyyy/MM/dd HH:mm:ss' }}</span>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="post-content">
+            <p class="post-message">{{ post.message }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+
+  <div class="paginator-wrapper">
+    <mat-paginator
+      [length]="totalItems()"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex()"
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      (page)="onPageChange($event)"
+      aria-label="ページ選択">
+    </mat-paginator>
+  </div>
+</section>

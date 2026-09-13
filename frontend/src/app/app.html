@@ -1,0 +1,11 @@
+<div class="app-container">
+  <mat-toolbar color="primary" class="app-toolbar">
+    <span>{{ title }}</span>
+  </mat-toolbar>
+
+  <main class="app-main-content">
+    <app-post-feed></app-post-feed>
+  </main>
+
+  <app-post-form (postCreated)="onPostCreated()"></app-post-form>
+</div>
