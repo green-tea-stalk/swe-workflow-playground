@@ -60,14 +60,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `docs/bulletin-board-v1.1-spec`
 
 #### Tasks
-- [ ] **TASK-009**: Implement Flyway V2 migration, ReplyEntity, and ReplyRepository
+- [x] **TASK-009**: Implement Flyway V2 migration, ReplyEntity, and ReplyRepository
   - **Component & Requirements**: `COMP-009`, `REQ-011`, `REQ-014`, `REQ-015`
   - **Target Files**: `backend/src/main/resources/db/migration/V2__create_replies_table.sql`, `backend/src/main/java/**/entity/ReplyEntity.java`, `backend/src/main/java/**/repository/ReplyRepository.java`, `backend/src/test/java/**/ReplyRepositoryTest.java`
   - **Acceptance Criteria**:
-    - [ ] Flyway migration `V2__create_replies_table.sql` creates `replies` table with foreign key `ON DELETE CASCADE` to `posts(id)`, indices `idx_replies_post_id` and `idx_replies_created_at_asc`.
-    - [ ] `ReplyEntity` record mapped to `replies` table with generated ID and microsecond timestamp.
-    - [ ] `ReplyRepository` interface defined extending Micronaut Data JDBC with `findByPostIdOrderByCreatedAtAsc` and `findByPostIdInOrderByCreatedAtAsc`.
-    - [ ] Repository integration tests against MySQL Testcontainers verify persistence, cascade deletion, and chronological ordering.
+    - [x] Flyway migration `V2__create_replies_table.sql` creates `replies` table with foreign key `ON DELETE CASCADE` to `posts(id)`, indices `idx_replies_post_id` and `idx_replies_created_at_asc`.
+    - [x] `ReplyEntity` record mapped to `replies` table with generated ID and microsecond timestamp.
+    - [x] `ReplyRepository` interface defined extending Micronaut Data JDBC with `findByPostIdOrderByCreatedAtAsc` and `findByPostIdInOrderByCreatedAtAsc`.
+    - [x] Repository integration tests against MySQL Testcontainers verify persistence, cascade deletion, and chronological ordering.
   - **Commit Message**: `feat(backend): implement COMP-009 ReplyEntity and ReplyRepository with Flyway V2 migration`
 
 - [ ] **TASK-010**: Implement reply DTOs, PostNotFoundException, and PostService batch reply logic

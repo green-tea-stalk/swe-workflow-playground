@@ -60,14 +60,14 @@ upstream:
 - **マージ対象**: `docs/bulletin-board-v1.1-spec`
 
 #### タスク一覧
-- [ ] **TASK-009**: Flyway V2 マイグレーション、ReplyEntity、および ReplyRepository の実装
+- [x] **TASK-009**: Flyway V2 マイグレーション、ReplyEntity、および ReplyRepository の実装
   - **コンポーネント & 関連要件**: `COMP-009`, `REQ-011`, `REQ-014`, `REQ-015`
   - **対象ファイル**: `backend/src/main/resources/db/migration/V2__create_replies_table.sql`, `backend/src/main/java/**/entity/ReplyEntity.java`, `backend/src/main/java/**/repository/ReplyRepository.java`, `backend/src/test/java/**/ReplyRepositoryTest.java`
   - **受け入れ基準**:
-    - [ ] Flyway マイグレーション `V2__create_replies_table.sql` により、`posts(id)` に対する `ON DELETE CASCADE` 外部キー、および `idx_replies_post_id`, `idx_replies_created_at_asc` インデックスを持つ `replies` テーブルが作成されること。
-    - [ ] `ReplyEntity` レコードが `replies` テーブルにマッピングされ、自動採番 ID とマイクロ秒タイムスタンプを持つこと。
-    - [ ] `ReplyRepository` インターフェースが Micronaut Data JDBC を拡張して定義され、`findByPostIdOrderByCreatedAtAsc` および `findByPostIdInOrderByCreatedAtAsc` を備えること。
-    - [ ] MySQL Testcontainers に対するリポジトリ統合テストにより、永続化、カスケード削除、および時系列昇順ソートが検証されること。
+    - [x] Flyway マイグレーション `V2__create_replies_table.sql` により、`posts(id)` に対する `ON DELETE CASCADE` 外部キー、および `idx_replies_post_id`, `idx_replies_created_at_asc` インデックスを持つ `replies` テーブルが作成されること。
+    - [x] `ReplyEntity` レコードが `replies` テーブルにマッピングされ、自動採番 ID とマイクロ秒タイムスタンプを持つこと。
+    - [x] `ReplyRepository` インターフェースが Micronaut Data JDBC を拡張して定義され、`findByPostIdOrderByCreatedAtAsc` および `findByPostIdInOrderByCreatedAtAsc` を備えること。
+    - [x] MySQL Testcontainers に対するリポジトリ統合テストにより、永続化、カスケード削除、および時系列昇順ソートが検証されること。
   - **コミットメッセージ**: `feat(backend): implement COMP-009 ReplyEntity and ReplyRepository with Flyway V2 migration`
 
 - [ ] **TASK-010**: 返信 DTO、PostNotFoundException、および PostService 返信一括取得ロジックの実装
