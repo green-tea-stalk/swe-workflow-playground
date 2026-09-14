@@ -342,4 +342,55 @@ class ExceptionHandlerTest {
         assertEquals("Storage failed", storageEx.getMessage());
         assertSame(rootCause, storageEx.getCause());
     }
+
+    @ParameterizedTest(name = "PostNotFoundExceptionHandler with Accept-Language: {0} resolves title: {1}")
+    @CsvSource({
+        "'ja', '対象の投稿が見つかりません', 'ID 999 の親投稿が見つかりませんでした。', 'ja'",
+        "'en', 'Post Not Found', 'Parent post with ID 999 was not found.', 'en'",
+        "'', 'Post Not Found', 'Parent post with ID 999 was not found.', 'en'"
+    })
+    @DisplayName("PostNotFoundExceptionHandler: should return localized 404 ProblemDetails and Content-Language header")
+    void testPostNotFoundExceptionHandlerLocalized(
+            String acceptLanguage, String expectedTitle, String expectedDetail, String expectedLang) {
+        PostNotFoundExceptionHandler handler =
+                new PostNotFoundExceptionHandler(localeResolver, messageLocalizationService);
+        HttpRequest<?> request = acceptLanguage.isBlank()
+                ? HttpRequest.POST("/api/posts/999/replies", "{}")
+                : HttpRequest.POST("/api/posts/999/replies", "{}").header("Accept-Language", acceptLanguage);
+        PostNotFoundException cause = new PostNotFoundException(999L);
+
+        HttpResponse<ProblemDetails> response = handler.handle(request, cause);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+        assertEquals(
+                MediaType.APPLICATION_JSON_PROBLEM_TYPE,
+                response.getContentType().orElse(null));
+        assertEquals(expectedLang, response.getHeaders().get("Content-Language"));
+
+        ProblemDetails problem = response.body();
+        assertNotNull(problem);
+        assertEquals("https://example.com/errors/post-not-found", problem.type());
+        assertEquals(expectedTitle, problem.title());
+        assertEquals(404, problem.status());
+        assertEquals(expectedDetail, problem.detail());
+        assertEquals("/api/posts/999/replies", problem.instance());
+        assertNotNull(problem.invalidParams());
+        assertTrue(problem.invalidParams().isEmpty());
+    }
+
+    @Test
+    @DisplayName("PostNotFoundExceptionHandler: should enforce non-null preconditions on constructor and handle method")
+    void testPostNotFoundExceptionHandlerPreconditions() {
+        assertThrows(
+                NullPointerException.class, () -> new PostNotFoundExceptionHandler(null, messageLocalizationService));
+        assertThrows(NullPointerException.class, () -> new PostNotFoundExceptionHandler(localeResolver, null));
+
+        PostNotFoundExceptionHandler handler =
+                new PostNotFoundExceptionHandler(localeResolver, messageLocalizationService);
+        HttpRequest<?> request = HttpRequest.POST("/api/posts/1/replies", "{}");
+        PostNotFoundException cause = new PostNotFoundException(1L);
+
+        assertThrows(NullPointerException.class, () -> handler.handle(null, cause));
+        assertThrows(NullPointerException.class, () -> handler.handle(request, null));
+    }
 }
