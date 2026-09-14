@@ -60,26 +60,26 @@ upstream:
 - **マージ対象**: `docs/bulletin-board-v1.1-spec`
 
 #### タスク一覧
-- [ ] **TASK-009**: Flyway V2 マイグレーション、ReplyEntity、および ReplyRepository の実装
+- [x] **TASK-009**: Flyway V2 マイグレーション、ReplyEntity、および ReplyRepository の実装
   - **コンポーネント & 関連要件**: `COMP-009`, `REQ-011`, `REQ-014`, `REQ-015`
   - **対象ファイル**: `backend/src/main/resources/db/migration/V2__create_replies_table.sql`, `backend/src/main/java/**/entity/ReplyEntity.java`, `backend/src/main/java/**/repository/ReplyRepository.java`, `backend/src/test/java/**/ReplyRepositoryTest.java`
   - **受け入れ基準**:
-    - [ ] Flyway マイグレーション `V2__create_replies_table.sql` により、`posts(id)` に対する `ON DELETE CASCADE` 外部キー、および `idx_replies_post_id`, `idx_replies_created_at_asc` インデックスを持つ `replies` テーブルが作成されること。
-    - [ ] `ReplyEntity` レコードが `replies` テーブルにマッピングされ、自動採番 ID とマイクロ秒タイムスタンプを持つこと。
-    - [ ] `ReplyRepository` インターフェースが Micronaut Data JDBC を拡張して定義され、`findByPostIdOrderByCreatedAtAsc` および `findByPostIdInOrderByCreatedAtAsc` を備えること。
-    - [ ] MySQL Testcontainers に対するリポジトリ統合テストにより、永続化、カスケード削除、および時系列昇順ソートが検証されること。
+    - [x] Flyway マイグレーション `V2__create_replies_table.sql` により、`posts(id)` に対する `ON DELETE CASCADE` 外部キー、および `idx_replies_post_id`, `idx_replies_created_at_asc` インデックスを持つ `replies` テーブルが作成されること。
+    - [x] `ReplyEntity` レコードが `replies` テーブルにマッピングされ、自動採番 ID とマイクロ秒タイムスタンプを持つこと。
+    - [x] `ReplyRepository` インターフェースが Micronaut Data JDBC を拡張して定義され、`findByPostIdOrderByCreatedAtAsc` および `findByPostIdInOrderByCreatedAtAsc` を備えること。
+    - [x] MySQL Testcontainers に対するリポジトリ統合テストにより、永続化、カスケード削除、および時系列昇順ソートが検証されること。
   - **コミットメッセージ**: `feat(backend): implement COMP-009 ReplyEntity and ReplyRepository with Flyway V2 migration`
 
-- [ ] **TASK-010**: 返信 DTO、PostNotFoundException、および PostService 返信一括取得ロジックの実装
+- [x] **TASK-010**: 返信 DTO、PostNotFoundException、および PostService 返信一括取得ロジックの実装
   - **コンポーネント & 関連要件**: `COMP-002`, `COMP-003`, `REQ-002`, `REQ-003`, `REQ-007`, `REQ-011`, `REQ-014`, `REQ-015`
   - **対象ファイル**: `backend/src/main/java/**/dto/CreateReplyRequest.java`, `backend/src/main/java/**/dto/ReplyResponse.java`, `backend/src/main/java/**/dto/PostResponse.java`, `backend/src/main/java/**/exception/PostNotFoundException.java`, `backend/src/main/java/**/service/PostService.java`, `backend/src/test/java/**/PostServiceTest.java`
   - **受け入れ基準**:
-    - [ ] `CreateReplyRequest` DTO がバリデーションアノテーション付きで定義されていること（名前 1〜50文字・空白不可、メール最大254文字・任意、本文 1〜4,000文字・空白不可）。
-    - [ ] `ReplyResponse` DTO が ISO 8601 UTC タイムスタンプフォーマット付きで定義されていること。
-    - [ ] `PostResponse` が更新され、返信が0件の場合でも非Nullな空配列 `replies: []` を保証すること。
-    - [ ] `PostService.getPagedPosts(page, size)` が `ReplyRepository.findByPostIdInOrderByCreatedAtAsc(postIds)` による単一バッチクエリを実行し、メモリ上で親投稿にマッピングして N+1 回の往復を排除していること。
-    - [ ] `PostService.createReply(postId, command)` が `PostRepository.findById` により親投稿の存在を確認し、存在しない場合は `PostNotFoundException` を送出し、有効な返信を現在 UTC タイムスタンプで永続化すること。
-    - [ ] 単体テストにより、事前条件、事後条件、空コレクション保証、および100%の分岐網羅率が検証されること。
+    - [x] `CreateReplyRequest` DTO がバリデーションアノテーション付きで定義されていること（名前 1〜50文字・空白不可、メール最大254文字・任意、本文 1〜4,000文字・空白不可）。
+    - [x] `ReplyResponse` DTO が ISO 8601 UTC タイムスタンプフォーマット付きで定義されていること。
+    - [x] `PostResponse` が更新され、返信が0件の場合でも非Nullな空配列 `replies: []` を保証すること。
+    - [x] `PostService.getPagedPosts(page, size)` が `ReplyRepository.findByPostIdInOrderByCreatedAtAsc(postIds)` による単一バッチクエリを実行し、メモリ上で親投稿にマッピングして N+1 回の往復を排除していること。
+    - [x] `PostService.createReply(postId, command)` が `PostRepository.findById` により親投稿の存在を確認し、存在しない場合は `PostNotFoundException` を送出し、有効な返信を現在 UTC タイムスタンプで永続化すること。
+    - [x] 単体テストにより、事前条件、事後条件、空コレクション保証、および100%の分岐網羅率が検証されること。
   - **コミットメッセージ**: `feat(backend): implement COMP-002 PostService reply batch fetching and creation logic`
 
 ---
