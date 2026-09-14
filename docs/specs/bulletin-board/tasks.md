@@ -70,16 +70,16 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
     - [x] Repository integration tests against MySQL Testcontainers verify persistence, cascade deletion, and chronological ordering.
   - **Commit Message**: `feat(backend): implement COMP-009 ReplyEntity and ReplyRepository with Flyway V2 migration`
 
-- [ ] **TASK-010**: Implement reply DTOs, PostNotFoundException, and PostService batch reply logic
+- [x] **TASK-010**: Implement reply DTOs, PostNotFoundException, and PostService batch reply logic
   - **Component & Requirements**: `COMP-002`, `COMP-003`, `REQ-002`, `REQ-003`, `REQ-007`, `REQ-011`, `REQ-014`, `REQ-015`
   - **Target Files**: `backend/src/main/java/**/dto/CreateReplyRequest.java`, `backend/src/main/java/**/dto/ReplyResponse.java`, `backend/src/main/java/**/dto/PostResponse.java`, `backend/src/main/java/**/exception/PostNotFoundException.java`, `backend/src/main/java/**/service/PostService.java`, `backend/src/test/java/**/PostServiceTest.java`
   - **Acceptance Criteria**:
-    - [ ] `CreateReplyRequest` DTO defined with validation annotations (name 1-50 non-blank, email max 254 optional, message 1-4000 non-blank).
-    - [ ] `ReplyResponse` DTO defined with ISO 8601 UTC timestamp formatting.
-    - [ ] `PostResponse` updated with `replies: List<ReplyResponse>` guaranteeing non-null empty list `[]` on zero replies.
-    - [ ] `PostService.getPagedPosts(page, size)` performs single batch query `ReplyRepository.findByPostIdInOrderByCreatedAtAsc(postIds)` and maps replies in memory avoiding N+1 round trips.
-    - [ ] `PostService.createReply(postId, command)` checks parent post existence via `PostRepository.findById`, throws `PostNotFoundException` if missing, and persists valid reply with current UTC time.
-    - [ ] Unit tests verify preconditions, postconditions, empty collection guarantees, and 100% branch coverage.
+    - [x] `CreateReplyRequest` DTO defined with validation annotations (name 1-50 non-blank, email max 254 optional, message 1-4000 non-blank).
+    - [x] `ReplyResponse` DTO defined with ISO 8601 UTC timestamp formatting.
+    - [x] `PostResponse` updated with `replies: List<ReplyResponse>` guaranteeing non-null empty list `[]` on zero replies.
+    - [x] `PostService.getPagedPosts(page, size)` performs single batch query `ReplyRepository.findByPostIdInOrderByCreatedAtAsc(postIds)` and maps replies in memory avoiding N+1 round trips.
+    - [x] `PostService.createReply(postId, command)` checks parent post existence via `PostRepository.findById`, throws `PostNotFoundException` if missing, and persists valid reply with current UTC time.
+    - [x] Unit tests verify preconditions, postconditions, empty collection guarantees, and 100% branch coverage.
   - **Commit Message**: `feat(backend): implement COMP-002 PostService reply batch fetching and creation logic`
 
 ---
