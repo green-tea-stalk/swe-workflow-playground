@@ -1,7 +1,7 @@
 [versions]
 micronaut = "5.0.2"
 shadow = "9.6.1"
-spotless = "7.0.2"
+spotless = "8.10.2"
 mockito = "5.23.0"
 testcontainers = "1.21.4"
 
