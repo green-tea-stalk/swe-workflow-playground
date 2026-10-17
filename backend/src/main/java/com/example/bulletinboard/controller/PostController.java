@@ -1,14 +1,17 @@
 package com.example.bulletinboard.controller;
 
 import com.example.bulletinboard.dto.CreatePostRequest;
+import com.example.bulletinboard.dto.CreateReplyRequest;
 import com.example.bulletinboard.dto.PagedPostResponse;
 import com.example.bulletinboard.dto.PostResponse;
+import com.example.bulletinboard.dto.ReplyResponse;
 import com.example.bulletinboard.service.PostService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.validation.Validated;
@@ -20,7 +23,7 @@ import java.net.URI;
 import java.util.Objects;
 
 /**
- * REST controller exposing bulletin board endpoints for feed retrieval and post submission.
+ * REST controller exposing bulletin board endpoints for feed retrieval, post submission, and reply creation.
  */
 @Controller("/api/posts")
 @Validated
@@ -66,5 +69,26 @@ public class PostController {
     public HttpResponse<PostResponse> createPost(@Body @Valid @NotNull CreatePostRequest request) {
         PostResponse response = postService.createPost(request);
         return HttpResponse.created(response, URI.create("/api/posts/" + response.id()));
+    }
+
+    /**
+     * Submits and records a new reply associated with an existing post.
+     *
+     * <p>Returns HTTP 201 Created on success, HTTP 400 Bad Request on validation failure,
+     * or HTTP 404 Not Found if the parent post does not exist.</p>
+     *
+     * @param postId  the parent post identifier (must be &gt;= 1)
+     * @param request the reply submission payload
+     * @return HTTP 201 Created containing {@link ReplyResponse} and Location header
+     */
+    @Post(uri = "/{postId}/replies", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    public HttpResponse<ReplyResponse> createReply(
+            @PathVariable("postId")
+                    @NotNull(message = "Post ID must not be null")
+                    @Min(value = 1, message = "Post ID must be greater than or equal to 1")
+                    Long postId,
+            @Body @Valid @NotNull CreateReplyRequest request) {
+        ReplyResponse response = postService.createReply(postId, request);
+        return HttpResponse.created(response, URI.create("/api/posts/" + postId + "/replies/" + response.id()));
     }
 }

@@ -7,11 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.bulletinboard.dto.CreatePostRequest;
+import com.example.bulletinboard.dto.CreateReplyRequest;
 import com.example.bulletinboard.dto.PagedPostResponse;
 import com.example.bulletinboard.dto.PostResponse;
+import com.example.bulletinboard.dto.ReplyResponse;
 import com.example.bulletinboard.entity.PostEntity;
 import com.example.bulletinboard.exception.ProblemDetails;
 import com.example.bulletinboard.repository.PostRepository;
+import com.example.bulletinboard.repository.ReplyRepository;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -44,11 +47,15 @@ class PostControllerTest {
     @Inject
     PostRepository postRepository;
 
+    @Inject
+    ReplyRepository replyRepository;
+
     private BlockingHttpClient client;
 
     @BeforeEach
     void setUp() {
         client = httpClient.toBlocking();
+        replyRepository.deleteAll();
         postRepository.deleteAll();
     }
 
@@ -336,5 +343,189 @@ class PostControllerTest {
                 .anyMatch(p -> "title".equals(p.name()) && "Title must not be blank".equals(p.reason())));
         assertTrue(problem.invalidParams().stream()
                 .anyMatch(p -> "message".equals(p.name()) && "Message must not be blank".equals(p.reason())));
+    }
+
+    @Test
+    @DisplayName("POST /api/posts/{postId}/replies: should return 201 Created and Location header on valid request")
+    void testCreateReplySuccessfully() {
+        PostEntity parent = postRepository.save(new PostEntity(
+                null, "Alice", "alice@example.com", "Parent Post", "Parent content", LocalDateTime.now()));
+
+        CreateReplyRequest requestPayload =
+                new CreateReplyRequest("  Bob  ", "bob@example.com", "  Great discussion!  ");
+        HttpRequest<?> request = HttpRequest.POST("/api/posts/" + parent.id() + "/replies", requestPayload);
+        HttpResponse<ReplyResponse> response = client.exchange(request, ReplyResponse.class);
+
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+        String location = response.header("Location");
+        assertNotNull(location, "Location header must be present");
+
+        ReplyResponse body = response.body();
+        assertNotNull(body);
+        assertNotNull(body.id());
+        assertEquals("/api/posts/" + parent.id() + "/replies/" + body.id(), location);
+        assertEquals(parent.id(), body.postId());
+        assertEquals("Bob", body.name(), "Name must be trimmed");
+        assertEquals("bob@example.com", body.email(), "Email must be trimmed");
+        assertEquals("Great discussion!", body.message(), "Message must be trimmed");
+        assertNotNull(body.createdAt(), "ISO 8601 UTC timestamp must be populated");
+
+        // Verify that feed retrieval embeds the newly created reply
+        HttpResponse<PagedPostResponse> feedResponse =
+                client.exchange(HttpRequest.GET("/api/posts"), PagedPostResponse.class);
+        assertEquals(1, feedResponse.body().items().size());
+        PostResponse postWithReply = feedResponse.body().items().get(0);
+        assertEquals(1, postWithReply.replies().size(), "Feed item must contain 1 reply");
+        assertEquals(body.id(), postWithReply.replies().get(0).id());
+        assertEquals("Bob", postWithReply.replies().get(0).name());
+    }
+
+    @Test
+    @DisplayName("POST /api/posts/{postId}/replies: should succeed with null optional email")
+    void testCreateReplyWithNullEmail() {
+        PostEntity parent = postRepository.save(new PostEntity(
+                null, "Alice", "alice@example.com", "Parent Post", "Parent content", LocalDateTime.now()));
+
+        CreateReplyRequest requestPayload = new CreateReplyRequest("Bob", null, "Reply without email");
+        HttpRequest<?> request = HttpRequest.POST("/api/posts/" + parent.id() + "/replies", requestPayload);
+        HttpResponse<ReplyResponse> response = client.exchange(request, ReplyResponse.class);
+
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+        ReplyResponse body = response.body();
+        assertNotNull(body);
+        assertNotNull(body.id());
+        assertNull(body.email(), "Omitted email must remain null");
+        assertEquals("Bob", body.name());
+        assertEquals("Reply without email", body.message());
+    }
+
+    @Test
+    @DisplayName(
+            "POST /api/posts/{postId}/replies: should return 400 Bad Request with ProblemDetails on validation error")
+    void testCreateReplyValidationFailure() {
+        PostEntity parent = postRepository.save(
+                new PostEntity(null, "Alice", null, "Parent Post", "Parent content", LocalDateTime.now()));
+
+        CreateReplyRequest invalidPayload = new CreateReplyRequest("", "invalid-email", "");
+        HttpRequest<?> request = HttpRequest.POST("/api/posts/" + parent.id() + "/replies", invalidPayload);
+
+        HttpClientResponseException ex = assertThrows(
+                HttpClientResponseException.class,
+                () -> client.exchange(request, Argument.of(ReplyResponse.class), Argument.of(ProblemDetails.class)));
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals(
+                "application/problem+json",
+                ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("en", ex.getResponse().getHeaders().get("Content-Language"));
+
+        Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
+        assertTrue(problemOpt.isPresent());
+
+        ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/validation-failed", problem.type());
+        assertEquals("Validation Failed", problem.title());
+        assertEquals("Input payload failed validation constraints.", problem.detail());
+        assertEquals(400, problem.status());
+        assertEquals("/api/posts/" + parent.id() + "/replies", problem.instance());
+        assertNotNull(problem.invalidParams());
+        assertTrue(problem.invalidParams().stream()
+                .anyMatch(p -> "name".equals(p.name()) && "Name must not be blank".equals(p.reason())));
+        assertTrue(problem.invalidParams().stream()
+                .anyMatch(p ->
+                        "email".equals(p.name()) && "Email must be a well-formed email address".equals(p.reason())));
+        assertTrue(problem.invalidParams().stream()
+                .anyMatch(p -> "message".equals(p.name()) && "Message must not be blank".equals(p.reason())));
+    }
+
+    @Test
+    @DisplayName("POST /api/posts/{postId}/replies: should return 404 Not Found when target post does not exist")
+    void testCreateReplyParentPostNotFound() {
+        CreateReplyRequest requestPayload = new CreateReplyRequest("Bob", null, "Replying to missing post");
+        HttpRequest<?> request = HttpRequest.POST("/api/posts/999999/replies", requestPayload);
+
+        HttpClientResponseException ex = assertThrows(
+                HttpClientResponseException.class,
+                () -> client.exchange(request, Argument.of(ReplyResponse.class), Argument.of(ProblemDetails.class)));
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        assertEquals(
+                "application/problem+json",
+                ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("en", ex.getResponse().getHeaders().get("Content-Language"));
+
+        Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
+        assertTrue(problemOpt.isPresent());
+
+        ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/post-not-found", problem.type());
+        assertEquals("Post Not Found", problem.title());
+        assertEquals(404, problem.status());
+        assertEquals("Parent post with ID 999999 was not found.", problem.detail());
+        assertEquals("/api/posts/999999/replies", problem.instance());
+        assertNotNull(problem.invalidParams());
+        assertTrue(problem.invalidParams().isEmpty());
+    }
+
+    @Test
+    @DisplayName("POST /api/posts/{postId}/replies: should return localized 404 Not Found when Accept-Language is ja")
+    void testCreateReplyParentPostNotFoundLocalizedJa() {
+        CreateReplyRequest requestPayload = new CreateReplyRequest("Bob", null, "Replying to missing post");
+        HttpRequest<?> request =
+                HttpRequest.POST("/api/posts/888888/replies", requestPayload).header("Accept-Language", "ja");
+
+        HttpClientResponseException ex = assertThrows(
+                HttpClientResponseException.class,
+                () -> client.exchange(request, Argument.of(ReplyResponse.class), Argument.of(ProblemDetails.class)));
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        assertEquals(
+                "application/problem+json",
+                ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("ja", ex.getResponse().getHeaders().get("Content-Language"));
+
+        Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
+        assertTrue(problemOpt.isPresent());
+
+        ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/post-not-found", problem.type());
+        assertEquals("対象の投稿が見つかりません", problem.title());
+        assertEquals(404, problem.status());
+        assertEquals("ID 888888 の親投稿が見つかりませんでした。", problem.detail());
+        assertEquals("/api/posts/888888/replies", problem.instance());
+        assertNotNull(problem.invalidParams());
+        assertTrue(problem.invalidParams().isEmpty());
+    }
+
+    @ParameterizedTest(name = "invalid postId: {0}")
+    @CsvSource({"0", "-1", "-100"})
+    @DisplayName("POST /api/posts/{postId}/replies: non-positive postId should return 400 Bad Request")
+    void testCreateReplyWithInvalidPostId(long invalidPostId) {
+        CreateReplyRequest requestPayload = new CreateReplyRequest("Bob", null, "Valid message");
+        HttpRequest<?> request = HttpRequest.POST("/api/posts/" + invalidPostId + "/replies", requestPayload);
+
+        HttpClientResponseException ex = assertThrows(
+                HttpClientResponseException.class,
+                () -> client.exchange(request, Argument.of(ReplyResponse.class), Argument.of(ProblemDetails.class)));
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        assertEquals(
+                "application/problem+json",
+                ex.getResponse().getContentType().map(Object::toString).orElse(""));
+        assertEquals("en", ex.getResponse().getHeaders().get("Content-Language"));
+
+        Optional<ProblemDetails> problemOpt = ex.getResponse().getBody(ProblemDetails.class);
+        assertTrue(problemOpt.isPresent(), "RFC 9457 ProblemDetails body must be present");
+
+        ProblemDetails problem = problemOpt.get();
+        assertEquals("https://example.com/errors/validation-failed", problem.type());
+        assertEquals("Validation Failed", problem.title());
+        assertEquals("Input payload failed validation constraints.", problem.detail());
+        assertEquals(400, problem.status());
+        assertEquals("/api/posts/" + invalidPostId + "/replies", problem.instance());
+        assertNotNull(problem.invalidParams());
+        assertTrue(
+                problem.invalidParams().stream().anyMatch(p -> p.name().contains("postId")),
+                "invalid_params must contain violation for postId");
     }
 }

@@ -89,14 +89,14 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 - **Merge Target**: `feat/bulletin-board-v1.1-backend-persistence-domain`
 
 #### Tasks
-- [ ] **TASK-011**: Implement POST /api/posts/{postId}/replies and RFC 9457 error handler
+- [x] **TASK-011**: Implement POST /api/posts/{postId}/replies and RFC 9457 error handler
   - **Component & Requirements**: `COMP-001`, `REQ-009`, `REQ-010`, `REQ-011`, `REQ-014`, `REQ-015`
   - **Target Files**: `backend/src/main/java/**/controller/PostController.java`, `backend/src/main/java/**/exception/GlobalExceptionHandler.java`, `backend/src/test/java/**/PostControllerTest.java`
   - **Acceptance Criteria**:
-    - [ ] `PostController` exposes `POST /api/posts/{postId}/replies` accepting `@Valid CreateReplyRequest` and returning `201 Created` with Location header `/api/posts/{postId}/replies/{id}`.
-    - [ ] Validation errors on `CreateReplyRequest` return `400 Bad Request` conforming to RFC 9457 with detailed `invalid_params`.
-    - [ ] `PostNotFoundException` mapped to RFC 9457 `404 Not Found` with problem details type `https://example.com/errors/post-not-found`.
-    - [ ] Integration tests verify successful reply creation (201), validation failure (400), and missing post error (404).
+    - [x] `PostController` exposes `POST /api/posts/{postId}/replies` accepting `@Valid CreateReplyRequest` and returning `201 Created` with Location header `/api/posts/{postId}/replies/{id}`.
+    - [x] Validation errors on `CreateReplyRequest` return `400 Bad Request` conforming to RFC 9457 with detailed `invalid_params`.
+    - [x] `PostNotFoundException` mapped to RFC 9457 `404 Not Found` with problem details type `https://example.com/errors/post-not-found`.
+    - [x] Integration tests verify successful reply creation (201), validation failure (400), and missing post error (404).
   - **Commit Message**: `feat(backend): implement COMP-001 reply endpoint and RFC 9457 404 error handler`
 
 ---

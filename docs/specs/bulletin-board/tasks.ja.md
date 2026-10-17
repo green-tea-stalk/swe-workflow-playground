@@ -89,14 +89,14 @@ upstream:
 - **マージ対象**: `feat/bulletin-board-v1.1-backend-persistence-domain`
 
 #### タスク一覧
-- [ ] **TASK-011**: POST /api/posts/{postId}/replies エンドポイントおよび RFC 9457 エラーハンドラーの実装
+- [x] **TASK-011**: POST /api/posts/{postId}/replies エンドポイントおよび RFC 9457 エラーハンドラーの実装
   - **コンポーネント & 関連要件**: `COMP-001`, `REQ-009`, `REQ-010`, `REQ-011`, `REQ-014`, `REQ-015`
   - **対象ファイル**: `backend/src/main/java/**/controller/PostController.java`, `backend/src/main/java/**/exception/GlobalExceptionHandler.java`, `backend/src/test/java/**/PostControllerTest.java`
   - **受け入れ基準**:
-    - [ ] `PostController` が `@Valid CreateReplyRequest` を受け取り、`Location` ヘッダー `/api/posts/{postId}/replies/{id}` とともに `201 Created` を返却する `POST /api/posts/{postId}/replies` を公開すること。
-    - [ ] `CreateReplyRequest` のバリデーションエラー時に、詳細な `invalid_params` を含む RFC 9457 準拠の `400 Bad Request` が返却されること。
-    - [ ] `PostNotFoundException` がタイプ `https://example.com/errors/post-not-found` を持つ RFC 9457 `404 Not Found` にマッピングされること。
-    - [ ] 統合テストにより、返信作成の成功（201）、バリデーションエラー（400）、および親投稿不存在エラー（404）が検証されること。
+    - [x] `PostController` が `@Valid CreateReplyRequest` を受け取り、`Location` ヘッダー `/api/posts/{postId}/replies/{id}` とともに `201 Created` を返却する `POST /api/posts/{postId}/replies` を公開すること。
+    - [x] `CreateReplyRequest` のバリデーションエラー時に、詳細な `invalid_params` を含む RFC 9457 準拠の `400 Bad Request` が返却されること。
+    - [x] `PostNotFoundException` がタイプ `https://example.com/errors/post-not-found` を持つ RFC 9457 `404 Not Found` にマッピングされること。
+    - [x] 統合テストにより、返信作成の成功（201）、バリデーションエラー（400）、および親投稿不存在エラー（404）が検証されること。
   - **コミットメッセージ**: `feat(backend): implement COMP-001 reply endpoint and RFC 9457 404 error handler`
 
 ---
