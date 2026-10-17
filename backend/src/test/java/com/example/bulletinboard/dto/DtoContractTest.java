@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.bulletinboard.entity.PostEntity;
+import com.example.bulletinboard.entity.ReplyEntity;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
@@ -84,7 +85,7 @@ class DtoContractTest {
     }
 
     @Test
-    @DisplayName("PostResponse JSON serialization should output created_at in snake_case")
+    @DisplayName("PostResponse JSON serialization should output created_at in snake_case and empty replies array []")
     void testPostResponseJsonSerialization() throws IOException {
         PostResponse post = new PostResponse(10L, "Charlie", null, "Title", "Body", "2026-09-11T12:00:00Z");
         String json = jsonMapper.writeValueAsString(post);
@@ -93,6 +94,9 @@ class DtoContractTest {
                 () -> assertTrue(
                         json.contains("\"created_at\":\"2026-09-11T12:00:00Z\""),
                         "created_at must be serialized in snake_case"),
+                () -> assertTrue(
+                        json.contains("\"replies\":[]"),
+                        "replies must be serialized as empty array [] in JSON: " + json),
                 () -> assertTrue(json.contains("\"name\":\"Charlie\"")),
                 () -> assertTrue(json.contains("\"id\":10")));
     }
@@ -131,6 +135,8 @@ class DtoContractTest {
         assertEquals(1L, item.id());
         assertEquals("David", item.name());
         assertEquals("2026-09-11T10:00:00Z", item.createdAt(), "created_at must be mapped properly");
+        assertNotNull(item.replies(), "replies must never be null");
+        assertTrue(item.replies().isEmpty(), "replies must default to empty list [] when omitted in JSON");
     }
 
     @Test
@@ -151,5 +157,48 @@ class DtoContractTest {
         assertNotNull(paged);
         assertNotNull(paged.items(), "items must never be null");
         assertTrue(paged.items().isEmpty(), "items must default to empty list [] when omitted");
+    }
+
+    @Test
+    @DisplayName("PostResponse should guarantee non-null empty list when replies is null")
+    void testPostResponseGuaranteesEmptyListOnNullReplies() {
+        PostResponse response = new PostResponse(1L, "Alice", null, "Title", "Message", "2026-09-14T10:00:00Z", null);
+
+        assertNotNull(response.replies(), "replies must never be null");
+        assertTrue(response.replies().isEmpty(), "replies must default to empty list [] when null is supplied");
+    }
+
+    @Test
+    @DisplayName("ReplyResponse.fromEntity should accurately map entity fields with ISO 8601 UTC timestamp")
+    void testReplyResponseFromEntityMapping() {
+        LocalDateTime now = LocalDateTime.of(2026, 9, 14, 12, 30, 0);
+        ReplyEntity entity = new ReplyEntity(10L, 1L, "Bob", "bob@example.com", "Reply message", now);
+
+        ReplyResponse response = ReplyResponse.fromEntity(entity);
+
+        assertAll(
+                () -> assertEquals(10L, response.id()),
+                () -> assertEquals(1L, response.postId()),
+                () -> assertEquals("Bob", response.name()),
+                () -> assertEquals("bob@example.com", response.email()),
+                () -> assertEquals("Reply message", response.message()),
+                () -> assertEquals("2026-09-14T12:30:00Z", response.createdAt()));
+    }
+
+    @Test
+    @DisplayName("JSON serialization of PostResponse should embed replies list with post_id and created_at mappings")
+    void testPostResponseJsonSerializationWithReplies() throws IOException {
+        ReplyResponse reply = new ReplyResponse(5L, 1L, "Bob", null, "Hello back", "2026-09-14T12:30:00Z");
+        PostResponse post =
+                new PostResponse(1L, "Alice", null, "Title", "Message", "2026-09-14T12:00:00Z", List.of(reply));
+
+        String json = jsonMapper.writeValueAsString(post);
+        assertTrue(json.contains("\"post_id\":1"), "JSON must serialize post_id in reply");
+        assertTrue(json.contains("\"created_at\":\"2026-09-14T12:30:00Z\""), "JSON must serialize created_at in reply");
+        assertTrue(json.contains("\"replies\":["), "JSON must serialize replies array");
+
+        PostResponse deserialized = jsonMapper.readValue(json, PostResponse.class);
+        assertEquals(1, deserialized.replies().size());
+        assertEquals(5L, deserialized.replies().get(0).id());
     }
 }

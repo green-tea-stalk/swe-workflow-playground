@@ -11,10 +11,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.bulletinboard.dto.CreatePostRequest;
+import com.example.bulletinboard.dto.CreateReplyRequest;
 import com.example.bulletinboard.dto.PagedPostResponse;
 import com.example.bulletinboard.dto.PostResponse;
+import com.example.bulletinboard.dto.ReplyResponse;
 import com.example.bulletinboard.entity.PostEntity;
+import com.example.bulletinboard.entity.ReplyEntity;
+import com.example.bulletinboard.exception.PostNotFoundException;
 import com.example.bulletinboard.repository.PostRepository;
+import com.example.bulletinboard.repository.ReplyRepository;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
 import io.micronaut.data.model.Sort;
@@ -23,6 +28,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,11 +54,14 @@ class PostServiceTest {
     @Mock
     PostRepository postRepository;
 
+    @Mock
+    ReplyRepository replyRepository;
+
     PostService postService;
 
     @BeforeEach
     void setUp() {
-        postService = new PostService(postRepository, FIXED_CLOCK);
+        postService = new PostService(postRepository, replyRepository, FIXED_CLOCK);
     }
 
     @Test
@@ -181,6 +190,13 @@ class PostServiceTest {
         assertEquals(2L, response.totalItems());
         assertEquals(1, response.totalPages());
 
+        assertNotNull(response.items().get(0).replies());
+        assertTrue(response.items().get(0).replies().isEmpty(), "Post 0 replies must default to empty list []");
+        assertNotNull(response.items().get(1).replies());
+        assertTrue(response.items().get(1).replies().isEmpty(), "Post 1 replies must default to empty list []");
+
+        verify(replyRepository).findByPostIdInOrderByCreatedAtAsc(List.of(2L, 1L));
+
         ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
         verify(postRepository).findAll(captor.capture());
         Pageable passed = captor.getValue();
@@ -225,14 +241,206 @@ class PostServiceTest {
     @Test
     @DisplayName("Precondition violation: passing null dependencies to constructor must throw NullPointerException")
     void testConstructorRejectsNullDependencies() {
-        assertThrows(NullPointerException.class, () -> new PostService(null));
-        assertThrows(NullPointerException.class, () -> new PostService(postRepository, null));
+        assertThrows(NullPointerException.class, () -> new PostService(null, replyRepository, FIXED_CLOCK));
+        assertThrows(NullPointerException.class, () -> new PostService(postRepository, null, FIXED_CLOCK));
+        assertThrows(NullPointerException.class, () -> new PostService(postRepository, replyRepository, null));
     }
 
     @Test
     @DisplayName("Default constructor: should instantiate successfully with system UTC clock")
     void testDefaultConstructorInstantiates() {
-        PostService defaultService = new PostService(postRepository);
+        PostService defaultService = new PostService(postRepository, replyRepository);
         assertNotNull(defaultService);
+    }
+
+    @Test
+    @DisplayName("Valid reply request: should trim strings, verify parent post, save entity, and return ReplyResponse")
+    void testCreateReplySuccessfully() {
+        CreateReplyRequest request = new CreateReplyRequest("  Bob  ", " bob@example.com ", "  Nice post!  ");
+        PostEntity parentPost = new PostEntity(10L, "Alice", null, "Title", "Message", EXPECTED_NOW);
+
+        when(postRepository.findById(10L)).thenReturn(Optional.of(parentPost));
+        when(replyRepository.save(any(ReplyEntity.class))).thenAnswer(invocation -> {
+            ReplyEntity entity = invocation.getArgument(0);
+            return new ReplyEntity(
+                    50L, entity.postId(), entity.name(), entity.email(), entity.message(), entity.createdAt());
+        });
+
+        ReplyResponse response = postService.createReply(10L, request);
+
+        assertNotNull(response);
+        assertEquals(50L, response.id());
+        assertEquals(10L, response.postId());
+        assertEquals("Bob", response.name());
+        assertEquals("bob@example.com", response.email());
+        assertEquals("Nice post!", response.message());
+        assertEquals("2026-09-11T10:15:30Z", response.createdAt());
+
+        ArgumentCaptor<ReplyEntity> captor = ArgumentCaptor.forClass(ReplyEntity.class);
+        verify(replyRepository).save(captor.capture());
+        ReplyEntity saved = captor.getValue();
+        assertEquals(10L, saved.postId());
+        assertEquals("Bob", saved.name());
+        assertEquals("bob@example.com", saved.email());
+        assertEquals("Nice post!", saved.message());
+        assertEquals(EXPECTED_NOW, saved.createdAt());
+    }
+
+    @ParameterizedTest(name = "blank email: ''{0}'' should normalize to null")
+    @ValueSource(strings = {"", "   ", "\t\n"})
+    @DisplayName(
+            "Valid reply request with blank or whitespace-only email should normalize email to null in entity and DTO")
+    void testCreateReplyNormalizesBlankEmailToNull(String blankEmail) {
+        CreateReplyRequest request = new CreateReplyRequest("Bob", blankEmail, "Message");
+        PostEntity parentPost = new PostEntity(10L, "Alice", null, "Title", "Message", EXPECTED_NOW);
+
+        when(postRepository.findById(10L)).thenReturn(Optional.of(parentPost));
+        when(replyRepository.save(any(ReplyEntity.class))).thenAnswer(invocation -> {
+            ReplyEntity entity = invocation.getArgument(0);
+            return new ReplyEntity(
+                    51L, entity.postId(), entity.name(), entity.email(), entity.message(), entity.createdAt());
+        });
+
+        ReplyResponse response = postService.createReply(10L, request);
+
+        assertNotNull(response);
+        assertNull(response.email(), "Email in response DTO must be normalized to null when blank");
+
+        ArgumentCaptor<ReplyEntity> captor = ArgumentCaptor.forClass(ReplyEntity.class);
+        verify(replyRepository).save(captor.capture());
+        assertNull(captor.getValue().email(), "Entity email passed to repository must also be null");
+    }
+
+    @Test
+    @DisplayName("Valid reply request with null email should persist null email in entity and DTO")
+    void testCreateReplyWithNullEmail() {
+        CreateReplyRequest request = new CreateReplyRequest("Bob", null, "Message");
+        PostEntity parentPost = new PostEntity(10L, "Alice", null, "Title", "Message", EXPECTED_NOW);
+
+        when(postRepository.findById(10L)).thenReturn(Optional.of(parentPost));
+        when(replyRepository.save(any(ReplyEntity.class))).thenAnswer(invocation -> {
+            ReplyEntity entity = invocation.getArgument(0);
+            return new ReplyEntity(
+                    52L, entity.postId(), entity.name(), entity.email(), entity.message(), entity.createdAt());
+        });
+
+        ReplyResponse response = postService.createReply(10L, request);
+
+        assertNotNull(response);
+        assertNull(response.email(), "Email in response DTO must be null");
+
+        ArgumentCaptor<ReplyEntity> captor = ArgumentCaptor.forClass(ReplyEntity.class);
+        verify(replyRepository).save(captor.capture());
+        assertNull(captor.getValue().email(), "Entity email passed to repository must also be null");
+    }
+
+    @Test
+    @DisplayName("Create reply for non-existent parent post should throw PostNotFoundException")
+    void testCreateReplyWhenParentPostNotFoundThrowsException() {
+        CreateReplyRequest request = new CreateReplyRequest("Bob", null, "Message");
+        when(postRepository.findById(999L)).thenReturn(Optional.empty());
+
+        PostNotFoundException ex = assertThrows(
+                PostNotFoundException.class,
+                () -> postService.createReply(999L, request),
+                "Should throw PostNotFoundException when post does not exist");
+
+        assertEquals(999L, ex.getPostId());
+        verify(replyRepository, never()).save(any());
+    }
+
+    @ParameterizedTest(name = "invalid reply arguments (blank/empty/null): name=''{0}'', message=''{1}''")
+    @CsvSource(
+            value = {
+                "'   ', 'Valid Message'",
+                "'', 'Valid Message'",
+                "NIL, 'Valid Message'",
+                "'Valid Name', '   '",
+                "'Valid Name', ''",
+                "'Valid Name', NIL"
+            },
+            nullValues = {"NIL"})
+    @DisplayName(
+            "Precondition violation: blank, empty, or null name or message in createReply must throw IllegalArgumentException")
+    void testCreateReplyRejectsBlankFields(String name, String message) {
+        CreateReplyRequest request = new CreateReplyRequest(name, null, message);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> postService.createReply(10L, request),
+                "Blank, empty, or null name or message must be rejected");
+        verify(postRepository, never()).findById(any());
+        verify(replyRepository, never()).save(any());
+    }
+
+    @ParameterizedTest(name = "invalid postId: {0}")
+    @ValueSource(longs = {0L, -1L, -100L})
+    @DisplayName("Precondition violation: non-positive postId in createReply must throw IllegalArgumentException")
+    void testCreateReplyRejectsNonPositivePostId(long invalidPostId) {
+        CreateReplyRequest request = new CreateReplyRequest("Bob", null, "Message");
+
+        assertThrows(IllegalArgumentException.class, () -> postService.createReply(invalidPostId, request));
+        verify(postRepository, never()).findById(any());
+        verify(replyRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName(
+            "Precondition violation: null command or null postId in createReply must throw IllegalArgumentException")
+    void testCreateReplyRejectsNullCommandOrPostId() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> postService.createReply(null, new CreateReplyRequest("Bob", null, "Msg")));
+        assertThrows(IllegalArgumentException.class, () -> postService.createReply(1L, null));
+        verify(postRepository, never()).findById(any());
+        verify(replyRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName(
+            "getPagedPosts must batch fetch replies in chronological order and guarantee empty list on zero replies")
+    void testGetPagedPostsBatchFetchesReplies() {
+        LocalDateTime now = LocalDateTime.now();
+        PostEntity post1 = new PostEntity(1L, "User1", null, "Title1", "Message1", now);
+        PostEntity post2 = new PostEntity(2L, "User2", null, "Title2", "Message2", now.minusMinutes(5));
+        PostEntity post3 = new PostEntity(3L, "User3", null, "Title3", "Message3", now.minusMinutes(10));
+
+        Page<PostEntity> mockPage = Page.of(List.of(post1, post2, post3), Pageable.from(0, 50), 3L);
+        when(postRepository.findAll(any(Pageable.class))).thenReturn(mockPage);
+
+        ReplyEntity reply1toPost1 =
+                new ReplyEntity(101L, 1L, "Replier1", null, "Reply 1 to Post 1", now.plusSeconds(10));
+        ReplyEntity reply2toPost1 =
+                new ReplyEntity(102L, 1L, "Replier2", null, "Reply 2 to Post 1", now.plusSeconds(20));
+        ReplyEntity reply1toPost2 =
+                new ReplyEntity(103L, 2L, "Replier3", null, "Reply 1 to Post 2", now.minusMinutes(4));
+
+        when(replyRepository.findByPostIdInOrderByCreatedAtAsc(List.of(1L, 2L, 3L)))
+                .thenReturn(List.of(reply1toPost2, reply1toPost1, reply2toPost1));
+
+        PagedPostResponse response = postService.getPagedPosts(0, 50);
+
+        assertNotNull(response);
+        assertEquals(3, response.items().size());
+
+        PostResponse post1Response = response.items().get(0);
+        assertEquals(1L, post1Response.id());
+        assertEquals(2, post1Response.replies().size(), "Post 1 must have 2 replies");
+        assertEquals(101L, post1Response.replies().get(0).id());
+        assertEquals(102L, post1Response.replies().get(1).id());
+
+        PostResponse post2Response = response.items().get(1);
+        assertEquals(2L, post2Response.id());
+        assertEquals(1, post2Response.replies().size(), "Post 2 must have 1 reply");
+        assertEquals(103L, post2Response.replies().get(0).id());
+
+        PostResponse post3Response = response.items().get(2);
+        assertEquals(3L, post3Response.id());
+        assertNotNull(post3Response.replies(), "Post 3 replies must never be null");
+        assertTrue(
+                post3Response.replies().isEmpty(),
+                "Post 3 replies must be guaranteed empty list [] when 0 replies exist");
+
+        verify(replyRepository).findByPostIdInOrderByCreatedAtAsc(List.of(1L, 2L, 3L));
     }
 }
