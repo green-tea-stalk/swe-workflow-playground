@@ -1,24 +1,24 @@
 ---
 feature: bulletin-board
 document_type: tasks
-version: 1.0.0
+version: 1.1.0
 status: approved
-updated_at: 2026-09-11
+updated_at: 2026-09-14
 upstream:
-  requirements: 1.0.0
-  design: 1.0.0
+  requirements: 1.1.0
+  design: 1.1.0
 ---
 
-# Implementation Task Plan: Bulletin Board Application
+# Implementation Task Plan: Bulletin Board Application (v1.1.0 Reply Functionality)
 
 ## 1. Executive Stacked PR Overview
 
 | PR # | Target Branch | Phase / Purpose | Key Components | Dependencies | Merge Order |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **PR 1** | `feat/bulletin-board-phase1-backend-persistence` | Backend Scaffolding, Flyway Migrations & Persistence | `COMP-003` | `docs/bulletin-board-spec` | 1 |
-| **PR 2** | `feat/bulletin-board-phase2-backend-service-api` | Domain Business Logic & REST Controller (RFC 9457) | `COMP-001`, `COMP-002` | `PR 1` | 2 |
-| **PR 3** | `feat/bulletin-board-phase3-frontend-feed` | Angular Scaffolding, Feed View & 50-Item Pagination | `COMP-004` | `PR 2` | 3 |
-| **PR 4** | `feat/bulletin-board-phase4-frontend-form-e2e` | Bottom Fixed Form, Feed Wiring & E2E Verification | `COMP-005` | `PR 3` | 4 |
+| **PR 1** | `feat/bulletin-board-v1.1-backend-persistence-domain` | Backend Reply Persistence & Domain Service Batch Fetching | `COMP-002`, `COMP-003`, `COMP-009` | `docs/bulletin-board-v1.1-spec` | 1 |
+| **PR 2** | `feat/bulletin-board-v1.1-backend-reply-api` | Backend Reply REST Controller & RFC 9457 Exception Mapping | `COMP-001` | `PR 1` | 2 |
+| **PR 3** | `feat/bulletin-board-v1.1-frontend-reply-ui` | Frontend Models, API Client, Feed Reply View & Form Reply Mode | `COMP-004`, `COMP-005` | `PR 2` | 3 |
+| **PR 4** | `feat/bulletin-board-v1.1-e2e-and-i18n` | Multi-Locale Localization & End-to-End Playwright Verification | `COMP-001`, `COMP-004`, `COMP-005` | `PR 3` | 4 |
 
 ---
 
@@ -28,16 +28,21 @@ Every active requirement and design component is accounted for with zero gaps:
 
 | Requirement ID | Component ID | Implementation Task | Target PR | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **REQ-001** | `COMP-005` | `TASK-007` | PR 4 | Pending |
-| **REQ-002** | `COMP-001`, `COMP-002`, `COMP-003`, `COMP-004` | `TASK-002`, `TASK-003`, `TASK-004`, `TASK-006` | PR 1, PR 2, PR 3 | Pending |
-| **REQ-003** | `COMP-001`, `COMP-002`, `COMP-003`, `COMP-004` | `TASK-002`, `TASK-003`, `TASK-004`, `TASK-006` | PR 1, PR 2, PR 3 | Pending |
-| **REQ-004** | `COMP-004` | `TASK-006` | PR 3 | Pending |
-| **REQ-005** | `COMP-004` | `TASK-006` | PR 3 | Pending |
-| **REQ-006** | `COMP-004` | `TASK-006` | PR 3 | Pending |
-| **REQ-007** | `COMP-001`, `COMP-002`, `COMP-003`, `COMP-005` | `TASK-002`, `TASK-003`, `TASK-004`, `TASK-007` | PR 1, PR 2, PR 4 | Pending |
-| **REQ-008** | `COMP-001`, `COMP-005` | `TASK-004`, `TASK-007` | PR 2, PR 4 | Pending |
-| **REQ-009** | `COMP-001`, `COMP-005` | `TASK-004`, `TASK-007` | PR 2, PR 4 | Pending |
-| **REQ-010** | `COMP-001`, `COMP-004`, `COMP-005` | `TASK-004`, `TASK-006`, `TASK-007`, `TASK-008` | PR 2, PR 3, PR 4 | Pending |
+| **REQ-001** | `COMP-005` | `TASK-014`, `TASK-015` | PR 3, PR 4 | Pending |
+| **REQ-002** | `COMP-001`, `COMP-002`, `COMP-003`, `COMP-004` | `TASK-010`, `TASK-015` | PR 1, PR 4 | Pending |
+| **REQ-003** | `COMP-001`, `COMP-002`, `COMP-003`, `COMP-004` | `TASK-010`, `TASK-015` | PR 1, PR 4 | Pending |
+| **REQ-004** | `COMP-004` | `TASK-013`, `TASK-015` | PR 3, PR 4 | Pending |
+| **REQ-005** | `COMP-004` | `TASK-013`, `TASK-015` | PR 3, PR 4 | Pending |
+| **REQ-006** | `COMP-004` | `TASK-013`, `TASK-015` | PR 3, PR 4 | Pending |
+| **REQ-007** | `COMP-001`, `COMP-002`, `COMP-003`, `COMP-005` | `TASK-010`, `TASK-014`, `TASK-015` | PR 1, PR 3, PR 4 | Pending |
+| **REQ-008** | `COMP-001`, `COMP-005` | `TASK-014`, `TASK-015` | PR 3, PR 4 | Pending |
+| **REQ-009** | `COMP-001`, `COMP-005` | `TASK-011`, `TASK-014`, `TASK-015` | PR 2, PR 3, PR 4 | Pending |
+| **REQ-010** | `COMP-001`, `COMP-004`, `COMP-005` | `TASK-011`, `TASK-013`, `TASK-014`, `TASK-015` | PR 2, PR 3, PR 4 | Pending |
+| **REQ-011** | `COMP-001`, `COMP-002`, `COMP-004`, `COMP-009` | `TASK-009`, `TASK-010`, `TASK-011`, `TASK-012`, `TASK-013`, `TASK-015` | PR 1, PR 2, PR 3, PR 4 | Pending |
+| **REQ-012** | `COMP-004`, `COMP-005` | `TASK-013`, `TASK-014`, `TASK-015` | PR 3, PR 4 | Pending |
+| **REQ-013** | `COMP-005` | `TASK-014`, `TASK-015` | PR 3, PR 4 | Pending |
+| **REQ-014** | `COMP-001`, `COMP-002`, `COMP-005`, `COMP-009` | `TASK-009`, `TASK-010`, `TASK-011`, `TASK-012`, `TASK-014`, `TASK-015` | PR 1, PR 2, PR 3, PR 4 | Pending |
+| **REQ-015** | `COMP-001`, `COMP-002`, `COMP-005`, `COMP-009` | `TASK-009`, `TASK-010`, `TASK-011`, `TASK-012`, `TASK-014`, `TASK-015` | PR 1, PR 2, PR 3, PR 4 | Pending |
 
 ---
 
@@ -50,110 +55,104 @@ Implementation agents execute tasks sequentially using the **Atomic Commit Loop*
 4. Execute `committing-changes` to commit code and updated `tasks.md` atomically.
 5. In case of unexpected interruption, resume immediately from the first unchecked task.
 
-### PR 1: Backend Scaffolding, Flyway Migrations & Persistence
-- **Branch**: `feat/bulletin-board-phase1-backend-persistence`
-- **Merge Target**: `docs/bulletin-board-spec`
+### PR 1: Backend Reply Persistence & Domain Service Batch Fetching
+- **Branch**: `feat/bulletin-board-v1.1-backend-persistence-domain`
+- **Merge Target**: `docs/bulletin-board-v1.1-spec`
 
 #### Tasks
-- [x] **TASK-001**: Initialize Micronaut backend and Flyway migration
-  - **Component & Requirements**: `COMP-003`, `REQ-007`
-  - **Target Files**: `backend/build.gradle.kts`, `backend/src/main/resources/application.yml`, `backend/src/main/resources/db/migration/V1__create_posts_table.sql`
+- [ ] **TASK-009**: Implement Flyway V2 migration, ReplyEntity, and ReplyRepository
+  - **Component & Requirements**: `COMP-009`, `REQ-011`, `REQ-014`, `REQ-015`
+  - **Target Files**: `backend/src/main/resources/db/migration/V2__create_replies_table.sql`, `backend/src/main/java/**/entity/ReplyEntity.java`, `backend/src/main/java/**/repository/ReplyRepository.java`, `backend/src/test/java/**/ReplyRepositoryTest.java`
   - **Acceptance Criteria**:
-    - [x] Micronaut 4.x project configured with Java 25 LTS, Gradle Kotlin DSL, and Micronaut Data JDBC dependencies.
-    - [x] Flyway migration script creates `posts` table with `BIGINT AUTO_INCREMENT`, UTF-8 encoding, and `idx_posts_created_at_desc` index.
-    - [x] Local and containerized MySQL database connection configurations verified.
-  - **Commit Message**: `chore(backend): initialize Micronaut project and posts table migration`
+    - [ ] Flyway migration `V2__create_replies_table.sql` creates `replies` table with foreign key `ON DELETE CASCADE` to `posts(id)`, indices `idx_replies_post_id` and `idx_replies_created_at_asc`.
+    - [ ] `ReplyEntity` record mapped to `replies` table with generated ID and microsecond timestamp.
+    - [ ] `ReplyRepository` interface defined extending Micronaut Data JDBC with `findByPostIdOrderByCreatedAtAsc` and `findByPostIdInOrderByCreatedAtAsc`.
+    - [ ] Repository integration tests against MySQL Testcontainers verify persistence, cascade deletion, and chronological ordering.
+  - **Commit Message**: `feat(backend): implement COMP-009 ReplyEntity and ReplyRepository with Flyway V2 migration`
 
-- [x] **TASK-002**: Implement PostEntity, DTO records, and PostRepository
-  - **Component & Requirements**: `COMP-003`, `REQ-002`, `REQ-003`, `REQ-007`
-  - **Target Files**: `backend/src/main/java/**/PostEntity.java`, `backend/src/main/java/**/dto/*.java`, `backend/src/main/java/**/PostRepository.java`, `backend/src/test/java/**/PostRepositoryTest.java`
+- [ ] **TASK-010**: Implement reply DTOs, PostNotFoundException, and PostService batch reply logic
+  - **Component & Requirements**: `COMP-002`, `COMP-003`, `REQ-002`, `REQ-003`, `REQ-007`, `REQ-011`, `REQ-014`, `REQ-015`
+  - **Target Files**: `backend/src/main/java/**/dto/CreateReplyRequest.java`, `backend/src/main/java/**/dto/ReplyResponse.java`, `backend/src/main/java/**/dto/PostResponse.java`, `backend/src/main/java/**/exception/PostNotFoundException.java`, `backend/src/main/java/**/service/PostService.java`, `backend/src/test/java/**/PostServiceTest.java`
   - **Acceptance Criteria**:
-    - [x] `PostEntity` mapped to `posts` table with generated ID and creation timestamp.
-    - [x] `CreatePostRequest`, `PostResponse`, and `PagedPostResponse` record DTOs defined with JSON Schema constraints.
-    - [x] `PagedPostResponse` enforces `minItems: 0 (guaranteed [] on empty)` for `items`.
-    - [x] `PostRepository` extends Micronaut Data `PageableRepository` with order descending by `created_at`.
-    - [x] Integration tests verify repository persistence and reverse-chronological pagination against Testcontainers MySQL.
-  - **Commit Message**: `feat(backend): implement COMP-003 PostEntity DTOs and PostRepository`
+    - [ ] `CreateReplyRequest` DTO defined with validation annotations (name 1-50 non-blank, email max 254 optional, message 1-4000 non-blank).
+    - [ ] `ReplyResponse` DTO defined with ISO 8601 UTC timestamp formatting.
+    - [ ] `PostResponse` updated with `replies: List<ReplyResponse>` guaranteeing non-null empty list `[]` on zero replies.
+    - [ ] `PostService.getPagedPosts(page, size)` performs single batch query `ReplyRepository.findByPostIdInOrderByCreatedAtAsc(postIds)` and maps replies in memory avoiding N+1 round trips.
+    - [ ] `PostService.createReply(postId, command)` checks parent post existence via `PostRepository.findById`, throws `PostNotFoundException` if missing, and persists valid reply with current UTC time.
+    - [ ] Unit tests verify preconditions, postconditions, empty collection guarantees, and 100% branch coverage.
+  - **Commit Message**: `feat(backend): implement COMP-002 PostService reply batch fetching and creation logic`
 
 ---
 
-### PR 2: Domain Business Logic & REST Controller (RFC 9457)
-- **Branch**: `feat/bulletin-board-phase2-backend-service-api`
-- **Merge Target**: `feat/bulletin-board-phase1-backend-persistence`
+### PR 2: Backend Reply REST Controller & RFC 9457 Exception Mapping
+- **Branch**: `feat/bulletin-board-v1.1-backend-reply-api`
+- **Merge Target**: `feat/bulletin-board-v1.1-backend-persistence-domain`
 
 #### Tasks
-- [x] **TASK-003**: Implement PostService domain logic and validation
-  - **Component & Requirements**: `COMP-002`, `REQ-002`, `REQ-003`, `REQ-007`
-  - **Target Files**: `backend/src/main/java/**/PostService.java`, `backend/src/test/java/**/PostServiceTest.java`
+- [ ] **TASK-011**: Implement POST /api/posts/{postId}/replies and RFC 9457 error handler
+  - **Component & Requirements**: `COMP-001`, `REQ-009`, `REQ-010`, `REQ-011`, `REQ-014`, `REQ-015`
+  - **Target Files**: `backend/src/main/java/**/controller/PostController.java`, `backend/src/main/java/**/exception/GlobalExceptionHandler.java`, `backend/src/test/java/**/PostControllerTest.java`
   - **Acceptance Criteria**:
-    - [x] `PostService.getPagedPosts(page, size)` returns `PagedPostResponse` with empty list guarantee on 0 records.
-    - [x] `PostService.createPost(command)` validates non-blank strings, assigns UTC timestamp, and invokes repository save.
-    - [x] Unit tests verify preconditions, postconditions, and invariant contracts with 100% branch coverage.
-  - **Commit Message**: `feat(backend): implement COMP-002 PostService domain logic`
-
-- [x] **TASK-004**: Implement PostController and RFC 9457 error handler
-  - **Component & Requirements**: `COMP-001`, `REQ-002`, `REQ-003`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`
-  - **Target Files**: `backend/src/main/java/**/PostController.java`, `backend/src/main/java/**/exception/*.java`, `backend/src/test/java/**/PostControllerTest.java`
-  - **Acceptance Criteria**:
-    - [x] `GET /api/posts` returns `200 OK` with paginated posts (default: `page=0`, `size=50`).
-    - [x] `POST /api/posts` validates body via Bean Validation, returning `201 Created` with Location header.
-    - [x] Validation failures return `400 Bad Request` with `application/problem+json` RFC 9457 structure and `invalid_params`.
-    - [x] Micronaut HTTP client test verifies full controller interaction.
-  - **Commit Message**: `feat(backend): implement COMP-001 PostController and RFC 9457 error handling`
+    - [ ] `PostController` exposes `POST /api/posts/{postId}/replies` accepting `@Valid CreateReplyRequest` and returning `201 Created` with Location header `/api/posts/{postId}/replies/{id}`.
+    - [ ] Validation errors on `CreateReplyRequest` return `400 Bad Request` conforming to RFC 9457 with detailed `invalid_params`.
+    - [ ] `PostNotFoundException` mapped to RFC 9457 `404 Not Found` with problem details type `https://example.com/errors/post-not-found`.
+    - [ ] Integration tests verify successful reply creation (201), validation failure (400), and missing post error (404).
+  - **Commit Message**: `feat(backend): implement COMP-001 reply endpoint and RFC 9457 404 error handler`
 
 ---
 
-### PR 3: Angular Scaffolding, Feed View & 50-Item Pagination
-- **Branch**: `feat/bulletin-board-phase3-frontend-feed`
-- **Merge Target**: `feat/bulletin-board-phase2-backend-service-api`
+### PR 3: Frontend Models, API Client, Feed Reply View & Form Reply Mode
+- **Branch**: `feat/bulletin-board-v1.1-frontend-reply-ui`
+- **Merge Target**: `feat/bulletin-board-v1.1-backend-reply-api`
 
 #### Tasks
-- [x] **TASK-005**: Initialize Angular project and API client service
-  - **Component & Requirements**: `COMP-004`, `REQ-010`
-  - **Target Files**: `frontend/package.json`, `frontend/angular.json`, `frontend/src/app/models/post.model.ts`, `frontend/src/app/services/post-api.service.ts`, `frontend/src/app/services/post-api.service.spec.ts`
+- [ ] **TASK-012**: Update TypeScript models and PostApiService for replies
+  - **Component & Requirements**: `COMP-004`, `COMP-005`, `REQ-011`, `REQ-014`, `REQ-015`
+  - **Target Files**: `frontend/src/app/models/post.model.ts`, `frontend/src/app/services/post-api.service.ts`, `frontend/src/app/services/post-api.service.spec.ts`
   - **Acceptance Criteria**:
-    - [x] Angular project initialized with Angular Material installed and configured.
-    - [x] TypeScript interfaces matching `CreatePostRequest`, `PostResponse`, and `PagedPostResponse` defined.
-    - [x] `PostApiService` handles `getPosts(page, size)` and `createPost(payload)` with error propagation.
-    - [x] Unit tests for `PostApiService` with `HttpClientTestingModule` pass.
-  - **Commit Message**: `chore(frontend): initialize Angular project and implement PostApiService`
+    - [ ] `CreateReplyRequest` and `ReplyResponse` interfaces defined in `post.model.ts`.
+    - [ ] `PostResponse` updated with `readonly replies: readonly ReplyResponse[]` default non-null.
+    - [ ] `PostApiService.createReply(postId: number, request: CreateReplyRequest)` implemented returning `Observable<ReplyResponse>`.
+    - [ ] Unit tests for `PostApiService` covering `createReply` and error propagation pass.
+  - **Commit Message**: `feat(frontend): add reply models and PostApiService.createReply method`
 
-- [x] **TASK-006**: Implement PostFeedComponent with pagination and empty state
-  - **Component & Requirements**: `COMP-004`, `REQ-002`, `REQ-003`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-010`
+- [ ] **TASK-013**: Implement reply list view and reply trigger in PostFeedComponent
+  - **Component & Requirements**: `COMP-004`, `REQ-004`, `REQ-005`, `REQ-006`, `REQ-010`, `REQ-011`, `REQ-012`
   - **Target Files**: `frontend/src/app/components/post-feed/post-feed.component.ts`, `frontend/src/app/components/post-feed/post-feed.component.html`, `frontend/src/app/components/post-feed/post-feed.component.scss`, `frontend/src/app/components/post-feed/post-feed.component.spec.ts`
   - **Acceptance Criteria**:
-    - [x] Feed renders posts in reverse chronological order displaying name, formatted timestamp, title, message, and optional public email.
-    - [x] Integrates `MatPaginator` configured for 50 items per page.
-    - [x] Displays placeholder message when total items is zero (`REQ-004`).
-    - [x] Scrollable feed container styled with dynamic calculation to avoid bottom form overlap.
-    - [x] Component unit tests verify rendering, empty state, and page navigation.
-  - **Commit Message**: `feat(frontend): implement COMP-004 PostFeedComponent with pagination`
+    - [ ] Each post card renders associated replies in ascending order of `created_at`, displaying contributor name, timestamp, message, and email.
+    - [ ] Empty reply lists render cleanly without errors or unnecessary whitespace.
+    - [ ] Dedicated reply action button on each post card emits reply target post to parent/service (`REQ-012`).
+    - [ ] Component unit tests verify reply rendering, chronological order, empty replies safety, and reply button click event.
+  - **Commit Message**: `feat(frontend): implement COMP-004 reply list rendering and reply action button`
+
+- [ ] **TASK-014**: Implement Reply Mode and submission in PostFormComponent
+  - **Component & Requirements**: `COMP-005`, `REQ-001`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`, `REQ-012`, `REQ-013`, `REQ-014`, `REQ-015`
+  - **Target Files**: `frontend/src/app/components/post-form/post-form.component.ts`, `frontend/src/app/components/post-form/post-form.component.html`, `frontend/src/app/components/post-form/post-form.component.scss`, `frontend/src/app/components/post-form/post-form.component.spec.ts`, `frontend/src/app/app.ts`, `frontend/src/app/app.html`
+  - **Acceptance Criteria**:
+    - [ ] Component tracks `replyTarget` state; when set, displays target post identifier badge and cancel button (`REQ-012`, `REQ-013`).
+    - [ ] In Reply Mode, title input is hidden and title validation constraints are deactivated (`REQ-013`).
+    - [ ] Cancel button clears `replyTarget` and restores standard mode with title field (`REQ-013`).
+    - [ ] On submit in Reply Mode: calls `createReply`, resets form, restores standard mode, refreshes feed, and shows success snackbar (`REQ-014`).
+    - [ ] On error or validation failure, preserves entered form text without clearing (`REQ-009`, `REQ-015`).
+    - [ ] Component unit tests verify Reply Mode transition, validation, cancel, submission, and error preservation.
+  - **Commit Message**: `feat(frontend): implement COMP-005 PostFormComponent reply mode and submission wiring`
 
 ---
 
-### PR 4: Bottom Fixed Form, Feed Wiring & E2E Verification
-- **Branch**: `feat/bulletin-board-phase4-frontend-form-e2e`
-- **Merge Target**: `feat/bulletin-board-phase3-frontend-feed`
+### PR 4: Multi-Locale Localization & End-to-End Playwright Verification
+- **Branch**: `feat/bulletin-board-v1.1-e2e-and-i18n`
+- **Merge Target**: `feat/bulletin-board-v1.1-frontend-reply-ui`
 
 #### Tasks
-- [x] **TASK-007**: Implement persistent bottom PostFormComponent and feed integration
-  - **Component & Requirements**: `COMP-005`, `REQ-001`, `REQ-007`, `REQ-008`, `REQ-009`, `REQ-010`
-  - **Target Files**: `frontend/src/app/components/post-form/post-form.component.ts`, `frontend/src/app/components/post-form/post-form.component.html`, `frontend/src/app/components/post-form/post-form.component.scss`, `frontend/src/app/components/post-form/post-form.component.spec.ts`
+- [ ] **TASK-015**: Implement multi-locale messages and full-stack E2E Playwright verification
+  - **Component & Requirements**: `COMP-001`, `COMP-004`, `COMP-005`, `REQ-001` through `REQ-015`
+  - **Target Files**: `frontend/src/locale/messages.xlf`, `frontend/src/locale/messages.ja.xlf`, `backend/src/main/resources/messages.properties`, `backend/src/main/resources/messages_ja.properties`, `frontend/e2e/bulletin-board.spec.ts`
   - **Acceptance Criteria**:
-    - [x] Form container anchored to bottom of viewport (`position: fixed; bottom: 0; width: 100%`).
-    - [x] Reactive form validates name (1–50), title (1–100), message (1–4000), and optional email.
-    - [x] Field-level error messages displayed without clearing input on validation failure (`REQ-009`).
-    - [x] On successful submission: resets form, refreshes feed to page 0, and opens `MatSnackBar` notification (`REQ-008`).
-    - [x] Component unit tests verify form states, error indicators, and submission callback.
-  - **Commit Message**: `feat(frontend): implement COMP-005 PostFormComponent with fixed bottom layout`
-
-- [x] **TASK-008**: Full-stack integration smoke verification
-  - **Component & Requirements**: `COMP-001`, `COMP-004`, `COMP-005`, `REQ-010`
-  - **Target Files**: `README.md`, integration smoke test script or workflow verification
-  - **Acceptance Criteria**:
-    - [x] End-to-end user flow verified: open application -> view empty state -> post message -> observe success notification and feed refresh with 50-item pagination.
-    - [x] All automated unit and integration tests across backend and frontend pass cleanly.
-  - **Commit Message**: `test(e2e): verify end-to-end bulletin board flow and update documentation`
+    - [ ] All new user-facing strings (reply button, reply mode badge, cancel action, success messages, validation messages) translated in English and Japanese.
+    - [ ] Playwright E2E tests cover complete user scenarios: browse posts with replies, submit a new post, click reply, cancel reply mode, submit a valid reply, and verify reply renders at the end of the post's reply thread.
+    - [ ] All backend test suites (`./gradlew test`) and frontend test suites (`npm test -- --watch=false`, `npm run e2e`) pass cleanly.
+  - **Commit Message**: `test(e2e): add reply end-to-end Playwright tests and multi-locale translations`
 
 ---
 
